@@ -1,0 +1,62 @@
+<?php
+
+use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\ApiController;
+use App\Http\Controllers\BookingController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\UserController;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+// Route::fallback(function(){
+//     return response()->json([
+//         'success' => 0,
+//         'message' => 'Route does not exist'
+//     ], 404);
+// });
+Route::post('enter-mobile', [AuthController::class, 'enter_mobile']);
+Route::post('verify-mobile', [AuthController::class, 'verify_otp']);
+Route::post('register', [AuthController::class, 'register']);
+
+  
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+Route::get('terms/{url}', [ApiController::class,'terms']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('contact_us', [ApiController::class,'contact_us']);
+    Route::get('contact_us', [ApiController::class,'queries']);
+    Route::get('bookings', [ApiController::class,'bookings']);
+    Route::get('bookings/{id}', [BookingController::class,'show']);
+    Route::get('policies', [ApiController::class,'policies']);
+    Route::post('book-studio', [BookingController::class, 'store']);
+    Route::post('find_start_slot', [AjaxController::class, 'find_start_slot'])->name('find_start_slot');
+    Route::post('find_end_slot', [AjaxController::class, 'find_end_slot'])->name('find_end_slot');
+    Route::delete('delete-account',  [ApiController::class, 'delete_account']);
+    Route::post('search', [ApiController::class, 'search_bookings']);
+    Route::post('coupan', [ApiController::class, 'add_promo_code']);
+    Route::post('add-fcm', [ApiController::class, 'update_fcm']);
+    Route::get('notifications', [ApiController::class, 'my_notifications']);
+    Route::get('gst_list', [ApiController::class, 'gst_list']);
+    Route::post('update_profile', [ApiController::class, 'update_profile']);
+});
+
+Route::post('get_slots', [AjaxController::class,'get_slots']);
+ Route::get('countries', [ApiController::class, 'countries']);
+ Route::get('services', [ApiController::class,'services']);
+ Route::get('states/{id}', [ApiController::class, 'states']);
+ Route::get('cities/{id}', [ApiController::class, 'cities']);
+ Route::get('banners', [ApiController::class, 'banners']);
+ Route::post('studios', [ApiController::class,'studios']);
+ Route::get('faqs', [ApiController::class,'faqs']);
+ Route::get('states/{id}', [ApiController::class, 'states']);
