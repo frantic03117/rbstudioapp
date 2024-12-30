@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-    @php
+@php
     use App\Http\Controllers\StaticController;
-     $scss = StaticController::studio_css();
-    @endphp
+    $scss = StaticController::studio_css();
+@endphp
 
 <head>
 
@@ -26,7 +26,7 @@
 
     <!-- preloader css -->
     <link rel="stylesheet" href="{{ url('public/css/css-preloader.min.css') }}" type="text/css">
- 
+
     <!-- apexcharts -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -42,108 +42,40 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-   
+
     @yield('script')
     <link rel="stylesheet" href="{{ url('public/css/css-login.css') }}">
+    {{-- <style>
+        @foreach ($scss as $cs)
+            .{{ implode('_', explode(' ', $cs->name)) }} {
+                background: {{ $cs->color }};
+                color: #fff;
+            }
+
+        @endforeach
+    </style> --}}
     <style>
-    @foreach($scss as $cs)
-        .{{ implode('_', explode(' ', $cs->name)) }} {
-            background: {{ $cs->color }};
-            color: #fff;
+        .fc .fc-list-event:hover td {
+            background: none;
         }
-      
-    @endforeach
-</style>
-    <style>
-    .fc .fc-list-event:hover td{
-        background:none;
-    }
-        /* .navbar-brand-box {
-            background-color: #077773;
-            -webkit-box-shadow: 0 1px 0 #077773;
-            box-shadow: 0 1px 0 #077773;
-        } */
 
-        /* .vertical-menu {
-            background-color: #077773;
-        } */
+        #toast-container>.toast-error {
+            background-position: left !important;
 
-        /*
-        #sidebar-menu ul li a,.menu-title,
-        #sidebar-menu ul li a i, body:not([data-sidebar-size=sm]) #vertical-menu-btn, .logo-txt  {
-            color: #fff  ;
-        } */
-        /*.fc-event, .fc-event-dot{*/
-        /*    background:#5A296B !important;*/
-        /*    color:#fff !important;*/
-        /*}*/
-      
-    /*    .Studio_A {*/
-    /*        background:#007c9f ;*/
-    /*        color:#fff ;*/
-    /*    }*/
-    /*    .Studio_A:hover {*/
-    /*        background:#007c9f ;*/
-    /*        color:#fff ;*/
-    /*    }*/
-    /*    .Studio_B {*/
-    /*        background:#077773 ;*/
-    /*        color:#fff;*/
-    /*    }*/
-    /*    .Studio_B:hover {*/
-    /*        background:#077773 ;*/
-    /*        color:#fff;*/
-    /*    }*/
-    /*    .Studio_C {*/
-    /*        background:#d3b000;*/
-    /*        color:#fff;*/
-    /*    }*/
-    /*    .Studio_C:hover {*/
-    /*        background:#f5cd04;*/
-    /*        color:#fff;*/
-    /*    }*/
-    /*    .Studio_X {*/
-    /*        background:#06402b ;*/
-    /*        color:#fff;*/
-    /*    }*/
-    /*    .Studio_X:hover {*/
-    /*        background:#06402b ;*/
-    /*        color:#fff;*/
-    /*    }*/
-    /*    .fc .fc-list-event:hover td{*/
-    /*        background:none ;*/
-    /*    }*/
-    /*.cke_notification_warning{*/
-    /*    display:none;*/
-    /*}*/
-#toast-container > .toast-error{
-     background-position:left !important;
-    
-}
+        }
 
         .toast-success {
             background: #077773 !important;
-            background-position:left !important;
-            background-repeat:no-repeat !important; 
+            background-position: left !important;
+            background-repeat: no-repeat !important;
         }
-        
+
 
         .toast-error {
             background: red !important;
-               background-position:left !important;
-                background-repeat:no-repeat !important; 
+            background-position: left !important;
+            background-repeat: no-repeat !important;
         }
-
-        /* .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            background: #077773;
-            color: #fff;
-        }
-        .mm-active .active{
-            color: #077773 !important;
-        }
-        .mm-active .active i{
-            color: #fff;
-        } */
     </style>
     <script>
         const url = "{{ url('') }}";
@@ -204,7 +136,7 @@
                     <button type="button" class="btn btn-sm px-3 font-size-16 header-item" id="vertical-menu-btn">
                         <i class="fa fa-fw fa-bars"></i>
                     </button>
-                    <audio id="notificationSound" src="{{url('public/images/Oneplus.mp3')}}"  preload="auto"></audio>
+                    <audio id="notificationSound" src="{{ url('public/images/Oneplus.mp3') }}" preload="auto"></audio>
 
 
                 </div>
@@ -235,54 +167,56 @@
 
                     <div class="dropdown d-none d-sm-inline-block">
                         <button type="button" class="btn header-item" id="mode-setting-btn">
-                           
+
                             <i class="fas fa-sun" class="icon-lg layout-mode-light"></i>
                         </button>
-                        
+
                     </div>
 
 
                     <div class="dropdown d-inline-block">
                         <button type="button" class="btn header-item noti-icon position-relative"
-                            id="page-header-notifications-dropdown"  data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
+                            id="page-header-notifications-dropdown" data-bs-auto-close="outside"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell"></i>
                             <span class="badge bg-danger rounded-pill" id="notifCount">5</span>
                         </button>
-                        <div data-simplebar style="max-height: 230px;" class="dropdown-menu dropdown-menu-lg dropdown-menu-outside dropdown-menu-end p-0"
+                        <div data-simplebar style="max-height: 230px;"
+                            class="dropdown-menu dropdown-menu-lg dropdown-menu-outside dropdown-menu-end p-0"
                             aria-labelledby="page-header-notifications-dropdown">
-                            
-                            
-                            <div id="notifBox" ></div>
+
+
+                            <div id="notifBox"></div>
                             <div class="p-2 border-top d-grid">
-                                <a  href="{{route('notification')}}" class="btn btn-sm btn-link font-size-14 text-center" >
+                                <a href="{{ route('notification') }}"
+                                    class="btn btn-sm btn-link font-size-14 text-center">
                                     <i class="mdi mdi-arrow-right-circle me-1"></i> <span>View More..</span>
                                 </a>
                             </div>
                             <script>
                                 let page = 1;
-                                const nurl = "{{route('notification')}}"
-                                  const audio = document.getElementById('notificationSound');
-                                 const playSound = () => {
-                                        if (audio) {
-                                            audio.play().catch(error => {
-                                                console.error('Playback failed:', error);
-                                                // You may want to show a user message or handle error
-                                            });
-                                        }
-                                         document.addEventListener('click', () => {
+                                const nurl = "{{ route('notification') }}"
+                                const audio = document.getElementById('notificationSound');
+                                const playSound = () => {
+                                    if (audio) {
+                                        audio.play().catch(error => {
+                                            console.error('Playback failed:', error);
+                                            // You may want to show a user message or handle error
+                                        });
+                                    }
+                                    document.addEventListener('click', () => {
                                         playSound(); // This is optional, but can help in cases where interaction is required
                                     });
-                                    };
+                                };
                                 const getNotification = (pg) => {
-                                    const nourl  = "{{route('web_notification')}}?page="+pg;
+                                    const nourl = "{{ route('web_notification') }}?page=" + pg;
                                     let elem = "";
-                                    $.get(nourl, function(res){
+                                    $.get(nourl, function(res) {
                                         const items = res.data;
-                                       
-                                       
+
+
                                         items.forEach((obj, index) => {
-                                             if (index == 0) {
+                                            if (index == 0) {
                                                 playSound();
                                             }
                                             elem += `   <a href="${nurl}" class="text-reset notification-item p-2 border flex-grow-1">
@@ -294,7 +228,7 @@
                                         });
                                         $("#notifBox").append(elem);
                                         $("#notifCount").html(res.data.length)
-                                        if(res.data.length == 0){
+                                        if (res.data.length == 0) {
                                             $("#loadMoreButton").hide()
                                         }
                                     })
@@ -303,7 +237,7 @@
                                 const loadMoreNotif = () => {
                                     page++;
                                     getNotification(page);
-                                }
+                                };
                             </script>
                         </div>
                     </div>
@@ -321,18 +255,18 @@
                             <img class="rounded-circle header-profile-user" src="{{ url('public/images/logo.png') }}"
                                 alt="Header Avatar">
                             <span class="d-none d-xl-inline-block ms-1 fw-medium">
-                            R & B
+                                R & B
                             </span>
                             <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">
                             <!-- item-->
-                            <a class="dropdown-item" href="{{route('profile')}}"><i
+                            <a class="dropdown-item" href="{{ route('profile') }}"><i
                                     class="mdi mdi mdi-face-man font-size-16 align-middle me-1"></i> Profile</a>
-                            <a class="dropdown-item" href="{{route('notification')}}"><i
+                            <a class="dropdown-item" href="{{ route('notification') }}"><i
                                     class="mdi mdi-lock font-size-16 align-middle me-1"></i> Notifications</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{route('logout')}}"><i
+                            <a class="dropdown-item" href="{{ route('logout') }}"><i
                                     class="mdi mdi-logout font-size-16 align-middle me-1"></i> Logout</a>
                         </div>
                     </div>
@@ -370,94 +304,90 @@
                             <ul class="sub-menu mm-collapse" aria-expanded="false">
                                 @can('services-list')
                                     <li><a href="{{ route('services.index') }}" data-key="t-g-maps">Services
-                                    </a></li>
+                                        </a></li>
                                 @endcan
                                 @can('product-list')
-                                <li><a href="{{ route('rents.index') }}" data-key="t-v-maps">Rentel Items</a></li>
-                                 @endcan
-                                   @can('policies-list')
-                                <li><a href="{{ route('policy.index') }}" data-key="t-v-maps">Policies</a></li>
+                                    <li><a href="{{ route('rents.index') }}" data-key="t-v-maps">Rentel Items</a></li>
                                 @endcan
-                                  @can('faq-list')
-                                <li><a href="{{ route('faq.index') }}" data-key="t-v-maps">FAQ</a></li>
-                                 @endcan
-                                   @can('banners-list')
-                                <li><a href="{{ route('banners') }}" data-key="t-v-maps">Banners</a></li>
-                                   @endcan
-                                   @can('role-list')  
-                            <li><a href="{{ route('roles.index') }}" data-key="t-g-maps">Roles</a></li>
-                             @endcan
-                                  @can('employee-list')    
-                            <li><a href="{{ route('employee.index') }}" data-key="t-v-maps">Employees</a></li>
-                             @endcan
+                                @can('policies-list')
+                                    <li><a href="{{ route('policy.index') }}" data-key="t-v-maps">Policies</a></li>
+                                @endcan
+                                @can('faq-list')
+                                    <li><a href="{{ route('faq.index') }}" data-key="t-v-maps">FAQ</a></li>
+                                @endcan
+                                @can('banners-list')
+                                    <li><a href="{{ route('banners') }}" data-key="t-v-maps">Banners</a></li>
+                                @endcan
+                                @can('role-list')
+                                    <li><a href="{{ route('roles.index') }}" data-key="t-g-maps">Roles</a></li>
+                                @endcan
+                                @can('employee-list')
+                                    <li><a href="{{ route('employee.index') }}" data-key="t-v-maps">Employees</a></li>
+                                @endcan
                             </ul>
                         </li>
 
-                       @can('vendors-list')
-                        <li>
-                            <a href="{{ route('vendor.index') }}">
-                                <i class=" fas fa-store"></i>
-                                <span data-key="t-store">Vendors</span>
-                            </a>
-                        </li>
-                         @endcan
-                           @can('studios-list')
-                        <li>
-                            <a href="{{ route('studio.index') }}">
-                                <i class="fas fa-tv"></i>
-                                <span data-key="t-dashboard">Studio</span>
-                            </a>
-                        </li>
-                          @endcan
-    @can('bookings-list')
-                        <li>
-                            <a href="{{ route('booking.index') }}">
-                                <i class=" fas fa-store"></i>
-                                <span data-key="t-store">Booking</span>
-                            </a>
-                        </li>
+                        @can('vendors-list')
+                            <li>
+                                <a href="{{ route('vendor.index') }}">
+                                    <i class=" fas fa-store"></i>
+                                    <span data-key="t-store">Vendors</span>
+                                </a>
+                            </li>
                         @endcan
-                          @can('promocodes-list')
-                        <li>
-                            <a href="{{ route('promo.index') }}">
-                                <i class=" fas fa-store"></i>
-                                <span data-key="t-store">Promo Codes</span>
-                            </a>
-                        </li>
-                         @endcan
-                          @can('payments-list')
-                        <li>
-                            <a href="{{ route('transactions.index') }}">
-                                <i class=" fas fa-store"></i>
-                                <span data-key="t-store">Payments</span>
-                            </a>
-                        </li>
-                         @endcan
-                          @can('payments-list')
-                        <li>
-                            <a href="{{ route('users') }}">
-                                <i class=" fas fa-store"></i>
-                                <span data-key="t-store">Users</span>
-                            </a>
-                        </li>
-                         @endcan
-                        <li class="d-none">
-                            <a href="javascript: void(0);" class="has-arrow" aria-expanded="false">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-map">
-                                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
-                                    <line x1="8" y1="2" x2="8" y2="18"></line>
-                                    <line x1="16" y1="6" x2="16" y2="22"></line>
-                                </svg>
-                                <span data-key="t-maps">Reports</span>
-                            </a>
-                            <ul class="sub-menu mm-collapse" aria-expanded="false">
-                                <li><a href="{{ route('calendar') }}" data-key="t-g-maps">Calendar</a></li>
-                                <li><a href="maps-vector.html" data-key="t-v-maps">Vector</a></li>
-                                <li><a href="maps-leaflet.html" data-key="t-l-maps">Leaflet</a></li>
-                            </ul>
-                        </li>
+                        @can('studios-list')
+                            <li>
+                                <a href="{{ route('studio.index') }}">
+                                    <i class="fas fa-tv"></i>
+                                    <span data-key="t-dashboard">Studio</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('bookings-list')
+                            <li class="">
+                                <a href="javascript: void(0);" class="has-arrow" aria-expanded="false">
+                                    <i class=" fas fa-store"></i>
+                                    <span data-key="t-maps">Bookings</span>
+                                </a>
+                                <ul class="sub-menu mm-collapse" aria-expanded="false">
+                                    <li><a href="{{ route('bookingsview', 'today') }}?booking_status=1"
+                                            data-key="t-g-maps">Today
+                                            Booking</a></li>
+                                    <li><a href="{{ route('bookingsview', 'upcoming') }}?booking_status=1"
+                                            data-key="t-g-maps">Upcoming
+                                            Booking</a></li>
+                                    <li><a
+                                            href="{{ route('bookingsview', 'past') }}?booking_status=1&approved_at=approved">Past
+                                            Booking</a></li>
+
+                                </ul>
+                            </li>
+                        @endcan
+                        @can('promocodes-list')
+                            <li>
+                                <a href="{{ route('promo.index') }}">
+                                    <i class=" fas fa-store"></i>
+                                    <span data-key="t-store">Promo Codes</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('payments-list')
+                            <li>
+                                <a href="{{ route('transactions.index') }}">
+                                    <i class=" fas fa-store"></i>
+                                    <span data-key="t-store">Payments</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('payments-list')
+                            <li>
+                                <a href="{{ route('users') }}">
+                                    <i class=" fas fa-store"></i>
+                                    <span data-key="t-store">Users</span>
+                                </a>
+                            </li>
+                        @endcan
+
                     </ul>
                 </div>
                 <!-- Sidebar -->
@@ -486,7 +416,8 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="text-sm-end d-none d-sm-block">
-                                Design &amp; Develop by <a href="#!" class="text-decoration-underline">R & B Studios</a>
+                                Design &amp; Develop by <a href="#!" class="text-decoration-underline">R & B
+                                    Studios</a>
                             </div>
                         </div>
                     </div>
@@ -520,7 +451,7 @@
     <script src="{{ url('public/js/pages-dashboard.init.js') }}"></script>
 
     <script src="{{ url('public/js/js-app.js') }}"></script>
-   
+
 
 
 </body>

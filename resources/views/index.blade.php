@@ -20,6 +20,11 @@
             toastr.error('Authorization Failed !', '')
         </script>
     @endif
+    @if (session()->has('error'))
+        <script>
+            toastr.error('Authorization Failed !', '')
+        </script>
+    @endif
 
 
     <section class="auth-bg bg-yellow-100 vw-100 overflow-hidden">

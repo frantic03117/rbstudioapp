@@ -55,15 +55,15 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('booking/export', [BookingController::class, 'export'])->name('booking.export');
     Route::resource('employee', UserController::class);
     Route::resource('booking', BookingController::class);
-    Route::get('bookings/{slug}', [BookingController::class, 'custom_view']);
+    Route::get('bookings/{slug}', [BookingController::class, 'custom_view'])->name('bookingsview');
     Route::get('calendar', [HomeController::class, 'index'])->name('calendar');
-    Route::get('generate-bill/{id}',[BookingController::class, 'generate_bill'])->name('generate_bill');
-    Route::post('generate-bill/{id}', [BookingController::class,'save_bill'])->name('save_bill');
-    Route::get('download_bill/{id}', [BookingController::class,'download_bill'])->name('download_bill');
-    Route::post('booking_item-add', [BookingController::class,'booking_item_add'])->name('booking_item.add');
-    Route::get('booking_item-delete/{id}', [BookingController::class,'booking_item_delete'])->name('booking_item.destroy');
-    Route::get('approve_booking/{id}', [BookingController::class,'approve_booking'])->name('approve_booking');
-    Route::post('booking-discount', [BookingController::class,'discount'])->name('booking.discount');
+    Route::get('generate-bill/{id}', [BookingController::class, 'generate_bill'])->name('generate_bill');
+    Route::post('generate-bill/{id}', [BookingController::class, 'save_bill'])->name('save_bill');
+    Route::get('download_bill/{id}', [BookingController::class, 'download_bill'])->name('download_bill');
+    Route::post('booking_item-add', [BookingController::class, 'booking_item_add'])->name('booking_item.add');
+    Route::get('booking_item-delete/{id}', [BookingController::class, 'booking_item_delete'])->name('booking_item.destroy');
+    Route::get('approve_booking/{id}', [BookingController::class, 'approve_booking'])->name('approve_booking');
+    Route::post('booking-discount', [BookingController::class, 'discount'])->name('booking.discount');
     Route::resource('transactions', TransactionController::class);
     Route::resource('policy', PolicyController::class);
     Route::resource('promo', PromoCodeController::class);
@@ -79,12 +79,12 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 Route::prefix('ajax')->middleware(['auth'])->group(function () {
     Route::post('/get-state', [AjaxController::class, 'states'])->name('ajax_states');
     Route::post('/get-city', [AjaxController::class, 'cities'])->name('ajax_cities');
-    Route::post('get-studios', [AjaxController::class,'getStudios'])->name('ajax_studios');
-    Route::post('get-slots', [AjaxController::class,'get_slots'])->name('ajax_slots');
-    Route::post('get-user', [AjaxController::class,'get_user'])->name('ajax_user');
-    Route::post('get_images', [AjaxController::class,'get_images'])->name('ajax_studio_images');
-    Route::post('add_image', [AjaxController::class,'add_image'])->name('ajax_add_studio_images');
-    Route::post('delete-images', [AjaxController::class,'delete_images'])->name('ajax_studio_image_delete');
+    Route::post('get-studios', [AjaxController::class, 'getStudios'])->name('ajax_studios');
+    Route::post('get-slots', [AjaxController::class, 'get_slots'])->name('ajax_slots');
+    Route::post('get-user', [AjaxController::class, 'get_user'])->name('ajax_user');
+    Route::post('get_images', [AjaxController::class, 'get_images'])->name('ajax_studio_images');
+    Route::post('add_image', [AjaxController::class, 'add_image'])->name('ajax_add_studio_images');
+    Route::post('delete-images', [AjaxController::class, 'delete_images'])->name('ajax_studio_image_delete');
     Route::post('find_start_slot', [AjaxController::class, 'find_start_slot'])->name('find_start_slot');
     Route::post('find_end_slot', [AjaxController::class, 'find_end_slot'])->name('find_end_slot');
     Route::post('get_services', [AjaxController::class, 'get_services'])->name('ajax_services');
@@ -93,10 +93,9 @@ Route::prefix('ajax')->middleware(['auth'])->group(function () {
     Route::post('update_s_service', [StudioController::class, 'update_s_service'])->name('studio.update_s_service');
     Route::post('rent-items', [AjaxController::class, 'get_rent_items'])->name('ajax_rents');
     Route::get('web-notification', [AjaxController::class, 'web_notification'])->name('web_notification');
-   
 });
- Route::get('ajax/delete-bookings-cron', [BookingController::class, 'cron_destroy_booking'])->name('cron_destroy_booking');
- Route::get('ajax/events', [AdminController::class, 'events'])->name('events');
+Route::get('ajax/delete-bookings-cron', [BookingController::class, 'cron_destroy_booking'])->name('cron_destroy_booking');
+Route::get('ajax/events', [AdminController::class, 'events'])->name('events');
 Route::post('add-payment-online/{id}', [StudioController::class, 'pay_now'])->name('pay_now');
 Route::post('pay_now/{id}', [StudioController::class, 'pay_now']);
 Route::any('pay_response', [StudioController::class, 'pay_response'])->name('pay_response');

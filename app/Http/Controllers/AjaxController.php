@@ -15,7 +15,6 @@ use App\Models\User;
 use App\Models\RbNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -133,7 +132,8 @@ class AjaxController extends Controller
         ];
         return response()->json($res);
     }
-    public function find_start_slot(Request $request){
+    public function find_start_slot(Request $request)
+    {
         date_default_timezone_set('Asia/kolkata');
         $request->validate([
             'sdate' => 'required',
@@ -150,11 +150,11 @@ class AjaxController extends Controller
         $items = Slot::whereNotIn('id', function ($q) use ($sdate, $sid, $isEdit, $bid) {
             $q->from('blocked_slots');
             $q->where('bdate', $sdate)->select('slot_id')->where('studio_id', $sid);
-            if($isEdit && $bid){
-                 $q->where('booking_id', '!=', $bid);
+            if ($isEdit && $bid) {
+                $q->where('booking_id', '!=', $bid);
             }
         });
-        if($request->mode){
+        if ($request->mode) {
             $items->where('start_at', '<=', $close)->where('start_at', '>=', $opens);
         }
         $slots = $items->get();
@@ -165,15 +165,15 @@ class AjaxController extends Controller
         $res = [
             'success' => true,
             'data' => $modifiedObjects
-            ];
+        ];
         return response()->json($res);
-        
     }
-    public function find_end_slot(Request $request){
+    public function find_end_slot(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-             'sdate' => 'required',
+            'sdate' => 'required',
             "studio_id" => "required",
-            "slot_id" => "required" 
+            "slot_id" => "required"
         ]);
         if ($validator->fails()) {
             $data = [
@@ -191,38 +191,39 @@ class AjaxController extends Controller
         $start_time = $slot->start_at;
         // $bsdate = date('Y-m-d H:i:s', strtotime($sdate.' '.$start_time));
         $bsdate = Carbon::parse($sdate . ' ' . $start_time)->minute(0)->second(0)->format('Y-m-d H:i:s');
-       
+
         $arr = [];
         $hours = $request->mode ? 24 : 720;
-        for($i = 1; $i <= $hours; $i++){
+        for ($i = 1; $i <= $hours; $i++) {
             // $bedate = date('Y-m-d H:0:0', strtotime($bsdate)+$i*3600);
             $bedate = Carbon::parse($bsdate)->addHours($i)->minute(0)->second(0)->format('Y-m-d H:i:s');
-            
+
             $innerBook = Booking::where('booking_start_date', $bsdate)->where('booking_end_date', $bedate)->where('studio_id', $sid)->where('booking_status',  '0')->count();
             $outerBook = Booking::where('booking_start_date', '>', $bsdate)->where('booking_start_date', '<', $bedate)->where('studio_id', $sid)->where('booking_status',  '0')->count();
             #$lcrosBook = Booking::where('booking_end_date', '>', $bsdate)->where('studio_id', $sid)->count();
             #$ucrosBook = Booking::where('booking_start_date', '>', $bedate)->where('studio_id', $sid)->count();
             $sum = $innerBook + $outerBook;
-            if($sum == 0){
+            if ($sum == 0) {
                 array_push($arr, $bedate);
             }
         }
-       $res = [
-           'success' => true,
-           'data' => $arr
-           ];
-         return response()->json($res);
+        $res = [
+            'success' => true,
+            'data' => $arr
+        ];
+        return response()->json($res);
     }
-    public function get_services(Request $request){
-         $request->validate([
+    public function get_services(Request $request)
+    {
+        $request->validate([
             'studio_id' => 'required'
         ]);
         $stid = $request->studio_id;
-        $services = Service::whereIn('id', function($q) use ($stid){
+        $services = Service::whereIn('id', function ($q) use ($stid) {
             $q->from('service_studios')->select('service_id')->where('studio_id', $stid);
         })->get();
-        $output = "<option value=''>---Select---</option>";
-        foreach($services as $s){
+        $output = "<option value=''>All</option>";
+        foreach ($services as $s) {
             $output .= "<option value='{$s->id}'>{$s->name}</option>";
         }
         echo $output;
@@ -289,34 +290,37 @@ class AjaxController extends Controller
         StudioImage::insert($idata);
         return response()->json(['data' => $sid, 'success' => true]);
     }
-    public function set_permissiable(Request $request){
-         $request->validate([
+    public function set_permissiable(Request $request)
+    {
+        $request->validate([
             'id' => 'required|exists:service_studios,id',
         ]);
-          $id = $request->id;
+        $id = $request->id;
         $item = DB::table('service_studios')->where('id', $id)->first();
         $perms = $item->is_permissable == "0" ? "1" : "0";
         DB::table('service_studios')->where('id', $id)->update(['is_permissable' => "{$perms}"]);
         return true;
     }
-    public function get_rest_services(Request $request){
-         $request->validate([
+    public function get_rest_services(Request $request)
+    {
+        $request->validate([
             'studio_id' => 'required|exists:studios,id',
         ]);
-         $sid = $request->studio_id;
+        $sid = $request->studio_id;
         $itm = DB::table('service_studios')->where('studio_id', $sid)->select('service_id')->get();
-        
-        $items = Service::whereNotIn('id', function($q) use($sid){
+
+        $items = Service::whereNotIn('id', function ($q) use ($sid) {
             $q->from('service_studios')->where('studio_id', $sid)->select('service_id');
         })->get();
-          
-          $output = '<option value="">---Select----</option>';
-          foreach($items as $t){
-              $output .= '<option value="'.$t->id.'">'.$t->name.'</option>';
-          }
-          return $output;
+
+        $output = '<option value="">---Select----</option>';
+        foreach ($items as $t) {
+            $output .= '<option value="' . $t->id . '">' . $t->name . '</option>';
+        }
+        return $output;
     }
-    public function get_rent_items(Request $request){
+    public function get_rent_items(Request $request)
+    {
         $request->validate([
             'sid' => 'required|exists:studios,id',
         ]);
@@ -324,22 +328,22 @@ class AjaxController extends Controller
         $items = Rent::whereIn('id', function ($query) use ($sid) {
             $query->from('charges')->select('item_id')->where('studio_id', $sid)->where('type', 'Item');
         })->get();
-        
-         $output = '<option value="">---Select----</option>';
-          foreach($items as $t){
-              $output .= '<option value="'.$t->id.'">'.$t->name.'</option>';
-          }
+
+        $output = '<option value="">---Select----</option>';
+        foreach ($items as $t) {
+            $output .= '<option value="' . $t->id . '">' . $t->name . '</option>';
+        }
         return $output;
-        
     }
-    public function web_notification(){
+    public function web_notification()
+    {
         $itms = RbNotification::whereIn('type', ['Booking', 'Payment']);
-         if(Auth::user()->role != "Super"){
+        if (Auth::user()->role != "Super") {
             $itms->where('vendor_id', Auth::user()->vendor_id);
         }
         $itms->where('is_read', '0')->with('user');
         $itms->orderBy('is_read', 'asc');
-         $itms->orderBy('created_at', 'desc');
+        $itms->orderBy('created_at', 'desc');
         $items = $itms->paginate(10);
         return response()->json($items);
     }

@@ -36,16 +36,133 @@ class BookingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function export(){
+    public function export()
+    {
         Excel::download(new BookingExport, 'bookings.xlsx');
     }
-    public static function resource_items($sid, $id){
-         $ritems = Rent::whereIn('id', function ($query) use ($sid) {
+    public static function resource_items($sid, $id)
+    {
+        $ritems = Rent::whereIn('id', function ($query) use ($sid) {
             $query->from('charges')->select('item_id')->where('studio_id', $sid)->where('type', 'Item');
         })->whereNotIn('id', function ($q) use ($id) {
             $q->from('booking_items')->where('booking_id', $id)->select('item_id');
         })->get();
         return $ritems;
+    }
+    public function custom_view($type = null)
+    {
+        date_default_timezone_set('Asia/kolkata');
+        $vendor_id = $_GET['vendor_id'] ?? null;
+        $studio_id = $_GET['studio_id'] ?? null;
+        $service_id = $_GET['service_id'] ?? null;
+        $bdf = $_GET['booking_date_form'] ?? null;
+        $bdt = $_GET['booking_date_to'] ?? null;
+        $created_by = $_GET['created_by'] ?? null;
+        $duration = $_GET['duration'] ?? null;
+        $payment_status = $_GET['payment_status'] ?? null;
+        $booking_status = $_GET['booking_status'] ?? null;
+        $approved_at = $_GET['approved_at'] ?? null;
+        $booking_tenure = $_GET['tenure'] ?? null;
+        $keyword = $_GET['keyword'] ?? null;
+        $vid = Auth::user()->vendor_id;
+        $now = date('Y-m-d H:i:s');
+
+        $title = "List of Booking";
+
+
+
+        $items = Booking::where('id', '>', '0');
+        if ($type == "upcoming") {
+            $items->whereDate('booking_start_date', '>', $now)->orderBy('booking_start_date', 'ASC');
+        }
+        if ($type == "today") {
+            $items->whereDate('booking_start_date', '=', $now)->orderBy('booking_start_date', 'ASC');
+        }
+        if ($type == "past") {
+            $items->whereDate('booking_start_date', '<', $now)->orderBy('booking_start_date', 'ASC');
+        }
+        if ($vid > 0) {
+            $items->where('vendor_id', $vid);
+        }
+
+        if ($keyword) {
+            $items->whereIn('user_id', function ($query) use ($keyword) {
+                $query->from('users')
+                    ->select('id')
+                    ->where(function ($q) use ($keyword) {
+                        $q->where('name', 'like', "%{$keyword}%")
+                            ->orWhere('email', 'like', "%{$keyword}%")
+                            ->orWhere('mobile', 'like', "%{$keyword}%");
+                    });
+            });
+        }
+        if ($studio_id) {
+            $items->where('studio_id', $studio_id);
+        }
+        if ($service_id) {
+            $items->where('service_id', $service_id);
+        }
+        if ($bdf) {
+            $items->whereDate('booking_start_date', '=', $bdf);
+        }
+        if ($bdt) {
+            $items->where('booking_end_date', '<=', $bdt);
+        }
+        if ($created_by && $created_by == '1') {
+            $items->where('created_by', '1');
+        }
+        if ($created_by && $created_by != '1') {
+            $items->where('created_by', '!=', '1');
+        }
+
+        if ($duration) {
+            $items->where('duration', $duration);
+        }
+
+        if ($payment_status) {
+            $items->where('payment_status', $payment_status);
+        }
+
+        if ($booking_status) {
+            $items->where('booking_status', $booking_status);
+        }
+        if ($booking_status == "0") {
+            $items->where('booking_status', "0");
+        }
+
+        if ($approved_at == "pending") {
+            $items->where('approved_at', null);
+        }
+
+        if ($approved_at == "approved") {
+            $items->where('approved_at', '!=', null);
+        }
+        $items->with('vendor')->with('user:id,name,email,mobile')->with('studio:id,name,address');
+        $items->with('rents')->with('transactions')->withSum('transactions', 'amount');
+        $items->with('creater:id,name,email');
+        if ($booking_tenure == "past") {
+            $items->where('booking_start_date', '<', $now);
+        }
+        $bookings = $items->paginate(10);
+        // return response()->json($bookings);
+        // die;
+        $stds = Studio::where('id', '>', '0');
+        if ($vid > 0) {
+            $stds->where('vendor_id', $vid);
+        }
+        $studios = $stds->get();
+        $vends = DB::table('vendors');
+        if ($vid) {
+            $vends->where('id', $vid);
+        }
+        $vendors = $vends->orderBy('id', 'DESC')->get();
+        $svs = Service::where('id', '>', '0');
+        // if($service_id){
+        //     $svs->where('id', $service_id);
+        // }
+        $services = $svs->get();
+        $res = compact('title', 'type', 'bookings', 'keyword', 'vendors', 'vendor_id', 'studio_id', 'service_id', 'approved_at', 'booking_status', 'payment_status', 'duration', 'created_by', 'bdf', 'services', 'bdt', 'studios');
+        return view('admin.bookings.index', $res);
     }
     public function index()
     {
@@ -63,78 +180,67 @@ class BookingController extends Controller
         $booking_tenure = $_GET['tenure'] ?? null;
         $vid = Auth::user()->vendor_id;
         $now = date('Y-m-d H:i:s');
-       
+
         $title = "List of Booking";
-        $items = Booking::orderByRaw("
-    CASE 
-        WHEN DATE(booking_start_date) = CURDATE() THEN 1 
-        ELSE 0 
-    END DESC
-")
-->orderByRaw("
-    CASE 
-        WHEN DATE(booking_start_date) = CURDATE() THEN booking_start_date 
-        ELSE id 
-    END DESC
-");
+        $items = Booking::orderBy('id', 'DESC');
         if ($vid > 0) {
             $items->where('vendor_id', $vid);
         }
-        
-        if($studio_id){
+
+        if ($studio_id) {
             $items->where('studio_id', $studio_id);
         }
-        if($service_id){
+        if ($service_id) {
             $items->where('service_id', $service_id);
         }
-        if($bdf){
+        if ($bdf) {
             $items->where('booking_start_date', '>=', $bdf);
         }
-        if($bdt){
+        if ($bdt) {
             $items->where('booking_end_date', '<=', $bdt);
         }
-        if($created_by && $created_by == '1'){
+        if ($created_by && $created_by == '1') {
             $items->where('created_by', '1');
         }
-        if($created_by && $created_by != '1'){
+        if ($created_by && $created_by != '1') {
             $items->where('created_by', '!=', '1');
         }
-        
-        if($duration){
+
+        if ($duration) {
             $items->where('duration', $duration);
         }
-        
-        if($payment_status){
+
+        if ($payment_status) {
             $items->where('payment_status', $payment_status);
         }
-        
-        if($booking_status){
+
+        if ($booking_status) {
             $items->where('booking_status', $booking_status);
         }
-        
-        if($approved_at == "0" ){
+
+        if ($approved_at == "0") {
             $items->where('approved_at', null);
         }
-        
-        if($approved_at == "1" ){
+
+        if ($approved_at == "1") {
             $items->where('approved_at', '!=', null);
         }
         $items->with('vendor')->with('user:id,name,email,mobile')->with('studio:id,name,address');
         $items->with('rents')->with('transactions')->withSum('transactions', 'amount');
         $items->with('creater:id,name,email');
-        if($booking_tenure == "past"){
-             $items->where('booking_start_date', '<', $now);
+        if ($booking_tenure == "past") {
+            $items->where('booking_start_date', '<', $now);
         }
         $bookings = $items->paginate(10);
         // return response()->json($bookings);
         // die;
         $stds = Studio::where('id', '>', '0');
-        if($vid > 0){
+        if ($vid > 0) {
             $stds->where('vendor_id', $vid);
         }
         $studios = $stds->get();
         $vends = DB::table('vendors');
-        if($vid){
+        if ($vid) {
             $vends->where('id', $vid);
         }
         $vendors = $vends->orderBy('id', 'DESC')->get();
@@ -210,26 +316,26 @@ class BookingController extends Controller
         $e_d = Carbon::parse($b_e_date)->minute(0)->second(0)->format('Y-m-d H:i:s');
         $start_date = Carbon::parse($s_d);
         $end_date = Carbon::parse($e_d);
-        
+
         // Calculate the duration in hours
         $duration = $end_date->diffInHours($start_date);
-        if($request->mode && $duration < 2){
-             $res = [
-                    "success" => '0',
-                    'errors' => [],
-                    'message' => 'Booking Creation Failed. minimum 2 hours needed to book',
-                    'data' =>[]
-                ];
+        if ($request->mode && $duration < 2) {
+            $res = [
+                "success" => '0',
+                'errors' => [],
+                'message' => 'Booking Creation Failed. minimum 2 hours needed to book',
+                'data' => []
+            ];
             return response()->json($res);
             die;
         }
-        if ($s_d >= $e_d  ) {
-             $res = [
-                    "success" => '0',
-                    'errors' => [],
-                    'message' => 'Booking Creation Failed. Incorrect booking dates',
-                    'data' =>[]
-                ];
+        if ($s_d >= $e_d) {
+            $res = [
+                "success" => '0',
+                'errors' => [],
+                'message' => 'Booking Creation Failed. Incorrect booking dates',
+                'data' => []
+            ];
             return response()->json($res);
             die;
         }
@@ -237,18 +343,18 @@ class BookingController extends Controller
         $outerBook = Booking::where('booking_start_date', '>', $s_d)->where('booking_start_date', '<', $e_d)->where('studio_id', $studio_id)->where('booking_status', '0')->count();
         $bsum = $innerBook +  $outerBook;
         $d = Carbon::parse($b_s_date)->diffInHours(Carbon::parse($b_e_date));
-        
-        if ($bsum == 0 && $d < 25 ) {
+
+        if ($bsum == 0 && $d < 25) {
             $user = User::where('mobile', $mobile)->first();
             $updata =  ['name' => $request->name, 'mobile' => $mobile, 'email' => $email, 'is_verified' => '1', 'otp_verified' => '1'];
-            
+
             // if($user){
             //     User::where(['id' => $user->id])->update($updata);
             // }
             $user_id = !$user ? User::insertGetId($updata) :  $user->id;
             $studio = Studio::where('id', $studio_id)->first();
             $vendor_id = $studio['vendor_id'];
-            $vendor = Vendor::where('id', $vendor_id)->first();          
+            $vendor = Vendor::where('id', $vendor_id)->first();
             $bsdate = $b_s_date;
             $bedate = $b_e_date;
             $prefix = $vendor->bill_prefix;
@@ -270,7 +376,7 @@ class BookingController extends Controller
                 'vendor_id' => $vendor_id,
                 'bill_no' => null,
                 'booking_start_date' =>  date('Y-m-d H:0:0', strtotime($bsdate)),
-                "booking_end_date" => date('Y-m-d H:0:0', strtotime($bedate)) ,
+                "booking_end_date" => date('Y-m-d H:0:0', strtotime($bedate)),
                 "start_at" => date('H:0:0', strtotime($bsdate)),
                 "end_at" => date('H:0:0', strtotime($bedate)),
                 "duration" => $d,
@@ -297,22 +403,21 @@ class BookingController extends Controller
                 $gstid = DB::table('booking_gsts')->insertGetId($gdata);
                 Booking::where('id', $bid)->update(['gst_id' => $gstid]);
             }
-            if($request->gst_id){
+            if ($request->gst_id) {
                 Booking::where('id', $bid)->update(['gst_id' => $request->gst_id]);
             }
-           
-            if($rents){
-                foreach($rents as $rt){
+
+            if ($rents) {
+                foreach ($rents as $rt) {
                     $s_rn = DB::table('charges')->where('item_id', $rt)->first();
                     $rtdata = [
                         'booking_id' => $bid,
                         'item_id' => $rt,
-                        'charge' => $s_rn->charge ,
+                        'charge' => $s_rn->charge,
                         'uses_hours' => $d
-                        ];
+                    ];
                     DB::table('booking_items')->insert($rtdata);
                 }
-              
             }
             for ($a = 0; $a < $d; $a++) {
                 $ndate = date('Y-m-d H:0:0', strtotime($bsdate) + $a * 3600);
@@ -328,22 +433,22 @@ class BookingController extends Controller
                 ];
                 BlockedSlot::insert($ndata);
             }
-            
+
             $n_tdata = [
-                    'user_id' => $user_id,
-                    'studio_id' => $studio_id,
-                    'vendor_id' => $vendor_id,
-                    'type' => 'Booking',
-                    'title' => 'Booking Created ',
-                    "message" => "Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.",
-                    "created_at" => date('Y-m-d H:i:s')
-                ];
+                'user_id' => $user_id,
+                'studio_id' => $studio_id,
+                'vendor_id' => $vendor_id,
+                'type' => 'Booking',
+                'title' => 'Booking Created ',
+                "message" => "Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.",
+                "created_at" => date('Y-m-d H:i:s')
+            ];
             RbNotification::insert($n_tdata);
-            if($user && $user->fcm_token){
+            if ($user && $user->fcm_token) {
                 $this->send_notification($user->fcm_token, 'Booking Created', 'Your booking request has been placed. Please make payment within 20 minute otherwise booking will be cancelled.', $user->id);
             }
-            
-            
+
+
             if ($request->mode) {
                 $res = [
                     "success" => '1',
@@ -355,9 +460,8 @@ class BookingController extends Controller
             } else {
                 return redirect()->back()->with('success', 'Booking Created Successfully');
             }
-        }
-        else{
-             $data = [
+        } else {
+            $data = [
                 'data' => [],
                 'success' => 0,
                 'errors' => ['booking' => 'Invalid Booking Slots'],
@@ -378,29 +482,30 @@ class BookingController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Booking $booking, $id)
-    { 
+    {
         $booking = Booking::where('id', $id)->with('studio')->with('transactions')->withSum('transactions', 'amount')->with('rents')
-        ->with('service:id,name')
-        ->first();
+            ->with('service:id,name')
+            ->first();
         $paid = $booking->transactions_sum_amount;
-        $studio_price = 
-        $rents =  $booking->rents;
+        $studio_price =
+            $rents =  $booking->rents;
         $arr = [];
-        foreach($rents as $r){
-            array_push($arr, $r->pivot->charge*$r->pivot->uses_hours);
+        foreach ($rents as $r) {
+            array_push($arr, $r->pivot->charge * $r->pivot->uses_hours);
         }
         $rentcharge = array_sum($arr);
+
         $booking['rents_price'] = $rentcharge;
-        $booking['total_to_pay'] = ($booking->duration*$booking->studio_charge + $rentcharge)*1.18;
+        $booking['total_to_pay'] = ($booking->duration * $booking->studio_charge + $rentcharge) * 1.18;
         $booking['paid'] = $paid;
-        $booking['net_payable'] = ($booking->duration*$booking->studio_charge + $rentcharge)*1.18 - $paid - floatval($booking->promo_discount_calculated);
+        $booking['net_payable'] = ($booking->duration * $booking->studio_charge + $rentcharge) * 1.18 - $paid - floatval($booking->promo_discount_calculated);
         $booking['calculation'] = ['gst' => 18, 'discount' => ['partial' => '0', 'full' => '0', 'type' => 'percent']];
         $data = [
-                'data' => $booking,
-                'success' => 0,
-                'errors' => [],
-                'message' => 'Current booking'
-            ];
+            'data' => $booking,
+            'success' => 0,
+            'errors' => [],
+            'message' => 'Current booking'
+        ];
         return response()->json($data);
     }
 
@@ -492,18 +597,18 @@ class BookingController extends Controller
         $bsdate = $b_s_date;
         $bedate = $b_e_date;
         $serviceStudio = DB::table('service_studios')->where('service_id', $service_id)->where('studio_id', $studio_id)->first();
-         $bdata = [
-                    'user_id' => $user_id,
-                    'studio_id' => $studio_id,
-                    'booking_start_date' => $bsdate,
-                    "booking_end_date" => $bedate,
-                    "start_at" => date('H:i:s', strtotime($bsdate)),
-                    "end_at" => date('H:i:s', strtotime($bedate)),
-                    "duration" => $d,
-                    "service_id" => $service_id,
-                    "studio_charge" => $serviceStudio->charge,
-                    "updated_at" =>  date('Y-m-d H:i:s')
-                ];
+        $bdata = [
+            'user_id' => $user_id,
+            'studio_id' => $studio_id,
+            'booking_start_date' => $bsdate,
+            "booking_end_date" => $bedate,
+            "start_at" => date('H:i:s', strtotime($bsdate)),
+            "end_at" => date('H:i:s', strtotime($bedate)),
+            "duration" => $d,
+            "service_id" => $service_id,
+            "studio_charge" => $serviceStudio->charge,
+            "updated_at" =>  date('Y-m-d H:i:s')
+        ];
 
         Booking::where(['id' => $booking->id])->update($bdata);
         $bid = $booking->id;
@@ -539,7 +644,7 @@ class BookingController extends Controller
 
             DB::table('booking_gsts')->insert($gdata);
         }
-        if($user && $user->fcm_token){
+        if ($user && $user->fcm_token) {
             $this->send_notification($user->fcm_token, 'Booking Rescheduled', 'Your booking request has been rescheduled. Please make payment if any due.', $user->id);
         }
         if ($request->mode) {
@@ -567,18 +672,18 @@ class BookingController extends Controller
         BlockedSlot::where('booking_id', $booking->id)->delete();
         return redirect()->back()->with('success', 'Booking Cancelled');
     }
-    public function cron_destroy_booking(){
+    public function cron_destroy_booking()
+    {
         date_default_timezone_set('Asia/kolkata');
-         $thirtyMinutesAgo = Carbon::now()->subMinutes(30)->format('Y-m-d H:i:s');
-         
-         $bookings = Booking::where('booking_status', '0')->where('created_at', '<', $thirtyMinutesAgo)->get();
-       
+        $thirtyMinutesAgo = Carbon::now()->subMinutes(30)->format('Y-m-d H:i:s');
+
+        $bookings = Booking::where('booking_status', '0')->where('created_at', '<', $thirtyMinutesAgo)->get();
+
         foreach ($bookings as $booking) {
             $booking->update(['booking_status' => '2']);
             BlockedSlot::where('booking_id', $booking->id)->delete();
         }
         return true;
-        
     }
     public function discount(Request $request)
     {
@@ -596,7 +701,7 @@ class BookingController extends Controller
     }
     public function generate_bill($id)
     {
-        $booking = Booking::where('id' , $id)->with('gst')->first();
+        $booking = Booking::where('id', $id)->with('gst')->first();
         $studio = Studio::where('vendor_id', $booking->vendor_id)
             ->with('country')->with('state')->with('district')
             ->first();
@@ -670,16 +775,17 @@ class BookingController extends Controller
         BookingItem::where('id', $id)->delete();
         return redirect()->back();
     }
-    public function approve_booking($id){
+    public function approve_booking($id)
+    {
         date_default_timezone_set('Asia/kolkata');
         $item = Booking::where('id', $id)->first();
         $user = User::where('id', $item->user_id)->first();
         Booking::where('id', $id)->update(['approved_at' => date('Y-m-d H:i:s')]);
         BlockedSlot::where('booking_id', $id)->delete();
-        if($user && $user->fcm_token){
+        if ($user && $user->fcm_token) {
             $this->send_notification($user->fcm_token, 'Booking Approved', 'Your booking request has been approved. Please make payment', $item->user_id);
         }
-        
+
         return redirect()->back()->with('success', 'Approved Successfully');
     }
 }
