@@ -38,7 +38,7 @@ class BookingController extends Controller
      */
     public function export()
     {
-        Excel::download(new BookingExport, 'bookings.xlsx');
+        return Excel::download(new BookingExport, 'bookings.xlsx');
     }
     public static function resource_items($sid, $id)
     {
@@ -159,8 +159,11 @@ class BookingController extends Controller
         // }
         $services = $svs->get();
         $res = compact('title', 'type', 'bookings', 'keyword', 'vendors', 'vendor_id', 'studio_id', 'service_id', 'approved_at', 'booking_status', 'payment_status', 'duration', 'created_by', 'bdf', 'services', 'bdt', 'studios');
-        // return response()->json($res);
+        // return response()->json($bookings);
         // die;
+        if (isset($_GET['export']) && $_GET['export'] == "excel") {
+            return Excel::download(new BookingExport($type), 'bookings.xlsx');
+        }
         return view('admin.bookings.index', $res);
     }
     public function index()

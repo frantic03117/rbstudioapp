@@ -132,7 +132,14 @@
                                             Filter
                                         </button>
                                         <a href="{{ route('booking.create') }}" class="btn btn-sm btn-gradient">Add New</a>
-                                        <a href="{{ route('booking.export') }}" class="btn btn-sm btn-info">Export</a>
+                                        <a href="{{ route('bookingsview', ['slug' => $type] + request()->query() + ['export' => 'excel']) }}"
+                                            class="btn btn-sm btn-info">
+                                            Export
+                                        </a>
+
+
+
+
                                     </div>
                                 </div>
                             </div>
