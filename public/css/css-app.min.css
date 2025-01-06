@@ -4,6 +4,11 @@
     background-color: var(--bs-sidebar-dark-bg) !important
 }
 
+.cke_notification_message,
+.cke_notifications_area {
+    display: none !important;
+}
+
 #page-topbar {
     position: fixed;
     top: 0;

@@ -23,7 +23,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index():\Illuminate\View\View
+    public function index(): \Illuminate\View\View
     {
         date_default_timezone_set('Asia/Kolkata');
         $aid = (Auth::user()->role == 'Super') ? ("0") : (Auth::user()->vendor_id);
@@ -33,7 +33,7 @@ class UserController extends Controller
         // die;
         return view('admin.users.index', $res);
     }
-   
+
     /**
      * Show the form for creating a new resource.
      *
@@ -50,6 +50,7 @@ class UserController extends Controller
         return view('admin.users.create', $res);
     }
 
+
     /**
      * Store a newly created resource in storage.
      *
@@ -59,7 +60,7 @@ class UserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         date_default_timezone_set('Asia/Kolkata');
-        $request->validate( [
+        $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|same:confirm-password',
@@ -69,11 +70,27 @@ class UserController extends Controller
         $aid = (Auth::user()->role == 'Super') ? ("0") : (Auth::user()->vendor_id);
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
-        $input['role' ] = "Employee";
-        $input['vendor_id' ] = $aid;
+        $input['role'] = "Employee";
+        $input['vendor_id'] = $aid;
         $user = User::create($input);
         $user->assignRole((int)$request->input('roles'));
         return redirect()->route('employee.index')
+            ->with('success', 'User created successfully');
+    }
+    public function store_user(Request $request)
+    {
+        date_default_timezone_set('Asia/Kolkata');
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'mobile' => 'required|min:10|max:10|unique:users,mobile'
+        ]);
+        $input = $request->except('_token');
+        $input['role'] = "User";
+        $input['otp_verified'] = "1";
+        $input['is_verified'] = "1";
+        $user = User::create($input);
+        return redirect()->back()
             ->with('success', 'User created successfully');
     }
 
@@ -97,15 +114,15 @@ class UserController extends Controller
      */
     public function edit(User $user, $id): \Illuminate\View\View
     {
-       
-      
+
+
         date_default_timezone_set('Asia/Kolkata');
         $employee = User::find($id);
         $roles = Role::where('vendor_id', $employee->vendor_id)->get(['id', 'name']);
         $title = "Edit Role";
-        
+
         $userRole = $employee->roles->pluck('name', 'name')->all();
-        
+
         return view('admin.users.edit', compact('employee', 'roles', 'userRole', 'title'));
     }
 
@@ -153,40 +170,48 @@ class UserController extends Controller
         return redirect()->route('users.index')
             ->with('success', 'User deleted successfully');
     }
-    public function profile(){
+    public function profile()
+    {
         $title = "Profile";
         $aid = (Auth::user()->role == 'Super') ? (0) : (Auth::user()->vendor_id);
         $item = Vendor::where('id', $aid)->first();
         $res = compact('item', 'title');
         return view('admin.reports.profile', $res);
     }
-    public function users(){
+    public function users()
+    {
         $title = "List of users";
         $key = $_GET['keyword'] ?? null;
-        
+
         $itms = User::where('role', 'User')->where('otp_verified', '1')->where('email', '!=', null)->where('mobile', '!=', null);
-        if($key){
+        if ($key) {
             $itms->where('name', 'LIKE', "%{$key}%")->orWhere('email', 'LIKE', "%{$key}%")->orWhere('mobile', 'LIKE', "%{$key}%");
         }
-        $items = $itms->orderBy('id', 'DESC')->get();
+        $items = $itms->orderBy('id', 'DESC')->paginate(20);
         $res = compact('title', 'items', 'key');
         return view('admin.reports.users', $res);
     }
-    public function edit_user($id){
+    public function edit_user($id)
+    {
         $user = User::where('id', $id)->first();
         $title = "Edit User";
         $res = compact('title', 'user');
         return view('admin.reports.edit_users', $res);
     }
-    public function update_edit_user(Request $request, $id){
+    public function update_edit_user(Request $request, $id)
+    {
         $request->validate(['name' => 'required', 'email' => 'required|email']);
         $data = [
             'name' => $request->name,
             'email' => $request->email
-            ];
+        ];
+        if ($request->dob) {
+            $data['dob'] = $request->dob;
+        }
+        if ($request->gender) {
+            $data['gender'] = $request->gender;
+        }
         User::where('id', $id)->update($data);
         return redirect()->back()->with('success', 'user updated successfully');
     }
-   
-  
 }

@@ -150,6 +150,7 @@
                                     <th>User</th>
                                     <th>Booking</th>
                                     <th>Studio</th>
+
                                     <th>Equipment Rental</th>
                                     <th>
                                         Payment Status
@@ -236,8 +237,12 @@
                                                 <li>
                                                     {{ $b->studio?->name }}
                                                 </li>
+                                                <li>
+                                                    Service : {{ $b->service?->name }}
+                                                </li>
                                             </ul>
                                         </td>
+
                                         <td>
                                             <table class="w-100 text-nowrap table-fixed">
                                                 <thead>

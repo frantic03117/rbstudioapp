@@ -51,12 +51,17 @@ class AjaxController extends Controller
     }
     public function getStudios(Request $request)
     {
-        $request->validate([
-            "vendor_id" => "required"
-        ]);
+        // $request->validate([
+        //     "vendor_id" => "required"
+        // ]);
         $vid = $request->vendor_id;
-        $studios = Studio::where("vendor_id", "=", $vid)->select(['name', 'id'])->get();
-        $output = '<option value="" selected>---All---</option>';
+        if ($vid) {
+            $studios = Studio::where("vendor_id", "=", $vid)->select(['name', 'id'])->get();
+        } else {
+            $studios = Studio::select(['name', 'id'])->get();
+        }
+
+        $output = '<option value="" selected>All</option>';
         foreach ($studios as $item) {
             $output .= "<option value={$item->id}>{$item->name}</option>";
         }

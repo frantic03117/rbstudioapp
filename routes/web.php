@@ -72,6 +72,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::post('/mark-read', [AdminController::class, 'mark_read'])->name('mark-read');
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
     Route::get('/users', [UserController::class, 'users'])->name('users');
+    Route::post('/users', [UserController::class, 'store_user'])->name('store_user');
     Route::get('/edit_user/{id}', [UserController::class, 'edit_user'])->name('edit_user');
     Route::post('/edit_user/{id}', [UserController::class, 'update_edit_user'])->name('edit_user.update');
     Route::post('/update_admin_profile', [AdminController::class, 'update_admin_profile'])->name('update_admin_profile');

@@ -45,15 +45,20 @@
 
     @yield('script')
     <link rel="stylesheet" href="{{ url('public/css/css-login.css') }}">
-    {{-- <style>
+    <style>
         @foreach ($scss as $cs)
             .{{ implode('_', explode(' ', $cs->name)) }} {
                 background: {{ $cs->color }};
                 color: #fff;
             }
 
+            .{{ implode('_', explode(' ', $cs->name)) }}:hover {
+                background: {{ $cs->color }};
+                color: #fff;
+            }
+
         @endforeach
-    </style> --}}
+    </style>
     <style>
         .fc .fc-list-event:hover td {
             background: none;
@@ -335,6 +340,7 @@
                                 </a>
                             </li>
                         @endcan
+
                         @can('studios-list')
                             <li>
                                 <a href="{{ route('studio.index') }}">
@@ -363,6 +369,12 @@
                                 </ul>
                             </li>
                         @endcan
+                        <li>
+                            <a href="{{ route('notification') }}">
+                                <i class=" fas fa-store"></i>
+                                <span data-key="t-store">Notifications</span>
+                            </a>
+                        </li>
                         @can('promocodes-list')
                             <li>
                                 <a href="{{ route('promo.index') }}">
@@ -412,7 +424,7 @@
                         <div class="col-sm-6">
                             <script>
                                 document.write(new Date().getFullYear())
-                            </script> &copy; MMS
+                            </script> &copy; R&B Studios
                         </div>
                         <div class="col-sm-6">
                             <div class="text-sm-end d-none d-sm-block">

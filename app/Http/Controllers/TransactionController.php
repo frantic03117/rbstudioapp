@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
-      use RbTrait;
+    use RbTrait;
     /**
      * Display a listing of the resource.
      *
@@ -21,16 +21,15 @@ class TransactionController extends Controller
     {
         $title = "List of transactions";
         $items = Transaction::where('amount', '>', '0');
-        if(Auth::user()->role != "Super"){
+        if (Auth::user()->role != "Super") {
             $items->where('vendor_id', Auth::user()->vendor_id);
         }
-        
+
         $transactions = $items->with('user')->with('booking')->orderBy('id', 'DESC')->paginate(40);
         // return response()->json($transactions);
         // die;
         $res = compact('title', 'transactions');
         return view('admin.reports.transactions', $res);
-        
     }
 
     /**
@@ -49,7 +48,7 @@ class TransactionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) 
+    public function store(Request $request)
     {
         $request->validate([
             'amount' => 'required|numeric',
@@ -73,38 +72,39 @@ class TransactionController extends Controller
             'created_at' => date('Y-m-d H:i:s')
         ];
         $amount = $request->amount;
-        if(Transaction::insert($data)){
+        if (Transaction::insert($data)) {
             $item =  Booking::where('id', $bid)->with('rents')->withSum('transactions', 'amount')->with('studio')->with('vendor')->with('service')->with('user')->first();
-           
             $ndata = [
                 'user_id' => $item->user->id,
+                'booking_id' => $bid,
                 'studio_id' => $item->studio_id,
                 'vendor_id' => $item->vendor_id,
                 'title' => 'Payment Received',
-                'message' => 'Transaction of amount ₹'.$amount,
+                'message' => 'Transaction of amount ₹' . $amount,
                 "is_read" => "0",
                 'created_at' => date('Y-m-d H:i:s'),
                 'type' => 'Payment'
             ];
             DB::table('notifications')->insert($ndata);
-             $rents =  $item->rents;
+            $rents =  $item->rents;
             $arr = [];
-            foreach($rents as $r){
-                array_push($arr, $r->pivot->charge*$r->pivot->uses_hours);
+            foreach ($rents as $r) {
+                array_push($arr, $r->pivot->charge * $r->pivot->uses_hours);
             }
             $rentcharge = array_sum($arr);
             Booking::where('id', $bid)->update(['booking_status' => '1']);
-            $amount =  $item->duration*$item->studio_charge + $rentcharge - $item->transactions_sum_amount - floatval($item->promo_discount_calculated);
-            if(ceil($amount) <= 1){
+            $amount =  $item->duration * $item->studio_charge + $rentcharge - $item->transactions_sum_amount - floatval($item->promo_discount_calculated);
+            if (ceil($amount) <= 1) {
                 Booking::where('id', $bid)->update(['payment_status' => '1', 'booking_status' => '1']);
             }
-             if($item->user && $item->user->fcm_token){
-                $this->send_notification($item->user->fcm_token, 'Transaction of amount ₹'.$amount, 'Your payment of ₹'.$amount.' has been received successfully.', $booking->user_id, 'Payment');
+            if ($item->user && $item->user->fcm_token) {
+                $this->send_notification($item->user->fcm_token, 'Transaction of amount ₹' . $amount, 'Your payment of ₹' . $amount . ' has been received successfully.', $booking->user_id, 'Payment');
             }
             return redirect()->back()->with('success', 'Transaction Created Successfully');
         }
     }
-    public function success_page($id){
+    public function success_page($id)
+    {
         $transaction = Transaction::where('id', $id)->first();
         $res = compact('transaction');
         return view('admin.bookings.success', $res);

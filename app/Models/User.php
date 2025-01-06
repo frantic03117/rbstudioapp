@@ -32,6 +32,7 @@ class User extends Authenticatable
         'gender',
         'otp_verified',
         'vendor_id',
+        'remember_token',
         'fcm_token'
     ];
 
@@ -41,8 +42,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password'
     ];
 
     /**

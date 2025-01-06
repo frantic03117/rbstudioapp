@@ -12,6 +12,7 @@ use App\Models\Studio\Service;
 use App\Models\Studio\Studio;
 use Illuminate\Support\Facades\DB;
 use App\Mail\CustomMail;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
@@ -49,15 +50,6 @@ class AdminController extends Controller
     public function dashboard()
     {
         date_default_timezone_set('Asia/kolkata');
-        // $data = [
-        //     'subject' => 'test Mail',
-        //     'name' => 'John Doe',
-        //     'order_id' => '123456'
-        // ];
-        // Mail::to('khan03117@gmail.com')->send(new CustomMail($data));
-
-
-
         $title = "Welcome to Dashboard";
         $now = Carbon::now()->format('Y-m-d');
         $vid = $_GET['vendor_id'] ?? null;
@@ -90,14 +82,12 @@ class AdminController extends Controller
             $tal_booking_month->where('vendor_id', Auth::user()->vendor_id);
         }
         $total_booking_month = $tal_booking_month->where('booking_status', '=', '1')->sum('duration');
-
         $aproval = Booking::whereMonth('booking_start_date', date('m'));
         if (Auth::user()->role != "Super") {
             $aproval->where('vendor_id', Auth::user()->vendor_id);
         }
         $aproval->whereYear('booking_start_date', date('Y'))->where('booking_status', '=', '1');
         $approval = $aproval->where('approved_at', null)->count();
-
         $vends = Vendor::orderBy('name');
         if (Auth::user()->role != "Super") {
             $vends->where('id', Auth::user()->vendor_id);
@@ -123,7 +113,9 @@ class AdminController extends Controller
         }
 
         $totalamount = array_sum($amountgenerated);
-
+        $payment_received = Transaction::where(['status' => 'Success', 'type' => 'Credit'])->whereYear('transaction_date', now()->year)
+            ->whereMonth('transaction_date', now()->month)->sum('amount');
+        $totalamount += $payment_received;
         $res = compact('title', 'today_booking', 'total_booking_month', 'approval', "vendors", "vid", "sid",  "studios", "services", "service_id", 'totalamount');
 
 
@@ -143,6 +135,9 @@ class AdminController extends Controller
         $books = Booking::where('booking_status', '=', '1')->with('user:id,name')->where('approved_at', '!=', null)->with('rents')->withSum('transactions', 'amount')->with('service');
         if ($vid) {
             $books->where('vendor_id', $vid);
+        }
+        if ($service_id) {
+            $books->where('service_id', $service_id);
         }
         if (Auth::user()->role != "Super") {
             $books->where('vendor_id', Auth::user()->vendor_id);
@@ -171,7 +166,7 @@ class AdminController extends Controller
     }
     public function all_notification()
     {
-        $itms = RbNotification::whereIn('type', ['Booking', 'Payment'])->with('user');
+        $itms = RbNotification::whereIn('type', ['Booking', 'Payment'])->with('user:id,name,email,mobile')->with('booking')->with('studio:id,name,address');
         if (Auth::user()->role != "Super") {
             $itms->where('vendor_id', Auth::user()->vendor_id);
         }
@@ -180,6 +175,7 @@ class AdminController extends Controller
         $items = $itms->paginate(50);
         $title = "Rb Notifications";
         $data = compact('items', 'title');
+        // return response()->json($data);
         return view('admin.notifications', $data);
     }
     public function delete_notification(Request $request, $id)
@@ -208,6 +204,9 @@ class AdminController extends Controller
             'email' => $input['email'],
             'password' => Hash::make($input['password'])
         ];
+        if ($request->remember_token) {
+            $data['remember_token'] = $request->remember_token;
+        }
         User::where('id', auth()->user()->id)->update($data);
         return redirect()->back()->with('success', 'Updated');
     }
