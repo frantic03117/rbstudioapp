@@ -29,12 +29,10 @@ class BookingExport implements FromCollection, WithHeadings, ShouldAutoSize
         $items->with('rents')->with('transactions')->withSum('transactions', 'amount');
         $items->with('creater:id,name,email');
         $bookings = $items->get();
-
         return $bookings->map(function ($b, $i) {
             $rentcharge = $b->rents->sum(function ($r) {
                 return $r->pivot->charge * $r->pivot->uses_hours;
             });
-
             $total = ($rentcharge + $b->duration * $b->studio_charge) * 1.18;
             return [
                 'Sr No.' => $i + 1,
