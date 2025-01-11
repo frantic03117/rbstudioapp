@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Studio\Service;
 use App\Models\Booking;
+use App\Models\RbNotification;
 use App\Models\User;
 use App\Models\Faq;
 use App\Models\Studio\Studio;
@@ -17,8 +18,9 @@ use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
-    public function update_fcm(Request $request){
-       
+    public function update_fcm(Request $request)
+    {
+
         $validator = Validator::make($request->all(), [
             'token' => 'required',
         ]);
@@ -33,8 +35,8 @@ class ApiController extends Controller
         }
         $data = [
             'fcm_token' => $request->token
-            ];
-        if(User::where('id' ,  auth('sanctum')->user()->id)->update($data)){
+        ];
+        if (User::where('id',  auth('sanctum')->user()->id)->update($data)) {
             $data = [
                 'data' => [],
                 'success' => 1,
@@ -42,8 +44,8 @@ class ApiController extends Controller
                 'message' => 'FCM token updated'
             ];
             return response()->json($data);
-        }else{
-             $data = [
+        } else {
+            $data = [
                 'data' => [],
                 'success' => 0,
                 'errors' => $validator->errors(),
@@ -81,16 +83,16 @@ class ApiController extends Controller
 
         $studios = Studio::with('country:id,country')->with('state:id,state')->with('district:id,city')->with('images')
             ->with('products');
-        if($sid){
+        if ($sid) {
             $studios->with(['charges' => function ($q) use ($sid) {
                 $q->where('service_id', $sid);
             }])->whereIn('id', function ($q) use ($sid) {
                 $q->from('service_studios')->where('service_id', $sid)->select('studio_id');
             });
-        }else{
-             $studios->with('charges');
+        } else {
+            $studios->with('charges');
         }
-            
+
         $items = $studios->with('services')->get();
         $data = [
             'data' => $items,
@@ -223,6 +225,17 @@ class ApiController extends Controller
         ];
         return response()->json($data);
     }
+    public function delete_query(Request $request, $id)
+    {
+        $uid = auth('sanctum')->user()->id;
+        $items = DB::table('queries')->where('user_id', $uid)->where(['id' => $id])->delete();
+        $data = [
+            'data' => $items,
+            'success' => $items ? true : false,
+            'message' => 'Query deleted successfully'
+        ];
+        return response()->json($data);
+    }
     public function banners()
     {
         $items = DB::table('banners')->orderBy('id', 'DESC')->get();
@@ -278,7 +291,8 @@ class ApiController extends Controller
         $bookings = $items->paginate(10);
         return response()->json(['data' => $bookings, 'success' => '1', 'message' => 'filter bookings']);
     }
-    public function add_promo_code(Request $request){
+    public function add_promo_code(Request $request)
+    {
         date_default_timezone_set('Asia/kolkata');
         $validator = Validator::make($request->all(), [
             'booking_id' => 'required|exists:bookings,id',
@@ -298,12 +312,12 @@ class ApiController extends Controller
         $pcode = $request->promo_code;
         $bid = $request->booking_id;
         $booking = Booking::where('id', $bid)->first();
-        
+
         $isValid = DB::table('promo_codes')->where('promo_code', $pcode)->where('studio_id', $booking->studio_id)
-        ->where('deleted_at', '=', null)->where('start_at', '<=', $today)->where('end_at', '>=', $today)
-        ->first();
+            ->where('deleted_at', '=', null)->where('start_at', '<=', $today)->where('end_at', '>=', $today)
+            ->first();
         if (!$isValid) {
-           
+
             $data = [
                 'data' => [],
                 'success' => 0,
@@ -312,9 +326,9 @@ class ApiController extends Controller
             ];
             return response()->json($data);
         }
-        if($isValid){
-             if($isValid?->user_id){
-                if($isValid->user_id != $uid){
+        if ($isValid) {
+            if ($isValid?->user_id) {
+                if ($isValid->user_id != $uid) {
                     $data = [
                         'data' => [],
                         'success' => 0,
@@ -326,9 +340,9 @@ class ApiController extends Controller
             }
         }
         $ucount = $isValid->user_count;
-        
-         $isUsed = Booking::where('user_id', $uid)->where('promo_id', $isValid->id)->count();
-         if ($isUsed >= $ucount) {
+
+        $isUsed = Booking::where('user_id', $uid)->where('promo_id', $isValid->id)->count();
+        if ($isUsed >= $ucount) {
             $data = [
                 'data' => [],
                 'success' => 0,
@@ -338,8 +352,8 @@ class ApiController extends Controller
             return response()->json($data);
         }
         $item =  Booking::where('id', $bid)->where('approved_at', '!=', null)->with('rents')->withSum('transactions', 'amount')->with('studio')->with('service')->first();
-        if(!$item){
-             $data = [
+        if (!$item) {
+            $data = [
                 'data' => [],
                 'success' => 0,
                 'errors' => $validator->errors(),
@@ -347,8 +361,8 @@ class ApiController extends Controller
             ];
             return response()->json($data);
         }
-        if($item->promo_id){
-             $data = [
+        if ($item->promo_id) {
+            $data = [
                 'data' => [],
                 'success' => 0,
                 'errors' => $validator->errors(),
@@ -357,7 +371,7 @@ class ApiController extends Controller
             return response()->json($data);
         }
         $paid = $item->transactions_sum_amount;
-         if($paid > 0){
+        if ($paid > 0) {
             $data = [
                 'data' => [],
                 'success' => 0,
@@ -365,74 +379,110 @@ class ApiController extends Controller
                 'message' => 'Promo Code can be applied only on new bookings'
             ];
             return response()->json($data);
-         }
-       
+        }
+
         $rents =  $item->rents;
         $arr = [];
-        foreach($rents as $r){
-            array_push($arr, $r->pivot->charge*$r->pivot->uses_hours);
+        foreach ($rents as $r) {
+            array_push($arr, $r->pivot->charge * $r->pivot->uses_hours);
         }
-       
+
         $rentcharge = array_sum($arr);
-        $amount =  ($item->duration*$item->studio_charge + $rentcharge)*1.18 - $item->transactions_sum_amount;
+        $amount =  ($item->duration * $item->studio_charge + $rentcharge) * 1.18 - $item->transactions_sum_amount;
         $promo_discount = $isValid->discount;
         $type = $isValid->discount_type;
-        if($type == "Fixed"){
+        if ($type == "Fixed") {
             $discount = $promo_discount;
-        }else{
-            $discount = $amount*$promo_discount*0.01;
+        } else {
+            $discount = $amount * $promo_discount * 0.01;
         }
-        
+
         Booking::where('id', $bid)->update(['promo_id' => $isValid->id, 'promo_code' => $pcode,  'promo_discount_calculated' => $discount]);
         return response()->json([
-                'data' => [],
-                'success' => 0,
-                'errors' => $validator->errors(),
-                'message' => 'Promo Code applied successfully'
-            ]);
-        
-    }
-    public function delete_account(Request $request){
-         $uid = auth('sanctum')->user()->id;
-         User::where('id', $uid)->update(['deleted_at' => date('Y-m-d H:i:s'), 'email' => '', 'mobile' => '']);
-          return response()->json([
-                'data' => [],
-                'success' => 1,
-                'errors' => [],
-                'message' => 'User deleted successfully'
-            ]);
-    }
-    public function my_notifications(){
-        $uid = auth('sanctum')->user()->id;
-        $items = DB::table('notifications')->where('user_id', $uid)->orderBy('id', 'DESC')->get();
-        return response()->json([
-                'data' => $items,
-                'success' => 1,
-                'errors' => [],
-                'message' => 'User notification fetched successfully'
-            ]);
-    }
-    public function gst_list(){
-        $uid = auth('sanctum')->user()->id;
-        $items = DB::table('booking_gsts')->where('user_id', $uid)->orderBy('id', 'DESC')->get();
-        return response()->json(['success' => '1', "data" => $items]);
-    }
-    public function update_profile(Request $request){
-        $id = auth('sanctum')->user()->id;
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-           'email' => 'required|email|unique:users,email,' . $id
+            'data' => [],
+            'success' => 0,
+            'errors' => $validator->errors(),
+            'message' => 'Promo Code applied successfully'
         ]);
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'updated_at' => date('Y-m-d H:i:s')
-            ];
-        User::where('id', $id)->update($data);
+    }
+    public function delete_account(Request $request)
+    {
+        $uid = auth('sanctum')->user()->id;
+        User::where('id', $uid)->update(['deleted_at' => date('Y-m-d H:i:s'), 'email' => '', 'mobile' => '']);
         return response()->json([
             'data' => [],
             'success' => 1,
-            'errors' => []
+            'errors' => [],
+            'message' => 'User deleted successfully'
+        ]);
+    }
+    public function my_notifications()
+    {
+        $uid = auth('sanctum')->user()->id;
+        $items = DB::table('notifications')->where('user_id', $uid)->where(['shown_to_user' => '1'])->orderBy('id', 'DESC')->get();
+        return response()->json([
+            'data' => $items,
+            'success' => 1,
+            'errors' => [],
+            'message' => 'User notification fetched successfully'
+        ]);
+    }
+    public function gst_list()
+    {
+        $uid = auth('sanctum')->user()->id;
+        $items = DB::table('booking_gsts')->where('user_id', $uid)->orderBy('id', 'DESC')->get();
+        return response()->json(['success' => true, "data" => $items]);
+    }
+    public function update_profile(Request $request)
+    {
+        $id = auth('sanctum')->user()->id;
+
+        // Validate input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'dob' => 'nullable|date',
+            'gender' => 'nullable|in:Male,Female,other',
+        ]);
+
+        // Prepare data for update
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+        ];
+
+        if ($request->filled('dob')) {
+            $data['dob'] = $request->dob;
+        }
+
+        if ($request->filled('gender')) {
+            $data['gender'] = $request->gender;
+        }
+
+        // Update the user's profile
+        $user = User::find($id);
+        if ($user) {
+            $user->update($data);
+
+            // Return success response with updated data
+            return response()->json([
+                'data' => $user,
+                'success' => 1,
+                'errors' => [],
             ]);
+        }
+
+        // If user not found, return error response
+        return response()->json([
+            'data' => [],
+            'success' => 0,
+            'errors' => ['User not found.'],
+        ], 404);
+    }
+    public function clear_notification(Request $request)
+    {
+        $uid = auth('sanctum')->user()->id;
+        RbNotification::where('user_id', $uid)->update(['shown_to_user' => '0']);
+        return response()->json(['success' => true, "data" => []]);
     }
 }

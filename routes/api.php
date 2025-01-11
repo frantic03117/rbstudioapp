@@ -38,6 +38,7 @@ Route::get('terms/{url}', [ApiController::class, 'terms']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('contact_us', [ApiController::class, 'contact_us']);
     Route::get('contact_us', [ApiController::class, 'queries']);
+    Route::delete('contact_us/{id}', [ApiController::class, 'delete_query']);
     Route::get('bookings', [ApiController::class, 'bookings']);
     Route::get('bookings/{id}', [BookingController::class, 'show']);
     Route::get('policies', [ApiController::class, 'policies']);
@@ -52,6 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('gst_list', [ApiController::class, 'gst_list']);
     Route::post('update_profile', [ApiController::class, 'update_profile']);
     Route::post('update_profile_image', [UserController::class, 'select_profile_image']);
+    Route::post('clear-notification', [ApiController::class, 'clear_notification']);
 });
 
 Route::post('get_slots', [AjaxController::class, 'get_slots']);
