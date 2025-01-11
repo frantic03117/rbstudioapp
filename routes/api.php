@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,3 +68,4 @@ Route::post('studios', [ApiController::class, 'studios']);
 Route::get('faqs', [ApiController::class, 'faqs']);
 Route::get('states/{id}', [ApiController::class, 'states']);
 Route::get('gallery', [GalleryController::class, 'index']);
+Route::post('query/resolve', [HomeController::class, 'resolve_queries'])->name('resolve_queries');

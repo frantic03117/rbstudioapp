@@ -12,6 +12,11 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        'ajax/*', 'pay_response', 'pay_cancel', 'pay_now/*', 'pay_now'
+        'ajax/*',
+        'pay_response',
+        'pay_cancel',
+        'pay_now/*',
+        'pay_now',
+        'api/*'
     ];
 }

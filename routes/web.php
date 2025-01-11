@@ -59,6 +59,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('gallery', GalleryController::class);
     Route::resource('booking', BookingController::class);
     Route::get('bookings/{slug}', [BookingController::class, 'custom_view'])->name('bookingsview');
+    Route::get('query', [HomeController::class, 'queries'])->name('queries');
+
     Route::get('calendar', [HomeController::class, 'index'])->name('calendar');
     Route::get('generate-bill/{id}', [BookingController::class, 'generate_bill'])->name('generate_bill');
     Route::post('generate-bill/{id}', [BookingController::class, 'save_bill'])->name('save_bill');

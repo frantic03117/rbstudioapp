@@ -352,7 +352,7 @@
                         @can('bookings-list')
                             <li class="">
                                 <a href="javascript: void(0);" class="has-arrow" aria-expanded="false">
-                                    <i class=" fas fa-store"></i>
+                                    <i class="fas fa-bookmark"></i>
                                     <span data-key="t-maps">Bookings</span>
                                 </a>
                                 <ul class="sub-menu mm-collapse" aria-expanded="false">
@@ -371,14 +371,14 @@
                         @endcan
                         <li>
                             <a href="{{ route('notification') }}">
-                                <i class=" fas fa-store"></i>
+                                <i class="fas fa-bell"></i>
                                 <span data-key="t-store">Notifications</span>
                             </a>
                         </li>
                         @can('promocodes-list')
                             <li>
                                 <a href="{{ route('promo.index') }}">
-                                    <i class=" fas fa-store"></i>
+                                    <i class="fas fa-code"></i>
                                     <span data-key="t-store">Promo Codes</span>
                                 </a>
                             </li>
@@ -386,7 +386,7 @@
                         @can('payments-list')
                             <li>
                                 <a href="{{ route('transactions.index') }}">
-                                    <i class=" fas fa-store"></i>
+                                    <i class="fas fa-money-check-alt"></i>
                                     <span data-key="t-store">Payments</span>
                                 </a>
                             </li>
@@ -394,11 +394,17 @@
                         @can('payments-list')
                             <li>
                                 <a href="{{ route('users') }}">
-                                    <i class=" fas fa-store"></i>
+                                    <i class="fas fa-users"></i>
                                     <span data-key="t-store">Users</span>
                                 </a>
                             </li>
                         @endcan
+                        <li>
+                            <a href="{{ route('queries') }}">
+                                <i class="fas fa-id-card-alt"></i>
+                                <span data-key="t-store">Queires</span>
+                            </a>
+                        </li>
 
                     </ul>
                 </div>
