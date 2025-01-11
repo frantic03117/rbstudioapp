@@ -66,7 +66,7 @@ class BookingController extends Controller
         $keyword = $_GET['keyword'] ?? null;
         $vid = Auth::user()->vendor_id;
         $now = date('Y-m-d H:i:s');
-        
+
         $title = "List of Booking";
         $items = Booking::where('id', '>', '0');
         if ($type == "upcoming") {
@@ -75,7 +75,7 @@ class BookingController extends Controller
         if ($type == "today") {
             $items->whereDate('booking_start_date', '=', date('Y-m-d'))->orderBy('booking_start_date', 'ASC');
         }
-       
+
         if ($type == "past") {
             $items->whereDate('booking_start_date', '<', $now)->orderBy('booking_start_date', 'ASC');
         }
@@ -120,14 +120,14 @@ class BookingController extends Controller
         if ($payment_status) {
             $items->where('payment_status', $payment_status);
         }
-        
-      
+
+
         if ($approved_at == "pending") {
-          
+
             $items->where('approved_at', null);
-        }else{
+        } else {
             if ($booking_status) {
-             $items->where('booking_status', $booking_status);
+                $items->where('booking_status', $booking_status);
             }
             if ($booking_status == "0") {
                 $items->where('booking_status', "0");
@@ -136,15 +136,15 @@ class BookingController extends Controller
 
         if ($approved_at == "approved") {
             if ($booking_status) {
-             $items->where('booking_status', $booking_status);
+                $items->where('booking_status', $booking_status);
             }
             if ($booking_status == "0") {
                 $items->where('booking_status', "0");
             }
-           
+
             $items->where('approved_at', '!=', null);
         }
-       
+
         $items->with('vendor')->with('service:id,name,icon,approval_required')->with('user:id,name,email,mobile')->with('studio:id,name,address');
         $items->with('rents')->with('transactions')->withSum('transactions', 'amount');
         $items->with('creater:id,name,email');
@@ -422,6 +422,7 @@ class BookingController extends Controller
                 "booking_status" => $request->mode ? "0" : "1",
                 "studio_charge" => $serviceStudio->charge,
                 'created_by' => auth('sanctum')->user()->id ?? auth()->user()->id,
+                "approved_at" => $request->mode  ? $serviceStudio->is_permissable == "0" ? date('Y-m-d H:i:s') : null : date('Y-m-d H:i:s'),
                 "approved_at" => $request->mode  ? $serviceStudio->is_permissable == "0" ? date('Y-m-d H:i:s') : null : date('Y-m-d H:i:s'),
                 "created_at" =>  date('Y-m-d H:i:s')
             ];
