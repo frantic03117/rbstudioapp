@@ -423,7 +423,6 @@ class BookingController extends Controller
                 "studio_charge" => $serviceStudio->charge,
                 'created_by' => auth('sanctum')->user()->id ?? auth()->user()->id,
                 "approved_at" => $request->mode  ? $serviceStudio->is_permissable == "0" ? date('Y-m-d H:i:s') : null : date('Y-m-d H:i:s'),
-                "approved_at" => $request->mode  ? $serviceStudio->is_permissable == "0" ? date('Y-m-d H:i:s') : null : date('Y-m-d H:i:s'),
                 "created_at" =>  date('Y-m-d H:i:s')
             ];
             $bid = Booking::insertGetId($bdata);
