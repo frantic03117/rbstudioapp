@@ -400,6 +400,12 @@
                             </li>
                         @endcan
                         <li>
+                            <a href="{{ route('gallery') }}">
+                                <i class="fas fa-images"></i>
+                                <span data-key="t-store">Queires</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('queries') }}">
                                 <i class="fas fa-id-card-alt"></i>
                                 <span data-key="t-store">Queires</span>
