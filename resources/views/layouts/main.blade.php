@@ -400,7 +400,7 @@
                             </li>
                         @endcan
                         <li>
-                            <a href="{{ route('gallery') }}">
+                            <a href="{{ route('gallery.index') }}">
                                 <i class="fas fa-images"></i>
                                 <span data-key="t-store">Queires</span>
                             </a>
