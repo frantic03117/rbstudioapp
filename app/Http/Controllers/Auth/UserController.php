@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Gallery;
 use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
@@ -213,5 +214,44 @@ class UserController extends Controller
         }
         User::where('id', $id)->update($data);
         return redirect()->back()->with('success', 'user updated successfully');
+    }
+    public function select_profile_image(Request $request)
+    {
+        $request->validate([
+            'gallery_id' => 'nullable|exists:galleries,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+        if ($request->has('gallery_id') && $request->hasFile('image')) {
+            return response()->json([
+                'message' => 'You cannot upload an image and select a gallery image simultaneously.',
+                'success' => 0,
+            ], 400);
+        }
+
+        $gid = $request->gallery_id;
+        if ($gid) {
+            $gallery  = Gallery::where('id', $gid)->first();
+            if (!$gallery) {
+                return response()->json(['data' => [], 'message' => 'Invalid gallery id']);
+            }
+            $uid = auth('sanctum')->user()->id ?? auth()->user()->id;
+            User::where('id', $uid)->update(['profile_image' => $gallery['image']]);
+        }
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $filename = 'gallery_' . date('Ymd_His') . '.' . $extension;
+            $file->move(public_path('gallery/'), $filename);
+            $image =  'public/gallery/' . $filename;
+            User::where('id', $uid)->update(['profile_image' => $image]);
+        }
+        if ($request->is('api/*') || $request->expectsJson()) {
+            return response()->json([
+                'message' => 'Gallery image saved successfully.',
+                'data' => [],
+                'success' => 1,
+            ]);
+        }
+        return redirect()->back()->with('success', 'Gallery image saved successfully.');
     }
 }

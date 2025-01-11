@@ -12,6 +12,7 @@ use App\Http\Controllers\StudioController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\FaqController;
+use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PromoCodeController;
 use App\Http\Controllers\PolicyController;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +56,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::put('update-resource', [StudioController::class, 'update_studio_resource_charge'])->name('studio.update_studio_resource_charge');
     Route::get('booking/export', [BookingController::class, 'export'])->name('booking.export');
     Route::resource('employee', UserController::class);
+    Route::resource('gallery', GalleryController::class);
     Route::resource('booking', BookingController::class);
     Route::get('bookings/{slug}', [BookingController::class, 'custom_view'])->name('bookingsview');
     Route::get('calendar', [HomeController::class, 'index'])->name('calendar');
