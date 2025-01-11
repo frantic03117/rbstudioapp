@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jan 11, 2025 at 06:58 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.1.25
+-- Host: localhost
+-- Generation Time: Jan 11, 2025 at 06:21 AM
+-- Server version: 10.11.10-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -103,12 +103,60 @@ INSERT INTO `blocked_slots` (`id`, `studio_id`, `booking_id`, `slot_id`, `bdate`
 (5, 4, 2, 11, '2024-10-19', 'booking', '2024-10-18 11:51:11', NULL),
 (6, 4, 3, 12, '2024-10-19', 'booking', '2024-10-18 11:55:41', NULL),
 (7, 4, 3, 13, '2024-10-19', 'booking', '2024-10-18 11:55:41', NULL),
+(9, 2, 5, 10, '2024-11-01', 'booking', '2024-10-27 19:21:26', NULL),
+(10, 2, 5, 11, '2024-11-01', 'booking', '2024-10-27 19:21:26', NULL),
+(11, 2, 5, 12, '2024-11-01', 'booking', '2024-10-27 19:21:26', NULL),
+(12, 2, 6, 14, '2024-11-01', 'booking', '2024-10-27 19:50:47', NULL),
+(13, 2, 6, 15, '2024-11-01', 'booking', '2024-10-27 19:50:47', NULL),
+(14, 3, 7, 11, '2024-10-27', 'booking', '2024-10-27 19:52:57', NULL),
+(15, 3, 7, 12, '2024-10-27', 'booking', '2024-10-27 19:52:57', NULL),
+(16, 3, 7, 13, '2024-10-27', 'booking', '2024-10-27 19:52:57', NULL),
+(17, 3, 7, 14, '2024-10-27', 'booking', '2024-10-27 19:52:57', NULL),
+(18, 3, 7, 15, '2024-10-27', 'booking', '2024-10-27 19:52:57', NULL),
+(19, 2, 8, 15, '2024-11-27', 'booking', '2024-11-07 15:29:01', NULL),
+(20, 2, 8, 16, '2024-11-27', 'booking', '2024-11-07 15:29:01', NULL),
+(21, 2, 8, 17, '2024-11-27', 'booking', '2024-11-07 15:29:01', NULL),
+(24, 5, 10, 25, '2024-11-09', 'booking', '2024-11-09 09:00:00', NULL),
+(25, 5, 10, 1, '2024-11-10', 'booking', '2024-11-09 09:00:00', NULL),
+(26, 5, 10, 2, '2024-11-10', 'booking', '2024-11-09 09:00:00', NULL),
+(27, 5, 10, 3, '2024-11-10', 'booking', '2024-11-09 09:00:00', NULL),
+(28, 5, 10, 5, '2024-11-10', 'booking', '2024-11-09 09:00:00', NULL),
+(29, 2, 11, 11, '2024-11-15', 'booking', '2024-11-09 09:25:23', NULL),
+(30, 2, 11, 12, '2024-11-15', 'booking', '2024-11-09 09:25:23', NULL),
+(31, 2, 12, 12, '2024-11-28', 'booking', '2024-11-09 09:26:21', NULL),
+(32, 2, 12, 13, '2024-11-28', 'booking', '2024-11-09 09:26:21', NULL),
+(33, 2, 12, 14, '2024-11-28', 'booking', '2024-11-09 09:26:21', NULL),
 (34, 2, 13, 15, '2024-11-28', 'booking', '2024-11-09 09:33:56', NULL),
 (35, 2, 13, 16, '2024-11-28', 'booking', '2024-11-09 09:33:56', NULL),
 (36, 2, 13, 17, '2024-11-28', 'booking', '2024-11-09 09:33:56', NULL),
+(37, 2, 14, 14, '2024-12-07', 'booking', '2024-12-07 16:20:47', NULL),
+(38, 2, 14, 15, '2024-12-07', 'booking', '2024-12-07 16:20:47', NULL),
+(39, 2, 14, 16, '2024-12-07', 'booking', '2024-12-07 16:20:47', NULL),
+(40, 2, 14, 17, '2024-12-07', 'booking', '2024-12-07 16:20:47', NULL),
+(41, 3, 15, 11, '2024-12-07', 'booking', '2024-12-07 16:21:31', NULL),
+(42, 3, 15, 12, '2024-12-07', 'booking', '2024-12-07 16:21:31', NULL),
+(43, 3, 15, 13, '2024-12-07', 'booking', '2024-12-07 16:21:31', NULL),
+(44, 3, 15, 14, '2024-12-07', 'booking', '2024-12-07 16:21:31', NULL),
+(45, 3, 15, 15, '2024-12-07', 'booking', '2024-12-07 16:21:31', NULL),
+(46, 3, 15, 16, '2024-12-07', 'booking', '2024-12-07 16:21:31', NULL),
+(47, 3, 15, 17, '2024-12-07', 'booking', '2024-12-07 16:21:31', NULL),
+(48, 4, 16, 14, '2024-12-07', 'booking', '2024-12-07 16:22:08', NULL),
+(49, 4, 16, 15, '2024-12-07', 'booking', '2024-12-07 16:22:08', NULL),
+(50, 4, 16, 16, '2024-12-07', 'booking', '2024-12-07 16:22:08', NULL),
+(51, 4, 16, 17, '2024-12-07', 'booking', '2024-12-07 16:22:08', NULL),
 (52, 5, 17, 20, '2024-12-25', 'booking', '2024-12-13 17:32:10', NULL),
 (53, 5, 17, 21, '2024-12-25', 'booking', '2024-12-13 17:32:10', NULL),
 (54, 5, 17, 22, '2024-12-25', 'booking', '2024-12-13 17:32:10', NULL),
+(55, 4, 18, 17, '2024-12-25', 'booking', '2024-12-14 16:05:55', NULL),
+(56, 4, 18, 18, '2024-12-25', 'booking', '2024-12-14 16:05:55', NULL),
+(57, 4, 18, 19, '2024-12-25', 'booking', '2024-12-14 16:05:55', NULL),
+(58, 4, 18, 20, '2024-12-25', 'booking', '2024-12-14 16:05:55', NULL),
+(59, 4, 18, 21, '2024-12-25', 'booking', '2024-12-14 16:05:55', NULL),
+(60, 5, 19, 11, '2024-12-14', 'booking', '2024-12-14 16:50:01', NULL),
+(61, 5, 19, 12, '2024-12-14', 'booking', '2024-12-14 16:50:01', NULL),
+(62, 4, 20, 11, '2025-01-01', 'booking', '2024-12-30 12:22:48', NULL),
+(63, 4, 20, 12, '2025-01-01', 'booking', '2024-12-30 12:22:48', NULL),
+(64, 4, 20, 13, '2025-01-01', 'booking', '2024-12-30 12:22:48', NULL),
 (65, 2, 21, 11, '2025-01-01', 'booking', '2024-12-30 12:23:30', NULL),
 (66, 2, 21, 12, '2025-01-01', 'booking', '2024-12-30 12:23:30', NULL),
 (67, 2, 21, 13, '2025-01-01', 'booking', '2024-12-30 12:23:30', NULL),
@@ -119,11 +167,54 @@ INSERT INTO `blocked_slots` (`id`, `studio_id`, `booking_id`, `slot_id`, `bdate`
 (72, 2, 22, 24, '2024-12-30', 'booking', '2024-12-30 12:39:03', NULL),
 (73, 2, 22, 25, '2024-12-30', 'booking', '2024-12-30 12:39:03', NULL),
 (74, 2, 22, 1, '2024-12-31', 'booking', '2024-12-30 12:39:03', NULL),
+(75, 3, 23, 17, '2025-01-15', 'booking', '2024-12-30 12:51:02', NULL),
+(76, 3, 23, 18, '2025-01-15', 'booking', '2024-12-30 12:51:02', NULL),
+(77, 3, 23, 19, '2025-01-15', 'booking', '2024-12-30 12:51:02', NULL),
 (78, 2, 24, 18, '2025-01-06', 'booking', '2024-12-30 12:54:19', NULL),
 (79, 2, 24, 19, '2025-01-06', 'booking', '2024-12-30 12:54:19', NULL),
 (80, 2, 24, 20, '2025-01-06', 'booking', '2024-12-30 12:54:19', NULL),
 (81, 2, 24, 21, '2025-01-06', 'booking', '2024-12-30 12:54:19', NULL),
-(82, 5, 25, 12, '2025-01-07', 'booking', '2025-01-06 10:35:29', NULL);
+(82, 2, 25, 11, '2024-12-30', 'booking', '2024-12-30 15:44:12', NULL),
+(83, 2, 25, 12, '2024-12-30', 'booking', '2024-12-30 15:44:12', NULL),
+(87, 3, 27, 11, '2025-01-02', 'booking', '2025-01-02 13:49:29', NULL),
+(88, 3, 27, 12, '2025-01-02', 'booking', '2025-01-02 13:49:29', NULL),
+(89, 3, 27, 13, '2025-01-02', 'booking', '2025-01-02 13:49:29', NULL),
+(90, 3, 27, 14, '2025-01-02', 'booking', '2025-01-02 13:49:29', NULL),
+(91, 3, 27, 15, '2025-01-02', 'booking', '2025-01-02 13:49:29', NULL),
+(92, 3, 28, 16, '2025-01-06', 'booking', '2025-01-06 15:45:55', NULL),
+(93, 3, 28, 17, '2025-01-06', 'booking', '2025-01-06 15:45:55', NULL),
+(94, 3, 28, 18, '2025-01-06', 'booking', '2025-01-06 15:45:55', NULL),
+(95, 3, 28, 19, '2025-01-06', 'booking', '2025-01-06 15:45:55', NULL),
+(98, 2, 30, 11, '2025-01-12', 'booking', '2025-01-08 13:43:04', NULL),
+(99, 2, 30, 12, '2025-01-12', 'booking', '2025-01-08 13:43:04', NULL),
+(100, 3, 31, 11, '2025-01-12', 'booking', '2025-01-08 14:44:15', NULL),
+(101, 3, 31, 12, '2025-01-12', 'booking', '2025-01-08 14:44:15', NULL),
+(102, 2, 32, 11, '2025-01-24', 'booking', '2025-01-09 16:55:02', NULL),
+(103, 2, 32, 12, '2025-01-24', 'booking', '2025-01-09 16:55:02', NULL),
+(113, 2, 36, 11, '2025-01-30', 'booking', '2025-01-09 17:25:15', NULL),
+(114, 2, 36, 12, '2025-01-30', 'booking', '2025-01-09 17:25:15', NULL),
+(115, 2, 36, 13, '2025-01-30', 'booking', '2025-01-09 17:25:15', NULL),
+(116, 2, 36, 14, '2025-01-30', 'booking', '2025-01-09 17:25:15', NULL),
+(117, 2, 36, 15, '2025-01-30', 'booking', '2025-01-09 17:25:15', NULL),
+(118, 2, 36, 16, '2025-01-30', 'booking', '2025-01-09 17:25:15', NULL),
+(119, 2, 36, 17, '2025-01-30', 'booking', '2025-01-09 17:25:15', NULL),
+(120, 2, 36, 18, '2025-01-30', 'booking', '2025-01-09 17:25:15', NULL),
+(121, 2, 36, 19, '2025-01-30', 'booking', '2025-01-09 17:25:15', NULL),
+(122, 2, 36, 20, '2025-01-30', 'booking', '2025-01-09 17:25:15', NULL),
+(123, 2, 36, 21, '2025-01-30', 'booking', '2025-01-09 17:25:15', NULL),
+(124, 2, 36, 22, '2025-01-30', 'booking', '2025-01-09 17:25:15', NULL),
+(125, 2, 36, 23, '2025-01-30', 'booking', '2025-01-09 17:25:15', NULL),
+(126, 2, 36, 24, '2025-01-30', 'booking', '2025-01-09 17:25:15', NULL),
+(127, 2, 36, 25, '2025-01-30', 'booking', '2025-01-09 17:25:15', NULL),
+(128, 2, 36, 1, '2025-01-31', 'booking', '2025-01-09 17:25:15', NULL),
+(129, 2, 36, 2, '2025-01-31', 'booking', '2025-01-09 17:25:15', NULL),
+(132, 2, 38, 17, '2025-01-10', 'booking', '2025-01-10 12:45:55', NULL),
+(133, 2, 38, 18, '2025-01-10', 'booking', '2025-01-10 12:45:55', NULL),
+(134, 2, 38, 19, '2025-01-10', 'booking', '2025-01-10 12:45:55', NULL),
+(135, 2, 38, 20, '2025-01-10', 'booking', '2025-01-10 12:45:55', NULL),
+(136, 2, 38, 21, '2025-01-10', 'booking', '2025-01-10 12:45:55', NULL),
+(137, 5, 39, 14, '2025-01-14', 'booking', '2025-01-10 21:33:44', NULL),
+(138, 5, 39, 15, '2025-01-14', 'booking', '2025-01-10 21:33:44', NULL);
 
 -- --------------------------------------------------------
 
@@ -164,31 +255,46 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `user_id`, `studio_id`, `vendor_id`, `service_id`, `gst_id`, `bill_no`, `booking_start_date`, `booking_end_date`, `start_at`, `end_at`, `duration`, `payment_status`, `discount`, `refunded`, `booking_status`, `studio_charge`, `partial_percent`, `promo_id`, `promo_code`, `promo_discount_calculated`, `approved_at`, `created_by`, `created_at`, `updated_at`) VALUES
-(1, 335, 2, 1, 2, NULL, NULL, '2024-10-18 13:00:00', '2024-10-18 14:00:00', '13:00:00', '14:00:00', 1, '1', NULL, NULL, '1', 1, 50, NULL, NULL, NULL, '2024-10-18 11:23:08', 1, '2024-10-18 11:23:08', '2025-01-06 08:23:21'),
+(1, 335, 2, 1, 2, NULL, NULL, '2024-10-18 13:00:00', '2024-10-18 14:00:00', '13:00:00', '14:00:00', 1, '0', NULL, NULL, '1', 1, 50, NULL, NULL, NULL, '2024-10-18 11:23:08', 1, '2024-10-18 11:23:08', '2024-10-18 18:29:31'),
 (2, 337, 4, 1, 6, NULL, NULL, '2024-10-19 06:00:00', '2024-10-19 10:00:00', '06:00:00', '10:00:00', 4, '0', NULL, NULL, '1', 1, 50, NULL, NULL, NULL, '2024-10-18 11:54:50', 1, '2024-10-18 11:51:11', NULL),
 (3, 338, 4, 1, 6, NULL, NULL, '2024-10-19 10:00:00', '2024-10-19 12:00:00', '10:00:00', '12:00:00', 2, '0', NULL, NULL, '1', 1, 50, NULL, NULL, NULL, '2024-10-18 11:55:41', 1, '2024-10-18 11:55:41', NULL),
 (4, 336, 3, 1, 4, NULL, NULL, '2024-10-21 10:00:00', '2024-10-21 11:00:00', '10:00:00', '11:00:00', 1, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2024-10-18 18:56:12', 1, '2024-10-18 18:56:12', '2024-10-20 20:33:18'),
-(5, 330, 2, 1, 2, NULL, NULL, '2024-11-01 08:00:00', '2024-11-01 11:00:00', '08:00:00', '11:00:00', 3, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2024-10-27 19:21:26', 330, '2024-10-27 19:21:26', '2025-01-06 10:57:29'),
-(6, 329, 2, 1, 2, 1, NULL, '2024-11-01 12:00:00', '2024-11-01 14:00:00', '12:00:00', '14:00:00', 2, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2024-10-27 19:50:47', 329, '2024-10-27 19:50:47', '2025-01-06 10:57:29'),
-(7, 329, 3, 1, 2, NULL, NULL, '2024-10-27 09:00:00', '2024-10-27 14:00:00', '09:00:00', '14:00:00', 5, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2024-10-27 19:52:57', 329, '2024-10-27 19:52:57', '2025-01-06 10:57:29'),
-(8, 324, 2, 1, 3, NULL, NULL, '2024-11-27 13:00:00', '2024-11-27 16:00:00', '13:00:00', '16:00:00', 3, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2024-11-07 15:29:01', 324, '2024-11-07 15:29:01', '2025-01-06 10:57:29'),
+(5, 330, 2, 1, 2, NULL, NULL, '2024-11-01 08:00:00', '2024-11-01 11:00:00', '08:00:00', '11:00:00', 3, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2024-10-27 19:21:26', 330, '2024-10-27 19:21:26', NULL),
+(6, 329, 2, 1, 2, 1, NULL, '2024-11-01 12:00:00', '2024-11-01 14:00:00', '12:00:00', '14:00:00', 2, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2024-10-27 19:50:47', 329, '2024-10-27 19:50:47', '2024-10-27 19:50:47'),
+(7, 329, 3, 1, 2, NULL, NULL, '2024-10-27 09:00:00', '2024-10-27 14:00:00', '09:00:00', '14:00:00', 5, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2024-10-27 19:52:57', 329, '2024-10-27 19:52:57', NULL),
+(8, 324, 2, 1, 3, NULL, NULL, '2024-11-27 13:00:00', '2024-11-27 16:00:00', '13:00:00', '16:00:00', 3, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2024-11-07 15:29:01', 324, '2024-11-07 15:29:01', NULL),
 (9, 342, 4, 1, 2, NULL, NULL, '2024-11-15 15:00:00', '2024-11-15 17:00:00', '15:00:00', '17:00:00', 2, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2024-11-07 17:34:01', 342, '2024-11-07 17:34:01', '2024-11-20 15:29:04'),
-(10, 342, 5, 2, 2, NULL, NULL, '2024-11-09 23:00:00', '2024-11-10 04:00:00', '23:00:00', '04:00:00', 5, '0', NULL, NULL, '2', 2000, 50, NULL, NULL, NULL, '2024-11-09 09:00:00', 342, '2024-11-09 09:00:00', '2025-01-06 10:57:29'),
-(11, 342, 2, 1, 2, NULL, NULL, '2024-11-15 09:00:00', '2024-11-15 11:00:00', '09:00:00', '11:00:00', 2, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2024-11-09 09:25:23', 342, '2024-11-09 09:25:23', '2025-01-06 10:57:29'),
-(12, 342, 2, 1, 2, NULL, NULL, '2024-11-28 10:00:00', '2024-11-28 13:00:00', '10:00:00', '13:00:00', 3, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2024-11-09 09:26:21', 342, '2024-11-09 09:26:21', '2025-01-06 10:57:29'),
+(10, 342, 5, 2, 2, NULL, NULL, '2024-11-09 23:00:00', '2024-11-10 04:00:00', '23:00:00', '04:00:00', 5, '0', NULL, NULL, '0', 2000, 50, NULL, NULL, NULL, '2024-11-09 09:00:00', 342, '2024-11-09 09:00:00', NULL),
+(11, 342, 2, 1, 2, NULL, NULL, '2024-11-15 09:00:00', '2024-11-15 11:00:00', '09:00:00', '11:00:00', 2, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2024-11-09 09:25:23', 342, '2024-11-09 09:25:23', NULL),
+(12, 342, 2, 1, 2, NULL, NULL, '2024-11-28 10:00:00', '2024-11-28 13:00:00', '10:00:00', '13:00:00', 3, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2024-11-09 09:26:21', 342, '2024-11-09 09:26:21', NULL),
 (13, 342, 2, 1, 3, 2, NULL, '2024-11-28 13:00:00', '2024-11-28 16:00:00', '13:00:00', '16:00:00', 3, '1', NULL, NULL, '1', 1, 50, NULL, NULL, NULL, '2024-11-09 09:33:56', 342, '2024-11-09 09:33:56', '2024-11-09 09:36:37'),
-(14, 325, 2, 1, 2, NULL, NULL, '2024-12-07 12:00:00', '2024-12-07 16:00:00', '12:00:00', '16:00:00', 4, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2024-12-07 16:20:47', 325, '2024-12-07 16:20:47', '2025-01-06 10:57:29'),
-(15, 325, 3, 1, 2, NULL, NULL, '2024-12-07 09:00:00', '2024-12-07 16:00:00', '09:00:00', '16:00:00', 7, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2024-12-07 16:21:31', 325, '2024-12-07 16:21:31', '2025-01-06 10:57:29'),
-(16, 325, 4, 1, 2, NULL, NULL, '2024-12-07 12:00:00', '2024-12-07 16:00:00', '12:00:00', '16:00:00', 4, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2024-12-07 16:22:08', 325, '2024-12-07 16:22:08', '2025-01-06 10:57:29'),
+(14, 325, 2, 1, 2, NULL, NULL, '2024-12-07 12:00:00', '2024-12-07 16:00:00', '12:00:00', '16:00:00', 4, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2024-12-07 16:20:47', 325, '2024-12-07 16:20:47', NULL),
+(15, 325, 3, 1, 2, NULL, NULL, '2024-12-07 09:00:00', '2024-12-07 16:00:00', '09:00:00', '16:00:00', 7, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2024-12-07 16:21:31', 325, '2024-12-07 16:21:31', NULL),
+(16, 325, 4, 1, 2, NULL, NULL, '2024-12-07 12:00:00', '2024-12-07 16:00:00', '12:00:00', '16:00:00', 4, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2024-12-07 16:22:08', 325, '2024-12-07 16:22:08', NULL),
 (17, 329, 5, 2, 2, NULL, NULL, '2024-12-25 18:00:00', '2024-12-25 21:00:00', '18:00:00', '21:00:00', 3, '0', NULL, NULL, '1', 2000, 50, NULL, NULL, NULL, '2024-12-13 17:32:10', 1, '2024-12-13 17:32:10', NULL),
-(18, 342, 4, 1, 2, NULL, NULL, '2024-12-25 15:00:00', '2024-12-25 20:00:00', '15:00:00', '20:00:00', 5, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2024-12-14 16:05:55', 342, '2024-12-14 16:05:55', '2025-01-06 10:57:29'),
-(19, 342, 5, 2, 2, NULL, NULL, '2024-12-14 09:00:00', '2024-12-14 11:00:00', '09:00:00', '11:00:00', 2, '0', NULL, NULL, '2', 2000, 50, NULL, NULL, NULL, '2024-12-14 16:50:01', 342, '2024-12-14 16:50:01', '2025-01-06 10:57:29'),
-(20, 342, 4, 1, 2, NULL, NULL, '2025-01-01 09:00:00', '2025-01-01 12:00:00', '09:00:00', '12:00:00', 3, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2024-12-30 12:22:48', 342, '2024-12-30 12:22:48', '2025-01-06 10:57:29'),
+(18, 342, 4, 1, 2, NULL, NULL, '2024-12-25 15:00:00', '2024-12-25 20:00:00', '15:00:00', '20:00:00', 5, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2024-12-14 16:05:55', 342, '2024-12-14 16:05:55', NULL),
+(19, 342, 5, 2, 2, NULL, NULL, '2024-12-14 09:00:00', '2024-12-14 11:00:00', '09:00:00', '11:00:00', 2, '0', NULL, NULL, '0', 2000, 50, NULL, NULL, NULL, '2024-12-14 16:50:01', 342, '2024-12-14 16:50:01', NULL),
+(20, 342, 4, 1, 2, NULL, NULL, '2025-01-01 09:00:00', '2025-01-01 12:00:00', '09:00:00', '12:00:00', 3, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2024-12-30 12:22:48', 342, '2024-12-30 12:22:48', NULL),
 (21, 342, 2, 1, 2, NULL, NULL, '2025-01-01 09:00:00', '2025-01-01 12:00:00', '09:00:00', '12:00:00', 3, '0', NULL, NULL, '1', 1, 50, NULL, NULL, NULL, '2024-12-30 12:23:30', 342, '2024-12-30 12:23:30', '2024-12-30 12:30:02'),
 (22, 329, 2, 1, 2, NULL, NULL, '2024-12-30 18:00:00', '2024-12-31 01:00:00', '18:00:00', '01:00:00', 7, '0', NULL, NULL, '1', 1, 50, NULL, NULL, NULL, '2024-12-30 12:39:03', 1, '2024-12-30 12:39:03', NULL),
-(23, 342, 3, 1, 2, NULL, NULL, '2025-01-15 15:00:00', '2025-01-15 18:00:00', '15:00:00', '18:00:00', 3, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2024-12-30 12:51:02', 342, '2024-12-30 12:51:02', '2025-01-06 10:57:29'),
-(24, 344, 2, 1, 2, NULL, NULL, '2025-01-06 16:00:00', '2025-01-06 20:00:00', '16:00:00', '20:00:00', 4, '1', NULL, NULL, '1', 1, 50, NULL, NULL, NULL, '2024-12-30 12:54:19', 1, '2024-12-30 12:54:19', '2025-01-06 10:17:46'),
-(25, 328, 5, 2, 6, NULL, NULL, '2025-01-07 10:00:00', '2025-01-07 11:00:00', '10:00:00', '11:00:00', 1, '0', NULL, NULL, '1', 6000, 50, NULL, NULL, NULL, '2025-01-06 16:05:29', 1, '2025-01-06 10:35:29', NULL);
+(23, 342, 3, 1, 2, NULL, NULL, '2025-01-15 15:00:00', '2025-01-15 18:00:00', '15:00:00', '18:00:00', 3, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2024-12-30 12:51:02', 342, '2024-12-30 12:51:02', NULL),
+(24, 344, 2, 1, 2, NULL, NULL, '2025-01-06 16:00:00', '2025-01-06 20:00:00', '16:00:00', '20:00:00', 4, '0', NULL, NULL, '1', 1, 50, NULL, NULL, NULL, '2024-12-30 12:54:19', 1, '2024-12-30 12:54:19', NULL),
+(25, 324, 2, 1, 2, NULL, NULL, '2024-12-30 09:00:00', '2024-12-30 11:00:00', '09:00:00', '11:00:00', 2, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2024-12-30 15:44:12', 324, '2024-12-30 15:44:12', NULL),
+(26, 336, 5, 2, 6, NULL, NULL, '2024-12-31 09:00:00', '2024-12-31 12:00:00', '09:00:00', '12:00:00', 3, '0', NULL, NULL, '2', 6000, 50, NULL, NULL, NULL, NULL, 336, '2024-12-30 17:02:30', '2025-01-06 17:51:02'),
+(27, 342, 3, 1, 2, 2, NULL, '2025-01-02 09:00:00', '2025-01-02 14:00:00', '09:00:00', '14:00:00', 5, '0', NULL, NULL, '1', 1, 50, NULL, NULL, NULL, '2025-01-02 13:49:29', 342, '2025-01-02 13:49:29', '2025-01-02 13:52:55'),
+(28, 329, 3, 1, 2, NULL, NULL, '2025-01-06 14:00:00', '2025-01-06 18:00:00', '14:00:00', '18:00:00', 4, '1', NULL, NULL, '1', 1, 50, NULL, NULL, NULL, '2025-01-06 15:45:55', 1, '2025-01-06 15:45:55', '2025-01-06 15:48:35'),
+(29, 336, 5, 2, 6, NULL, NULL, '2025-01-06 19:00:00', '2025-01-06 21:00:00', '19:00:00', '21:00:00', 2, '0', NULL, NULL, '0', 6000, 50, NULL, NULL, NULL, '2025-01-06 17:50:28', 336, '2025-01-06 17:36:04', '2025-01-06 17:50:28'),
+(30, 342, 2, 1, 2, NULL, NULL, '2025-01-12 09:00:00', '2025-01-12 11:00:00', '09:00:00', '11:00:00', 2, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2025-01-08 13:43:04', 342, '2025-01-08 13:43:04', NULL),
+(31, 342, 3, 1, 2, NULL, NULL, '2025-01-12 09:00:00', '2025-01-12 11:00:00', '09:00:00', '11:00:00', 2, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2025-01-08 14:44:15', 342, '2025-01-08 14:44:15', NULL),
+(32, 324, 2, 1, 2, NULL, NULL, '2025-01-24 09:00:00', '2025-01-24 11:00:00', '09:00:00', '11:00:00', 2, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2025-01-09 16:55:02', 324, '2025-01-09 16:55:02', NULL),
+(33, 324, 2, 1, 2, NULL, NULL, '2025-01-09 09:00:00', '2025-01-09 11:00:00', '09:00:00', '11:00:00', 2, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2025-01-09 17:19:58', 324, '2025-01-09 17:19:58', '2025-01-09 18:48:43'),
+(34, 324, 2, 1, 2, NULL, NULL, '2025-01-09 11:00:00', '2025-01-09 13:00:00', '11:00:00', '13:00:00', 2, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2025-01-09 17:23:10', 324, '2025-01-09 17:23:10', '2025-01-09 18:49:00'),
+(35, 324, 2, 1, 2, NULL, NULL, '2025-01-09 11:00:00', '2025-01-09 16:00:00', '11:00:00', '16:00:00', 5, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, '2025-01-09 17:23:58', 324, '2025-01-09 17:23:58', '2025-01-09 18:49:53'),
+(36, 324, 2, 1, 3, NULL, NULL, '2025-01-30 09:00:00', '2025-01-31 02:00:00', '09:00:00', '02:00:00', 17, '0', NULL, NULL, '0', 1, 50, NULL, NULL, NULL, '2025-01-09 17:25:15', 324, '2025-01-09 17:25:15', NULL),
+(37, 324, 3, 1, 4, NULL, NULL, '2025-01-09 09:00:00', '2025-01-09 11:00:00', '09:00:00', '11:00:00', 2, '0', NULL, NULL, '2', 1, 50, NULL, NULL, NULL, NULL, 324, '2025-01-09 17:26:08', '2025-01-09 18:47:33'),
+(38, 324, 2, 1, 2, NULL, NULL, '2025-01-10 15:00:00', '2025-01-10 20:00:00', '15:00:00', '20:00:00', 5, '0', NULL, NULL, '1', 1, 50, NULL, NULL, NULL, '2025-01-10 12:45:55', 324, '2025-01-10 12:45:55', '2025-01-10 12:46:50'),
+(39, 336, 5, 2, 6, NULL, NULL, '2025-01-14 12:00:00', '2025-01-14 14:00:00', '12:00:00', '14:00:00', 2, '0', NULL, NULL, '0', 6000, 50, NULL, NULL, NULL, NULL, 336, '2025-01-10 21:33:44', NULL),
+(40, 336, 5, 2, 6, NULL, NULL, '2025-01-12 18:00:00', '2025-01-12 22:00:00', '18:00:00', '22:00:00', 4, '1', NULL, NULL, '1', 6000, 50, NULL, NULL, NULL, '2025-01-11 11:13:10', 336, '2025-01-11 11:11:58', '2025-01-11 11:19:36');
 
 -- --------------------------------------------------------
 
@@ -251,7 +357,13 @@ INSERT INTO `booking_items` (`id`, `booking_id`, `item_id`, `charge`, `uses_hour
 (10, 7, 8, 200, 5, NULL, NULL),
 (11, 7, 9, 200, 5, NULL, NULL),
 (12, 8, 1, 500, 3, NULL, NULL),
-(13, 9, 2, 200, 2, NULL, NULL);
+(13, 9, 2, 200, 2, NULL, NULL),
+(14, 32, 1, 500, 2, NULL, NULL),
+(15, 33, 1, 500, 2, NULL, NULL),
+(16, 34, 1, 500, 2, NULL, NULL),
+(17, 35, 1, 500, 5, NULL, NULL),
+(18, 36, 1, 500, 17, NULL, NULL),
+(19, 36, 1, 500, 17, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1472,58 +1584,75 @@ INSERT INTO `notifications` (`id`, `user_id`, `booking_id`, `studio_id`, `vendor
 (35, 324, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-09-17 14:42:47', '2024-12-30 12:30:10'),
 (36, 324, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-09-17 16:25:03', '2024-12-30 12:30:10'),
 (37, 325, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-09-17 17:34:44', '2024-12-30 12:30:10'),
-(38, 325, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-09-17 17:58:50', '2024-12-30 12:30:10'),
-(39, 328, NULL, 4, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-09-19 15:03:56', '2024-12-30 12:30:10'),
-(40, 324, NULL, 2, 1, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹1000', '1', '2024-09-19 15:06:56', '2024-12-30 12:30:10'),
-(41, 330, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-09-30 11:50:17', '2024-12-30 12:30:10'),
-(42, 330, NULL, 5, 2, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-09-30 13:13:15', '2024-12-30 12:30:10'),
-(43, 330, NULL, 5, 2, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹4720', '1', '2024-09-30 16:31:04', '2024-12-30 12:30:10'),
-(44, 331, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-03 16:45:46', '2024-12-30 12:30:10'),
-(45, 329, NULL, 4, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-15 14:31:42', '2024-12-30 12:30:10'),
-(46, 329, NULL, 4, 1, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹1775', '1', '2024-10-15 14:50:51', '2024-12-30 12:30:10'),
-(47, 324, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-15 15:10:15', '2024-12-30 12:30:10'),
-(48, 324, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-15 15:15:03', '2024-12-30 12:30:10'),
-(49, 324, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-15 15:22:43', '2024-12-30 12:30:10'),
-(50, 324, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 17:01:16', '2024-12-30 12:30:10'),
-(51, 333, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 17:33:34', '2024-12-30 12:30:10'),
-(52, 333, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 17:35:26', '2024-12-30 12:30:10'),
-(53, 333, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 17:36:55', '2024-12-30 12:30:10'),
-(54, 333, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 17:45:55', '2024-12-30 12:30:10'),
-(55, 333, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 17:46:43', '2024-12-30 12:30:10'),
-(56, 333, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 18:15:44', '2024-12-30 12:30:10'),
-(57, 333, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 18:16:30', '2024-12-30 12:30:10'),
-(58, 333, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 18:18:53', '2024-12-30 12:30:10'),
-(59, 333, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 18:20:49', '2024-12-30 12:30:10'),
-(60, 333, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 18:30:49', '2024-12-30 12:30:10'),
-(61, 334, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-18 10:58:05', '2024-12-30 12:30:10'),
-(62, 334, NULL, 2, 1, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹1000', '1', '2024-10-18 11:07:04', '2024-12-30 12:30:10'),
-(63, 335, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-18 11:23:08', '2024-12-30 12:30:10'),
-(64, 337, NULL, 4, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-18 11:51:11', '2024-12-30 12:30:10'),
-(65, 338, NULL, 4, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-18 11:55:41', '2024-12-30 12:30:10'),
-(66, 335, NULL, 2, 1, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹100', '1', '2024-10-18 18:29:31', '2024-12-30 12:30:10'),
-(67, 336, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-18 18:56:12', '2024-12-30 12:30:10'),
-(68, 330, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-27 19:21:26', '2024-12-30 12:30:10'),
-(69, 329, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-27 19:50:47', '2024-12-30 12:30:10'),
-(70, 329, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-27 19:52:57', '2024-12-30 12:30:10'),
-(71, 324, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-11-07 15:29:01', '2024-12-30 12:30:10'),
-(72, 342, NULL, 4, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-11-07 17:34:01', '2024-12-30 12:30:10'),
-(73, 342, NULL, 5, 2, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-11-09 09:00:00', '2024-12-30 12:30:10'),
-(74, 342, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-11-09 09:25:23', '2024-12-30 12:30:10'),
-(75, 342, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-11-09 09:26:21', '2024-12-30 12:30:10'),
-(76, 342, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-11-09 09:33:56', '2024-12-30 12:30:10'),
-(77, 325, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-07 16:20:47', '2024-12-30 12:30:10'),
-(80, 329, NULL, 5, 2, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-13 17:32:10', '2024-12-30 12:30:10'),
-(81, 342, NULL, 4, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-14 16:05:55', '2024-12-30 12:30:10'),
-(82, 342, NULL, 5, 2, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-14 16:50:01', '2024-12-30 12:30:10'),
-(83, 342, NULL, 4, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-30 12:22:48', '2024-12-30 12:30:10'),
-(84, 342, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-30 12:23:30', '2024-12-30 12:30:10'),
-(85, 342, NULL, 2, 1, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹1', '1', '2024-12-30 12:30:02', '2024-12-30 12:30:10'),
-(87, 342, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-30 12:51:02', '2024-12-30 12:52:00'),
-(88, 344, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-30 12:54:19', '2024-12-30 12:54:27'),
-(89, 344, NULL, 2, 1, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹1', '1', '2025-01-06 13:52:47', '2025-01-06 14:33:44'),
-(90, 335, NULL, 2, 1, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹400', '1', '2025-01-06 13:53:21', '2025-01-06 14:33:42'),
-(91, 344, 24, 2, 1, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹2', '1', '2025-01-06 15:47:46', '2025-01-06 15:48:01'),
-(92, 328, NULL, 5, 2, 'Booking', NULL, 'Booking Created ', 'Admin Created a booking', '1', '2025-01-06 16:05:29', '2025-01-06 16:05:47');
+(38, 325, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-09-17 17:58:50', '2024-12-30 17:04:23'),
+(39, 328, NULL, 4, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-09-19 15:03:56', '2024-12-30 17:04:23'),
+(40, 324, NULL, 2, 1, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹1000', '1', '2024-09-19 15:06:56', '2024-12-30 17:04:23'),
+(41, 330, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-09-30 11:50:17', '2024-12-30 17:04:23'),
+(42, 330, NULL, 5, 2, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-09-30 13:13:15', '2024-12-30 17:04:23'),
+(43, 330, NULL, 5, 2, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹4720', '1', '2024-09-30 16:31:04', '2024-12-30 17:04:23'),
+(44, 331, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-03 16:45:46', '2024-12-30 17:04:23'),
+(45, 329, NULL, 4, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-15 14:31:42', '2024-12-30 17:04:23'),
+(46, 329, NULL, 4, 1, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹1775', '1', '2024-10-15 14:50:51', '2024-12-30 17:04:23'),
+(47, 324, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-15 15:10:15', '2024-12-30 17:04:23'),
+(48, 324, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-15 15:15:03', '2024-12-30 17:04:23'),
+(49, 324, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-15 15:22:43', '2024-12-30 17:04:23'),
+(50, 324, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 17:01:16', '2025-01-09 17:47:32'),
+(51, 333, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 17:33:34', '2025-01-09 17:47:32'),
+(52, 333, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 17:35:26', '2025-01-09 17:47:32'),
+(53, 333, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 17:36:55', '2025-01-09 17:47:32'),
+(54, 333, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 17:45:55', '2025-01-11 11:12:53'),
+(55, 333, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 17:46:43', '2025-01-11 11:12:53'),
+(56, 333, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 18:15:44', '2025-01-11 11:12:53'),
+(57, 333, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 18:16:30', '2025-01-11 11:21:27'),
+(58, 333, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 18:18:53', '2025-01-11 11:21:27'),
+(59, 333, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 18:20:49', '2025-01-11 11:21:27'),
+(60, 333, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-17 18:30:49', '2025-01-11 11:21:27'),
+(61, 334, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-18 10:58:05', '2025-01-11 11:21:27'),
+(62, 334, NULL, 2, 1, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹1000', '1', '2024-10-18 11:07:04', '2025-01-11 11:21:27'),
+(63, 335, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-18 11:23:08', '2025-01-11 11:21:27'),
+(64, 337, NULL, 4, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-18 11:51:11', '2025-01-11 11:21:27'),
+(65, 338, NULL, 4, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-18 11:55:41', '2025-01-11 11:21:27'),
+(66, 335, NULL, 2, 1, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹100', '1', '2024-10-18 18:29:31', '2025-01-11 11:21:27'),
+(67, 336, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-18 18:56:12', '2025-01-11 11:21:27'),
+(68, 330, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-27 19:21:26', '2025-01-11 11:21:27'),
+(69, 329, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-27 19:50:47', '2025-01-11 11:21:27'),
+(70, 329, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-10-27 19:52:57', '2025-01-11 11:21:27'),
+(71, 324, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-11-07 15:29:01', '2025-01-11 11:21:27'),
+(72, 342, NULL, 4, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-11-07 17:34:01', '2025-01-11 11:21:27'),
+(73, 342, NULL, 5, 2, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-11-09 09:00:00', '2025-01-11 11:21:27'),
+(74, 342, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-11-09 09:25:23', '2025-01-11 11:21:27'),
+(75, 342, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-11-09 09:26:21', '2025-01-11 11:21:27'),
+(76, 342, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-11-09 09:33:56', '2025-01-11 11:21:27'),
+(77, 325, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-07 16:20:47', '2025-01-11 11:21:27'),
+(80, 329, NULL, 5, 2, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-13 17:32:10', '2025-01-11 11:21:27'),
+(81, 342, NULL, 4, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-14 16:05:55', '2025-01-11 11:21:27'),
+(82, 342, NULL, 5, 2, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-14 16:50:01', '2025-01-11 11:21:27'),
+(83, 342, NULL, 4, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-30 12:22:48', '2025-01-11 11:21:27'),
+(84, 342, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-30 12:23:30', '2025-01-11 11:21:27'),
+(85, 342, NULL, 2, 1, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹1', '1', '2024-12-30 12:30:02', '2025-01-11 11:21:27'),
+(87, 342, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-30 12:51:02', '2025-01-11 11:21:27'),
+(88, 344, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-30 12:54:19', '2025-01-11 11:21:27'),
+(89, 324, NULL, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-30 15:44:12', '2025-01-11 11:21:27'),
+(90, 336, NULL, 5, 2, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2024-12-30 17:02:30', '2025-01-11 11:21:27'),
+(91, 342, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2025-01-02 13:49:29', '2025-01-11 11:21:27'),
+(92, 329, NULL, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 20 minutes.', '1', '2025-01-06 15:45:55', '2025-01-11 11:21:27'),
+(93, 329, NULL, 3, 1, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹4.72', '1', '2025-01-06 15:48:35', '2025-01-11 11:21:27'),
+(94, 336, 29, 5, 2, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 0 minutes.', '1', '2025-01-06 17:36:04', '2025-01-11 11:21:27'),
+(95, 342, 30, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 30 minutes.', '1', '2025-01-08 13:43:04', '2025-01-11 11:21:27'),
+(96, 342, 31, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 30 minutes.', '1', '2025-01-08 14:44:15', '2025-01-11 11:21:27'),
+(97, 324, 32, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 30 minutes.', '1', '2025-01-09 16:55:02', '2025-01-11 11:21:27'),
+(98, 324, 33, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 30 minutes.', '1', '2025-01-09 17:19:58', '2025-01-11 11:21:27'),
+(99, 324, 34, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 30 minutes.', '1', '2025-01-09 17:23:10', '2025-01-11 11:21:27'),
+(100, 324, 35, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 30 minutes.', '1', '2025-01-09 17:23:58', '2025-01-11 11:21:27'),
+(101, 324, 36, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 30 minutes.', '1', '2025-01-09 17:25:15', '2025-01-11 11:21:27'),
+(102, 324, 37, 3, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 30 minutes.', '1', '2025-01-09 17:26:08', '2025-01-11 11:21:27'),
+(103, 324, 38, 2, 1, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 30 minutes.', '1', '2025-01-10 12:45:55', '2025-01-11 11:21:27'),
+(104, 324, 38, 2, 1, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹1', '1', '2025-01-10 12:46:50', '2025-01-11 11:21:27'),
+(105, 336, 39, 5, 2, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 30 minutes.', '1', '2025-01-10 21:33:44', '2025-01-11 11:21:27'),
+(106, 336, 40, 5, 2, 'Booking', NULL, 'Booking Created ', 'Booking has been created. Please make payment otherwise your request will be cancelled within 30 minutes.', '1', '2025-01-11 11:11:58', '2025-01-11 11:21:27'),
+(107, 336, 40, 5, 2, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹1000', '1', '2025-01-11 11:14:38', '2025-01-11 11:21:27'),
+(108, 336, 40, 5, 2, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹1000', '1', '2025-01-11 11:19:12', '2025-01-11 11:21:27'),
+(109, 336, 40, 5, 2, 'Payment', NULL, 'Payment Received', 'Transaction of amount ₹22000', '1', '2025-01-11 11:19:36', '2025-01-11 11:21:27');
 
 -- --------------------------------------------------------
 
@@ -1844,7 +1973,17 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (212, 'App\\Models\\User', 342, 'auth_token', 'c68b2fabcb705d5e756f1aacf1c7226c06de42bfeef9ae11e14849fd89a0dfd3', '[\"*\"]', '2024-12-30 12:51:02', NULL, '2024-11-09 08:34:22', '2024-12-30 12:51:02'),
 (213, 'App\\Models\\User', 325, 'auth_token', 'fd8d1562cb84e3229f3bdb653347c961a0254d1a28cad58ea4861add850e6d13', '[\"*\"]', '2024-12-07 16:18:14', NULL, '2024-12-07 16:17:30', '2024-12-07 16:18:14'),
 (214, 'App\\Models\\User', 325, 'auth_token', '397ab52c0602abfb4014b745501f4e6c363b038efc75f410c22a42be6e9a1c6a', '[\"*\"]', '2024-12-07 16:22:50', NULL, '2024-12-07 16:19:21', '2024-12-07 16:22:50'),
-(215, 'App\\Models\\User', 343, 'auth_token', '8ec59d3c3f20dd7c513a8a67712347930bf7a32fd31934bb2502bb876d1717be', '[\"*\"]', '2024-12-20 11:43:18', NULL, '2024-12-18 14:34:13', '2024-12-20 11:43:18');
+(215, 'App\\Models\\User', 343, 'auth_token', '8ec59d3c3f20dd7c513a8a67712347930bf7a32fd31934bb2502bb876d1717be', '[\"*\"]', '2024-12-20 11:43:18', NULL, '2024-12-18 14:34:13', '2024-12-20 11:43:18'),
+(216, 'App\\Models\\User', 324, 'auth_token', 'a56c0ea64d07ef8d054daf6289cc2f204a8b4dde7ff0d5f8e67ae3495eb532f6', '[\"*\"]', '2024-12-30 16:50:39', NULL, '2024-12-30 15:44:00', '2024-12-30 16:50:39'),
+(217, 'App\\Models\\User', 336, 'auth_token', 'cd6979aee8090d409d48b6505ed264dc8f1fb0046c0a05da366292c31a63bd7a', '[\"*\"]', '2025-01-02 19:06:50', NULL, '2024-12-30 16:48:46', '2025-01-02 19:06:50'),
+(218, 'App\\Models\\User', 324, 'auth_token', 'c931c2cf022c2e5359008728ede60b3ef1fbdc89b84ac2feafc1f7a9b9c3b2e0', '[\"*\"]', '2025-01-09 13:22:03', NULL, '2024-12-30 16:51:20', '2025-01-09 13:22:03'),
+(219, 'App\\Models\\User', 342, 'auth_token', 'd92675f133794b16f5c94ec67b64a7dd941904e7e48faa98b517c546ff2bb010', '[\"*\"]', '2025-01-08 14:46:00', NULL, '2025-01-02 13:48:50', '2025-01-08 14:46:00'),
+(220, 'App\\Models\\User', 336, 'auth_token', 'c2d1ec414780aa8a984baf6b409c3843408aeca9123ba47e389adac36bf558b4', '[\"*\"]', '2025-01-10 21:35:33', NULL, '2025-01-06 17:33:25', '2025-01-10 21:35:33'),
+(221, 'App\\Models\\User', 324, 'auth_token', '914708eec683ba709e15b44a11baef8fbe96ce0c9cbf000b613f356f28793906', '[\"*\"]', '2025-01-09 16:51:02', NULL, '2025-01-09 14:51:53', '2025-01-09 16:51:02'),
+(222, 'App\\Models\\User', 324, 'auth_token', '9aeafd221d47337e2f337c1b0f200db7c20d78547d48eb9863f08d356cd4aa36', '[\"*\"]', '2025-01-10 12:54:43', NULL, '2025-01-09 16:51:19', '2025-01-10 12:54:43'),
+(223, 'App\\Models\\User', 342, 'auth_token', 'a176d942f5ea4e8090975f52bcd5001191a9a521d810f3ef3a84dd04ce133743', '[\"*\"]', '2025-01-09 20:28:11', NULL, '2025-01-09 20:28:02', '2025-01-09 20:28:11'),
+(224, 'App\\Models\\User', 324, 'auth_token', '71ab330c1bd5ac307f9338bbeaa2f37415886d89e80e212f085f71186de0e9b1', '[\"*\"]', '2025-01-11 11:33:21', NULL, '2025-01-10 12:55:04', '2025-01-11 11:33:21'),
+(225, 'App\\Models\\User', 336, 'auth_token', '90dea59017ac170c1ef1f76723583869159c460ef47b1488e0ac7d1b43f59a05', '[\"*\"]', '2025-01-11 11:21:02', NULL, '2025-01-11 11:11:19', '2025-01-11 11:21:02');
 
 -- --------------------------------------------------------
 
@@ -2031,7 +2170,8 @@ INSERT INTO `queries` (`id`, `user_id`, `subject`, `message`, `image`, `is_resol
 (67, 14, 'nice studio', 'am happy', NULL, '0', '2024-06-26 11:23:33', NULL),
 (68, 14, 'studio', 'studio a', NULL, '0', '2024-06-26 11:26:08', NULL),
 (69, 14, 'beautiful', 'nice', NULL, '0', '2024-06-26 11:26:57', NULL),
-(70, 342, 'AC was not working', 'AC did not work the whole session', NULL, '0', '2024-11-09 08:48:40', NULL);
+(70, 342, 'AC was not working', 'AC did not work the whole session', NULL, '0', '2024-11-09 08:48:40', NULL),
+(71, 324, 'test', 'test', NULL, '0', '2025-01-09 17:14:49', NULL);
 
 -- --------------------------------------------------------
 
@@ -6642,7 +6782,7 @@ CREATE TABLE `studios` (
 --
 
 INSERT INTO `studios` (`id`, `vendor_id`, `name`, `color`, `address`, `country_id`, `state_id`, `district_id`, `city`, `pincode`, `google_map`, `description`, `equipment_info`, `terms`, `opens_at`, `ends_at`, `longitude`, `deleted_at`, `latitude`, `created_at`, `updated_at`) VALUES
-(2, 1, 'Studio A', '#00bcf5', '7th Floor 702 B Wing, Venus Tower, Above Axis Bank, Azad Nagar, Veera Desai Road, Andheri West,', 19, 22, 405, NULL, '400058', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3769.467701951998!2d72.83478507554112!3d19.130993982084973!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b6265a933aa1%3A0xbb888b8fd66d79e7!2sR%20and%20B%20Studios!5e0!3m2!1sen!2sin!4v1715868625346!5m2!1sen!2sin\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', NULL, '<p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>', NULL, '08:00:00', '23:00:00', '19.1309991', NULL, '72.8347851', '2024-02-28 19:46:37', '2025-01-06 08:19:01'),
+(2, 1, 'Studio A', '#01232d', '7th Floor 702 B Wing, Venus Tower, Above Axis Bank, Azad Nagar, Veera Desai Road, Andheri West,', 19, 22, 405, NULL, '400058', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3769.467701951998!2d72.83478507554112!3d19.130993982084973!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b6265a933aa1%3A0xbb888b8fd66d79e7!2sR%20and%20B%20Studios!5e0!3m2!1sen!2sin!4v1715868625346!5m2!1sen!2sin\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', NULL, '<p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>', NULL, '08:00:00', '23:00:00', '19.1309991', NULL, '72.8347851', '2024-02-28 19:46:37', '2024-10-18 18:32:28'),
 (3, 1, 'Studio B', '#00bdb6', '9th Floor 905 B Wing, Venus Tower, Above Axis Bank, Azad Nagar, Veera Desai Road, Andheri West,', 19, 22, 405, NULL, '400058', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3769.467701951998!2d72.83478507554112!3d19.130993982084973!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b6265a933aa1%3A0xbb888b8fd66d79e7!2sR%20and%20B%20Studios!5e0!3m2!1sen!2sin!4v1715868625346!5m2!1sen!2sin\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', NULL, '<p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>', NULL, '08:00:00', '23:00:00', '72.8347851', NULL, '19.1309991', '2024-02-28 19:51:41', '2024-10-18 18:32:42'),
 (4, 1, 'Studio C', '#cc8100', '11th Floor 1104 B Wing, Venus Tower, Above Axis Bank, Azad Nagar, Veera Desai Road, Andheri West', 19, 22, 405, NULL, '400058', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3769.467701951998!2d72.83478507554112!3d19.130993982084973!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b6265a933aa1%3A0xbb888b8fd66d79e7!2sR%20and%20B%20Studios!5e0!3m2!1sen!2sin!4v1715868625346!5m2!1sen!2sin\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', NULL, '<p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>', NULL, '08:00:00', '23:00:00', NULL, NULL, NULL, '2024-03-15 13:01:58', '2024-10-18 18:33:04'),
 (5, 2, 'Studio X', '#06402b', '104/105 Nivan, Plot No 96, SV Road, Opp Podar Int. School, Khar West', 19, 22, 405, NULL, '400052', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3770.871489079762!2d72.8344253248146!3d19.06938705218097!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c9102b85a5c5%3A0xe19427b2504bb3c9!2sNivan%20Apartment%2C%20Khar%2C%20Shiv%20Kutir%2C%20Khar%20West%2C%20Mumbai%2C%20Maharashtra%20400052!5e0!3m2!1sen!2sin!4v1723623995216!5m2!1sen!2sin\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '<p>this is test</p>', '<p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>', '<p>no data</p>', '08:00:00', '23:00:00', '19.131258', NULL, '72.837296', '2024-06-20 09:43:08', '2024-09-17 12:42:31');
@@ -6723,9 +6863,24 @@ INSERT INTO `transactions` (`id`, `transaction_date`, `transaction_id`, `type`, 
 (5, '2024-11-09', NULL, 'Credit', 3.54, '1731125064_13', 342, 13, 2, 1, '{\"merchant_id\":\"2164114\",\"order_id\":\"1731125064_13\",\"currency\":\"INR\",\"amount\":3.54,\"redirect_url\":\"https:\\/\\/rbstudios.info\\/pay_response\",\"cancel_url\":\"https:\\/\\/rbstudios.info\\/pay_cancel\",\"language\":\"EN\"}', '{\"order_id\":\"1731125064_13\",\"tracking_id\":\"113533691289\",\"bank_ref_no\":\"431421639102\",\"order_status\":\"Success\",\"failure_message\":\"\",\"payment_mode\":\"Unified Payments\",\"card_name\":\"UPI\",\"status_code\":\"null\",\"status_message\":\"Transaction Successful-NA-0\",\"currency\":\"INR\",\"amount\":\"3.54\",\"billing_name\":\"Harsh\",\"billing_address\":\"Khar\",\"billing_city\":\"Mumbai\",\"billing_state\":\"Maharastra\",\"billing_zip\":\"4000052\",\"billing_country\":\"India\",\"billing_tel\":\"9372837667\",\"billing_email\":\"harshgupta@gmail.com\",\"delivery_name\":\"\",\"delivery_address\":\"\",\"delivery_city\":\"\",\"delivery_state\":\"\",\"delivery_zip\":\"\",\"delivery_country\":\"\",\"delivery_tel\":\"\",\"merchant_param1\":\"\",\"merchant_param2\":\"\",\"merchant_param3\":\"\",\"merchant_param4\":\"\",\"merchant_param5\":\"\",\"vault\":\"N\",\"offer_type\":\"null\",\"offer_code\":\"null\",\"discount_value\":\"0.0\",\"mer_amount\":\"3.54\",\"eci_value\":\"null\",\"retry\":\"N\",\"response_code\":\"null\",\"billing_notes\":\"\",\"trans_date\":\"09\\/11\\/2024 09:34:24\",\"bin_country\":\"\",\"auth_ref_num\":\"\"}', 'CCA', 'Success', NULL, '2024-11-09 09:34:24', '2024-11-09 09:36:37'),
 (6, '2024-12-30', NULL, 'Credit', 3.54, '1735541966_21', 342, 21, 2, 1, '{\"merchant_id\":\"2164114\",\"order_id\":\"1735541966_21\",\"currency\":\"INR\",\"amount\":3.54,\"redirect_url\":\"https:\\/\\/rbstudios.info\\/pay_response\",\"cancel_url\":\"https:\\/\\/rbstudios.info\\/pay_cancel\",\"language\":\"EN\"}', NULL, 'CCA', NULL, NULL, '2024-12-30 12:29:26', NULL),
 (7, '2024-12-30', NULL, 'Credit', 1, '20241230123002', 342, 21, 2, 1, NULL, NULL, 'cash', 'Success', NULL, '2024-12-30 12:30:02', NULL),
-(8, '2025-01-06', NULL, 'Credit', 1, '20250106015247', 344, 24, 2, 1, NULL, NULL, 'cash', 'Success', NULL, '2025-01-06 08:22:47', NULL),
-(9, '2025-01-06', NULL, 'Credit', 400, '20250106015320', 335, 1, 2, 1, NULL, NULL, 'cash', 'Success', NULL, '2025-01-06 08:23:20', NULL),
-(10, '2025-01-06', NULL, 'Credit', 2, '20250106034746', 344, 24, 2, 1, NULL, NULL, 'cash', 'Success', NULL, '2025-01-06 10:17:46', NULL);
+(8, '2025-01-02', NULL, 'Credit', 2.95, '1735806091_27', 342, 27, 3, 1, '{\"merchant_id\":\"2164114\",\"order_id\":\"1735806091_27\",\"currency\":\"INR\",\"amount\":2.95,\"redirect_url\":\"https:\\/\\/rbstudios.info\\/pay_response\",\"cancel_url\":\"https:\\/\\/rbstudios.info\\/pay_cancel\",\"language\":\"EN\"}', '{\"order_id\":\"1735806091_27\",\"tracking_id\":\"113596290499\",\"bank_ref_no\":\"500253709954\",\"order_status\":\"Success\",\"failure_message\":\"\",\"payment_mode\":\"Unified Payments\",\"card_name\":\"UPI\",\"status_code\":\"null\",\"status_message\":\"Transaction Successful-NA-0\",\"currency\":\"INR\",\"amount\":\"2.95\",\"billing_name\":\"Karamveer\",\"billing_address\":\"1301 Jaswant Heights\",\"billing_city\":\"Mumbai\",\"billing_state\":\"Maharashtra\",\"billing_zip\":\"400052\",\"billing_country\":\"India\",\"billing_tel\":\"9820998866\",\"billing_email\":\"admin@rbstudios.info\",\"delivery_name\":\"\",\"delivery_address\":\"\",\"delivery_city\":\"\",\"delivery_state\":\"\",\"delivery_zip\":\"\",\"delivery_country\":\"\",\"delivery_tel\":\"\",\"merchant_param1\":\"\",\"merchant_param2\":\"\",\"merchant_param3\":\"\",\"merchant_param4\":\"\",\"merchant_param5\":\"\",\"vault\":\"N\",\"offer_type\":\"null\",\"offer_code\":\"null\",\"discount_value\":\"0.0\",\"mer_amount\":\"2.95\",\"eci_value\":\"null\",\"retry\":\"N\",\"response_code\":\"null\",\"billing_notes\":\"\",\"trans_date\":\"02\\/01\\/2025 13:51:32\",\"bin_country\":\"\",\"auth_ref_num\":\"\"}', 'CCA', 'Success', NULL, '2025-01-02 13:51:31', '2025-01-02 13:52:55'),
+(9, '2025-01-06', '7689', 'Credit', 4.72, '20250106034835', 329, 28, 3, 1, NULL, NULL, 'UPI', 'Success', NULL, '2025-01-06 15:48:35', NULL),
+(10, '2025-01-06', NULL, 'Credit', 4.72, '1736159091_24', 344, 24, 2, 1, '{\"merchant_id\":\"2164114\",\"order_id\":\"1736159091_24\",\"currency\":\"INR\",\"amount\":4.72,\"redirect_url\":\"https:\\/\\/rbstudios.info\\/pay_response\",\"cancel_url\":\"https:\\/\\/rbstudios.info\\/pay_cancel\",\"language\":\"EN\"}', NULL, 'CCA', NULL, NULL, '2025-01-06 15:54:51', NULL),
+(11, '2025-01-06', NULL, 'Credit', 14160, '1736166075_29', 336, 29, 5, 2, '{\"merchant_id\":\"2164114\",\"order_id\":\"1736166075_29\",\"currency\":\"INR\",\"amount\":14160,\"redirect_url\":\"https:\\/\\/rbstudios.info\\/pay_response\",\"cancel_url\":\"https:\\/\\/rbstudios.info\\/pay_cancel\",\"language\":\"EN\"}', NULL, 'CCA', NULL, NULL, '2025-01-06 17:51:15', NULL),
+(12, '2025-01-06', NULL, 'Credit', 7080, '1736166147_29', 336, 29, 5, 2, '{\"merchant_id\":\"2164114\",\"order_id\":\"1736166147_29\",\"currency\":\"INR\",\"amount\":7080,\"redirect_url\":\"https:\\/\\/rbstudios.info\\/pay_response\",\"cancel_url\":\"https:\\/\\/rbstudios.info\\/pay_cancel\",\"language\":\"EN\"}', NULL, 'CCA', NULL, NULL, '2025-01-06 17:52:27', NULL),
+(13, '2025-01-09', NULL, 'Credit', 1182.36, '1736421913_32', 324, 32, 2, 1, '{\"merchant_id\":\"2164114\",\"order_id\":\"1736421913_32\",\"currency\":\"INR\",\"amount\":1182.36,\"redirect_url\":\"https:\\/\\/rbstudios.info\\/pay_response\",\"cancel_url\":\"https:\\/\\/rbstudios.info\\/pay_cancel\",\"language\":\"EN\"}', NULL, 'CCA', NULL, NULL, '2025-01-09 16:55:13', NULL),
+(14, '2025-01-09', NULL, 'Credit', 1182.36, '1736423581_33', 324, 33, 2, 1, '{\"merchant_id\":\"2164114\",\"order_id\":\"1736423581_33\",\"currency\":\"INR\",\"amount\":1182.36,\"redirect_url\":\"https:\\/\\/rbstudios.info\\/pay_response\",\"cancel_url\":\"https:\\/\\/rbstudios.info\\/pay_cancel\",\"language\":\"EN\"}', NULL, 'CCA', NULL, NULL, '2025-01-09 17:23:01', NULL),
+(15, '2025-01-09', NULL, 'Credit', 20080.06, '1736423718_36', 324, 36, 2, 1, '{\"merchant_id\":\"2164114\",\"order_id\":\"1736423718_36\",\"currency\":\"INR\",\"amount\":20080.059999999998,\"redirect_url\":\"https:\\/\\/rbstudios.info\\/pay_response\",\"cancel_url\":\"https:\\/\\/rbstudios.info\\/pay_cancel\",\"language\":\"EN\"}', '{\"order_id\":\"1736423718_36\",\"tracking_id\":\"113605218448\",\"bank_ref_no\":\"null\",\"order_status\":\"Aborted\",\"failure_message\":\"\",\"payment_mode\":\"\",\"card_name\":\"\",\"status_code\":\"null\",\"status_message\":\"Do not want to share my payment details online\",\"currency\":\"INR\",\"amount\":\"20080.06\",\"billing_name\":\"\",\"billing_address\":\"\",\"billing_city\":\"\",\"billing_state\":\"\",\"billing_zip\":\"\",\"billing_country\":\"\",\"billing_tel\":\"\",\"billing_email\":\"\",\"delivery_name\":\"\",\"delivery_address\":\"\",\"delivery_city\":\"\",\"delivery_state\":\"\",\"delivery_zip\":\"\",\"delivery_country\":\"\",\"delivery_tel\":\"\",\"merchant_param1\":\"\",\"merchant_param2\":\"\",\"merchant_param3\":\"\",\"merchant_param4\":\"\",\"merchant_param5\":\"\",\"vault\":\"N\",\"offer_type\":\"null\",\"offer_code\":\"null\",\"discount_value\":\"0.0\",\"mer_amount\":\"20080.06\",\"eci_value\":\"null\",\"retry\":\"null\",\"response_code\":\"null\",\"billing_notes\":\"\",\"trans_date\":\"09\\/01\\/2025 17:25:18\",\"bin_country\":\"\",\"auth_ref_num\":\"\"}', 'CCA', 'Aborted', NULL, '2025-01-09 17:25:18', '2025-01-09 17:25:26'),
+(16, '2025-01-09', NULL, 'Credit', 2955.9, '1736428758_35', 324, 35, 2, 1, '{\"merchant_id\":\"2164114\",\"order_id\":\"1736428758_35\",\"currency\":\"INR\",\"amount\":2955.8999999999996,\"redirect_url\":\"https:\\/\\/rbstudios.info\\/pay_response\",\"cancel_url\":\"https:\\/\\/rbstudios.info\\/pay_cancel\",\"language\":\"EN\"}', NULL, 'CCA', NULL, NULL, '2025-01-09 18:49:18', NULL),
+(17, '2025-01-09', NULL, 'Credit', 20080.06, '1736428764_36', 324, 36, 2, 1, '{\"merchant_id\":\"2164114\",\"order_id\":\"1736428764_36\",\"currency\":\"INR\",\"amount\":20080.059999999998,\"redirect_url\":\"https:\\/\\/rbstudios.info\\/pay_response\",\"cancel_url\":\"https:\\/\\/rbstudios.info\\/pay_cancel\",\"language\":\"EN\"}', NULL, 'CCA', NULL, NULL, '2025-01-09 18:49:24', NULL),
+(18, '2025-01-09', NULL, 'Credit', 1182.36, '1736428786_34', 324, 34, 2, 1, '{\"merchant_id\":\"2164114\",\"order_id\":\"1736428786_34\",\"currency\":\"INR\",\"amount\":1182.36,\"redirect_url\":\"https:\\/\\/rbstudios.info\\/pay_response\",\"cancel_url\":\"https:\\/\\/rbstudios.info\\/pay_cancel\",\"language\":\"EN\"}', NULL, 'CCA', NULL, NULL, '2025-01-09 18:49:46', NULL),
+(19, '2025-01-09', NULL, 'Credit', 2955.9, '1736428796_35', 324, 35, 2, 1, '{\"merchant_id\":\"2164114\",\"order_id\":\"1736428796_35\",\"currency\":\"INR\",\"amount\":2955.8999999999996,\"redirect_url\":\"https:\\/\\/rbstudios.info\\/pay_response\",\"cancel_url\":\"https:\\/\\/rbstudios.info\\/pay_cancel\",\"language\":\"EN\"}', NULL, 'CCA', NULL, NULL, '2025-01-09 18:49:56', NULL),
+(20, '2025-01-10', NULL, 'Credit', 1, '20250110124650', 324, 38, 2, 1, NULL, NULL, 'Cash', 'Success', NULL, '2025-01-10 12:46:50', NULL),
+(21, '2025-01-11', NULL, 'Credit', 28320, '1736574245_40', 336, 40, 5, 2, '{\"merchant_id\":\"2164114\",\"order_id\":\"1736574245_40\",\"currency\":\"INR\",\"amount\":28320,\"redirect_url\":\"https:\\/\\/rbstudios.info\\/pay_response\",\"cancel_url\":\"https:\\/\\/rbstudios.info\\/pay_cancel\",\"language\":\"EN\"}', NULL, 'CCA', NULL, NULL, '2025-01-11 11:14:05', NULL),
+(22, '2025-01-11', NULL, 'Credit', 1000, '20250111111438', 336, 40, 5, 2, NULL, NULL, 'cash', 'Success', NULL, '2025-01-11 11:14:38', NULL),
+(23, '2025-01-11', NULL, 'Credit', 27320, '1736574536_40', 336, 40, 5, 2, '{\"merchant_id\":\"2164114\",\"order_id\":\"1736574536_40\",\"currency\":\"INR\",\"amount\":27320,\"redirect_url\":\"https:\\/\\/rbstudios.info\\/pay_response\",\"cancel_url\":\"https:\\/\\/rbstudios.info\\/pay_cancel\",\"language\":\"EN\"}', NULL, 'CCA', NULL, NULL, '2025-01-11 11:18:56', NULL),
+(24, '2025-01-11', NULL, 'Credit', 1000, '20250111111912', 336, 40, 5, 2, NULL, NULL, 'cash', 'Success', NULL, '2025-01-11 11:19:12', NULL),
+(25, '2025-01-11', NULL, 'Credit', 22000, '20250111111936', 336, 40, 5, 2, NULL, NULL, 'Cash', 'Success', NULL, '2025-01-11 11:19:36', NULL);
 
 -- --------------------------------------------------------
 
@@ -6759,12 +6914,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `vendor_id`, `name`, `email`, `password`, `mobile`, `role`, `dob`, `gender`, `mobile_verified_at`, `is_verified`, `otp`, `otp_verified`, `remember_token`, `fcm_token`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 0, 'Super Admin', 'super@admin.com', '$2y$10$JpexmVFGXkT9tko6qqtTCeytAZumFu4Uzec32Nb3O70xAjOer.53u', '8989898989', 'Super', NULL, NULL, NULL, '1', NULL, '1', '30', NULL, NULL, '2024-02-17 04:21:29', '2025-01-06 10:52:41'),
+(1, 0, 'Super Admin', 'super@admin.com', '$2y$10$h8s32GnO.FTLMK03.N9.UezG1z2Wh8adWslKdU/CsOfPwSfXK6afK', '8989898989', 'Super', NULL, NULL, NULL, '1', NULL, '1', '30', NULL, NULL, '2024-02-17 04:21:29', '2025-01-06 17:53:07'),
 (2, 1, 'R and B Studios (Andheri)', 'bookings@rbstudios.com', '$2y$10$oUgSNyKuLbRJ0VH6u86ZBehsqW/MIPdKRPE1EguJKxUHo4zHjSvz6', '9892856000', 'Admin', NULL, NULL, '2024-09-16 13:19:24', '0', '', '1', 'Munna@123', NULL, NULL, '2024-02-19 03:53:59', '2024-12-13 17:44:05'),
 (5, 1, 'Manager full', 'manager@gmail.com', '$2y$10$mFWslbtMHRxgSRE.P4wrXenvBSioPRtPY/6bX70m0K3JVqmX4Uaye', '8758787484', 'Employee', NULL, 'Female', NULL, '0', NULL, '0', NULL, NULL, '2024-09-07 17:39:53', '2024-02-19 07:16:43', '2024-09-07 18:15:00'),
 (6, 1, 'Editor', 'editor@admin.com', '$2y$10$1HxyI7OnLLwD4m0DI5CVI.jhcYgQCc46md0J8kPZQn9nmSeXUxDU.', '7878787878', 'Employee', NULL, 'Female', NULL, '0', NULL, '0', NULL, NULL, '2024-09-07 17:39:59', '2024-02-19 07:17:23', '2024-09-07 17:39:59'),
 (7, 2, 'R and B Studios (Khar)', 'admin@rbstudios.info', '$2y$10$BXtMyUxlg52/boL0S6bKoOE7o6rfHhauPX3PFcNIS7GxJK1FJf5u2', '9820996688', 'Admin', NULL, NULL, '2024-09-16 18:14:54', '1', '8772', '0', 'Munna@123', NULL, NULL, '2024-02-20 03:53:41', '2024-09-16 18:49:39'),
-(324, NULL, 'Pulkesh Tiwari', NULL, NULL, '8953734328', 'User', NULL, NULL, '2024-11-07 15:28:51', '1', '', '1', NULL, 'cnWo24x9SD2-0ErRR6zAQj:APA91bG8ZauxL433aKLqPAg-PaUa6FNoEdAcjRtCE9cfgzPvXrV-Ydc7uwg1b0RfkCori00xTbNuGxupuOsspBuZQiuMIu8jGY5RgfTEz_TkCDx1wRAmCE8', NULL, '2024-09-16 00:00:00', '2024-11-07 15:28:51'),
+(324, NULL, 'Pulkesh Tiwari', 'pulkeshtiwari@gmail.com', NULL, '8953734328', 'User', NULL, 'Male', '2025-01-10 12:55:04', '1', '', '1', NULL, 'e7tjgTcTSHWjzJ1pOTWfa3:APA91bGyVrB9WlrWrQsXhV5HL5DSWzUwvtMOALCvq10FF-khdRT2J0VU1Jk-VjSs0ZW7b7j6PdR5MW19hxA5kbwgNOme5TrNVx4OXpxaYHD7geGztuen4BQ', NULL, '2024-09-16 00:00:00', '2025-01-11 11:06:37'),
 (325, NULL, 'playstore', 'playstore11@gmail.com', NULL, '8888888888', 'User', NULL, NULL, '2024-12-07 16:19:21', '1', '', '1', NULL, 'eCd64FHiSjugmP4H6lvzlT:APA91bE3ANOEK2MZrzA6I3r4sC6_acOEvtivGMnGCDNDa6VC7V91e9lmZaXvFfbTckaFxhZtwdCa0UTorAetQzbXScdRXDfYsqMTKINiyJ0NswVkXSddbLg', NULL, '2024-09-17 00:00:00', '2024-12-07 16:20:28'),
 (326, NULL, NULL, NULL, NULL, '7357653866', 'User', NULL, NULL, '2024-09-17 18:07:01', '0', '', '1', NULL, NULL, NULL, '2024-09-17 00:00:00', '2024-09-17 18:07:01'),
 (327, NULL, NULL, NULL, NULL, '9667472768', 'User', NULL, NULL, NULL, '0', '4148', '0', NULL, NULL, NULL, '2024-09-17 00:00:00', '2024-09-17 18:01:58'),
@@ -6776,17 +6931,16 @@ INSERT INTO `users` (`id`, `vendor_id`, `name`, `email`, `password`, `mobile`, `
 (333, NULL, 'Taufeeq Ahmad', 'tfa@gmail.com', NULL, '9580418361', 'User', NULL, NULL, '2024-10-17 17:29:16', '1', '', '1', NULL, 'cVxKVcGHT5aCHTytI3coQz:APA91bHJAkYCnKHbGtxeZvwXyof8hcWo0CGsJNzwlBHrayUXrc9V7oGhEBCo-l5Bq2dtbfgAvc3Io-nnXBNVCutQS-sLkXaeStl9OnE3jv8BsmDxBvgaEKYgpTMcxJ8928bX7IslZ1be', NULL, '2024-10-17 00:00:00', '2024-10-17 18:21:04'),
 (334, NULL, 'Shayam Prasad', 'shayamprasad1234@gmail.com', NULL, '9012322715', 'User', NULL, NULL, NULL, '1', NULL, '1', NULL, NULL, NULL, NULL, NULL),
 (335, NULL, 'Jagat pradas', 'jagat_prasad1123@gmail.com', NULL, '9084694810', 'User', NULL, NULL, NULL, '1', NULL, '1', NULL, NULL, NULL, NULL, NULL),
-(336, NULL, NULL, NULL, NULL, '9084694815', 'User', NULL, NULL, '2024-12-30 14:30:16', '0', '', '1', NULL, NULL, NULL, '2024-10-18 00:00:00', '2024-12-30 14:30:16'),
+(336, NULL, 'Shahrukh Bhai', 'khan031171@gmail.com', NULL, '9084694815', 'User', NULL, NULL, '2025-01-11 11:11:18', '1', '', '1', NULL, 'dOQv9-4tR1yxhdjk9FdFwB:APA91bFKHfSfJARxyVl112dd8BmQzfE06buuhkjdISat9CV1FPwia6ywpywTn_wuALFlSzm_KpAkVjvx9MmTo6bUC_pIMHVJzMnx8xCJ0WiqduuEEPWCxZY', NULL, '2024-10-18 00:00:00', '2025-01-11 11:20:08'),
 (337, NULL, 'Radhey Shayam', 'radheyshayam@gmail.com', NULL, '9084657484', 'User', NULL, NULL, NULL, '1', NULL, '1', NULL, NULL, NULL, NULL, NULL),
 (338, NULL, 'Rajendra Prasad', 'rajendra@gmail.com', NULL, '9897484547', 'User', NULL, NULL, NULL, '1', NULL, '1', NULL, NULL, NULL, NULL, '2024-10-19 12:22:47'),
 (339, 0, 'Myemployee Super', 'employee1@rbstudios.info', '$2y$10$MPEQRf5NZ2jHA1QqWen/6OnSIenEMORiknnuFZ3JEjvkJHFjh9LFe', '9084587451', 'Employee', NULL, 'Female', NULL, '0', NULL, '0', NULL, NULL, NULL, '2024-10-19 13:27:23', '2024-10-19 13:27:23'),
 (340, NULL, 'Swarupa Ananth', 'Swarupa.ananth@gmail.com', NULL, '9820534318', 'User', NULL, NULL, '2024-11-03 13:01:46', '1', '', '1', NULL, NULL, NULL, '2024-11-03 00:00:00', '2024-11-03 13:02:31'),
 (341, NULL, 'Sonali Keshari', 'kesharwanisonali@gnail.com', NULL, '8009493236', 'User', NULL, NULL, '2024-11-07 15:30:26', '1', '', '1', NULL, 'dRODaETnSYKqX8WynJn4yg:APA91bE38JzKI9oUYCbP0K90ujie2F68ICj7Os0PhMgjnR4z9rnpnUOgSoAQG0oUQicGaINXCbmX6ngjZXqpZRpY--K4rsxLMFXKrLeoSJPOGAgoIzcz_UI', NULL, '2024-11-07 00:00:00', '2024-11-13 14:44:59'),
-(342, NULL, 'Harsh Gupta', 'harshgupta@gmail.com', NULL, '9372837667', 'User', NULL, NULL, '2024-11-09 08:34:22', '1', '6270', '0', NULL, NULL, NULL, '2024-11-07 00:00:00', '2024-12-30 12:59:38'),
+(342, NULL, 'Harsh Gupta', 'harshgupta@gmail.com', NULL, '9372837667', 'User', NULL, NULL, '2025-01-09 20:28:02', '1', '', '1', NULL, 'cwwx3LPzQ0itl5CjLshyAO:APA91bHsvptVnFBznREdk6rkrLQa5SFSdL3d6ObkrFoSIVXNVnr0QmM5GJvBeGSyvR73Awd4-gSrnRDqcL3goBjJmbSU_88a51LwTexnAw15JaFqWcNfLng', NULL, '2024-11-07 00:00:00', '2025-01-09 20:28:03'),
 (343, NULL, 'Evaan Kothari', 'evaankothari@gmail.com', NULL, '8808800701', 'User', NULL, NULL, '2024-12-18 14:33:23', '1', '', '1', NULL, NULL, NULL, '2024-12-18 00:00:00', '2024-12-18 14:34:13'),
 (344, NULL, 'Neha Poly', 'nehapoly@hotmail.com', NULL, '9820377223', 'User', NULL, NULL, NULL, '1', NULL, '1', NULL, NULL, NULL, NULL, NULL),
-(345, NULL, 'Aman Markawa', 'amanmarkawa@gmail.com', NULL, '9878181817', 'User', NULL, NULL, NULL, '0', NULL, '0', NULL, NULL, NULL, '2025-01-06 07:22:36', '2025-01-06 07:22:36'),
-(346, NULL, 'Sru Notiyal', 'srunaot@gmail.com', NULL, '9819817161', 'User', '2002-03-06', 'Male', NULL, '1', NULL, '1', NULL, NULL, NULL, '2025-01-06 07:25:03', '2025-01-06 11:02:41');
+(345, NULL, NULL, NULL, NULL, '9625284824', 'User', NULL, NULL, NULL, '0', '7725', '0', NULL, NULL, NULL, '2025-01-09 00:00:00', '2025-01-09 13:33:33');
 
 -- --------------------------------------------------------
 
@@ -7071,13 +7225,13 @@ ALTER TABLE `banners`
 -- AUTO_INCREMENT for table `blocked_slots`
 --
 ALTER TABLE `blocked_slots`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
 
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `booking_gsts`
@@ -7089,7 +7243,7 @@ ALTER TABLE `booking_gsts`
 -- AUTO_INCREMENT for table `booking_items`
 --
 ALTER TABLE `booking_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `charges`
@@ -7131,7 +7285,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -7143,7 +7297,7 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=216;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=226;
 
 --
 -- AUTO_INCREMENT for table `pincodes`
@@ -7167,7 +7321,7 @@ ALTER TABLE `promo_codes`
 -- AUTO_INCREMENT for table `queries`
 --
 ALTER TABLE `queries`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `rents`
@@ -7221,13 +7375,13 @@ ALTER TABLE `studio_images`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=347;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=346;
 
 --
 -- AUTO_INCREMENT for table `vendors`
