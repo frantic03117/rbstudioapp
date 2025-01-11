@@ -3,6 +3,7 @@
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\RentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -53,6 +54,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::post('get_slots', [AjaxController::class,'get_slots']);
  Route::get('countries', [ApiController::class, 'countries']);
+ Route::get('rental', [RentController::class, 'index']);
  Route::get('services', [ApiController::class,'services']);
  Route::get('states/{id}', [ApiController::class, 'states']);
  Route::get('cities/{id}', [ApiController::class, 'cities']);

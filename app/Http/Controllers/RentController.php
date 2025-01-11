@@ -8,23 +8,31 @@ use Illuminate\Http\Request;
 
 class RentController extends Controller
 {
-    function __construct()
-    {
-        $this->middleware(['permission:product-list|product-create|product-edit|product-delete'], ['only' => ['index', 'store']]);
-        $this->middleware(['permission:product-create'], ['only' => ['create', 'store']]);
-        $this->middleware(['permission:product-edit'], ['only' => ['edit', 'update']]);
-        $this->middleware(['permission:product-delete'], ['only' => ['destroy']]);
-    }
+    // function __construct()
+    // {
+    //     $this->middleware(['permission:product-list|product-create|product-edit|product-delete'], ['only' => ['index', 'store']]);
+    //     $this->middleware(['permission:product-create'], ['only' => ['create', 'store']]);
+    //     $this->middleware(['permission:product-edit'], ['only' => ['edit', 'update']]);
+    //     $this->middleware(['permission:product-delete'], ['only' => ['destroy']]);
+    // }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() : \Illuminate\View\View
+    public function index(Request $request) 
     {
+       
         $title = "List of Rental Resources";
         $rents = Rent::all();
-        //return response()->json($services);
+       
+         if ($request->is('api/*') || $request->expectsJson()) {
+            return response()->json([
+                'title' => $title,
+                'data' => $rents,
+                'success' => 1
+            ]);
+        }
         return view("admin.rents.index", compact("title", "rents"));
     }
 

@@ -93,8 +93,8 @@ class TransactionController extends Controller
             }
             $rentcharge = array_sum($arr);
             Booking::where('id', $bid)->update(['booking_status' => '1']);
-            $amount =  $item->duration * $item->studio_charge + $rentcharge - $item->transactions_sum_amount - floatval($item->promo_discount_calculated);
-            if (ceil($amount) <= 1) {
+            $remainamount =  $item->duration * $item->studio_charge + $rentcharge - $item->transactions_sum_amount - floatval($item->promo_discount_calculated);
+            if (ceil($remainamount) <= 1) {
                 Booking::where('id', $bid)->update(['payment_status' => '1', 'booking_status' => '1']);
             }
             if ($item->user && $item->user->fcm_token) {

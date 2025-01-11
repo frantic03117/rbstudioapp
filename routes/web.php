@@ -29,14 +29,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/login', [AdminController::class, 'index'])->name('login');
 Route::post('/admin', [AdminController::class, 'login'])->name('login.store');
+Route::get('/admin', [AdminController::class, 'login'])->name('login.index');
 Route::any('logout', [AdminController::class, 'logout'])->name('logout');
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/policy/{url}', [HomeController::class, 'terms'])->name('terms');
 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
-    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
-    Route::get('/dashboard', [AdminController::class, 'dashboard']);
+    // Route::get('/das', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/banners', [HomeController::class, 'banners'])->name('banners');
     Route::get('/banners_delete/{id}', [HomeController::class, 'banners_delete'])->name('banners_delete');
     Route::post('/banners', [HomeController::class, 'save_banners'])->name('save_banners');
