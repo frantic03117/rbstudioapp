@@ -481,8 +481,18 @@ class ApiController extends Controller
     }
     public function clear_notification(Request $request)
     {
+        $request->validate([
+            'id' => 'required'
+        ]);
+
+        $nid = $request->id;
         $uid = auth('sanctum')->user()->id;
-        RbNotification::where('user_id', $uid)->update(['shown_to_user' => '0']);
+        if ($nid == "All") {
+            RbNotification::where('user_id', $uid)->update(['shown_to_user' => '0']);
+        } else {
+            RbNotification::where('user_id', $uid)->where('id', $nid)->update(['shown_to_user' => '0']);
+        }
+
         return response()->json(['success' => true, "data" => []]);
     }
 }
