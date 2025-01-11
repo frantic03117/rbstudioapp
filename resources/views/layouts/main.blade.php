@@ -344,7 +344,7 @@
                         @can('studios-list')
                             <li>
                                 <a href="{{ route('studio.index') }}">
-                                    <i class="fas fa-tv"></i>
+                                    <i class="fab fa-studiovinari"></i>
                                     <span data-key="t-dashboard">Studio</span>
                                 </a>
                             </li>
