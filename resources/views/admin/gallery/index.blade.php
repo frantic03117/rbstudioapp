@@ -44,7 +44,7 @@
                                     {{ $item->category }}
                                 </td>
                                 <td>
-                                    <img src="{{ url('' . $item->image) }}" alt="" class="img-fluid">
+                                    <img width="50" src="{{ url('' . $item->image) }}" alt="" class="img-fluid">
                                 </td>
                                 <td>
                                     <form action="{{ route('gallery.destroy', $item->id) }}" method="post">
