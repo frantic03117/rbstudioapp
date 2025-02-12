@@ -70,84 +70,88 @@ class BookingController extends Controller
 
         $title = "List of Booking";
         $items = Booking::where('id', '>', '0');
-        if ($type == "upcoming") {
-            $items->whereDate('booking_start_date', '>', $now)->orderBy('booking_start_date', 'ASC');
-        }
-        if ($type == "today") {
-            $items->whereDate('booking_start_date', '=', date('Y-m-d'))->orderBy('booking_start_date', 'ASC');
-        }
         if ($booking_id) {
             $items->where('id', $booking_id);
-        }
-        if ($type == "past") {
-            $items->whereDate('booking_start_date', '<', $now)->orderBy('booking_start_date', 'ASC');
-        }
-        if ($vid > 0) {
-            $items->where('vendor_id', $vid);
-        }
-
-        if ($keyword) {
-            $items->whereIn('user_id', function ($query) use ($keyword) {
-                $query->from('users')
-                    ->select('id')
-                    ->where(function ($q) use ($keyword) {
-                        $q->where('name', 'like', "%{$keyword}%")
-                            ->orWhere('email', 'like', "%{$keyword}%")
-                            ->orWhere('mobile', 'like', "%{$keyword}%");
-                    });
-            });
-        }
-        if ($studio_id) {
-            $items->where('studio_id', $studio_id);
-        }
-        if ($service_id) {
-            $items->where('service_id', $service_id);
-        }
-        if ($bdf) {
-            $items->whereDate('booking_start_date', '=', $bdf);
-        }
-        if ($bdt) {
-            $items->where('booking_end_date', '<=', $bdt);
-        }
-        if ($created_by && $created_by == '1') {
-            $items->where('created_by', '1');
-        }
-        if ($created_by && $created_by != '1') {
-            $items->where('created_by', '!=', '1');
-        }
-
-        if ($duration) {
-            $items->where('duration', $duration);
-        }
-
-        if ($payment_status) {
-            $items->where('payment_status', $payment_status);
-        }
-
-
-        if ($approved_at == "pending") {
-
-            $items->where('approved_at', null);
         } else {
-            if ($booking_status) {
-                $items->where('booking_status', $booking_status);
+
+
+            if ($type == "upcoming") {
+                $items->whereDate('booking_start_date', '>', $now)->orderBy('booking_start_date', 'ASC');
             }
-            if ($booking_status == "0") {
-                $items->where('booking_status', "0");
+            if ($type == "today") {
+                $items->whereDate('booking_start_date', '=', date('Y-m-d'))->orderBy('booking_start_date', 'ASC');
+            }
+
+
+            if ($type == "past") {
+                $items->whereDate('booking_start_date', '<', $now)->orderBy('booking_start_date', 'ASC');
+            }
+            if ($vid > 0) {
+                $items->where('vendor_id', $vid);
+            }
+
+            if ($keyword) {
+                $items->whereIn('user_id', function ($query) use ($keyword) {
+                    $query->from('users')
+                        ->select('id')
+                        ->where(function ($q) use ($keyword) {
+                            $q->where('name', 'like', "%{$keyword}%")
+                                ->orWhere('email', 'like', "%{$keyword}%")
+                                ->orWhere('mobile', 'like', "%{$keyword}%");
+                        });
+                });
+            }
+            if ($studio_id) {
+                $items->where('studio_id', $studio_id);
+            }
+            if ($service_id) {
+                $items->where('service_id', $service_id);
+            }
+            if ($bdf) {
+                $items->whereDate('booking_start_date', '=', $bdf);
+            }
+            if ($bdt) {
+                $items->where('booking_end_date', '<=', $bdt);
+            }
+            if ($created_by && $created_by == '1') {
+                $items->where('created_by', '1');
+            }
+            if ($created_by && $created_by != '1') {
+                $items->where('created_by', '!=', '1');
+            }
+
+            if ($duration) {
+                $items->where('duration', $duration);
+            }
+
+            if ($payment_status) {
+                $items->where('payment_status', $payment_status);
+            }
+
+
+            if ($approved_at == "pending") {
+
+                $items->where('approved_at', null);
+            } else {
+                if ($booking_status) {
+                    $items->where('booking_status', $booking_status);
+                }
+                if ($booking_status == "0") {
+                    $items->where('booking_status', "0");
+                }
+            }
+
+            if ($approved_at == "approved") {
+                if ($booking_status) {
+                    $items->where('booking_status', $booking_status);
+                }
+                if ($booking_status == "0") {
+                    $items->where('booking_status', "0");
+                }
+
+                $items->where('approved_at', '!=', null);
             }
         }
-
-        if ($approved_at == "approved") {
-            if ($booking_status) {
-                $items->where('booking_status', $booking_status);
-            }
-            if ($booking_status == "0") {
-                $items->where('booking_status', "0");
-            }
-
-            $items->where('approved_at', '!=', null);
-        }
-
         $items->with('vendor')->with('service:id,name,icon,approval_required')->with('user:id,name,email,mobile')->with('studio:id,name,address');
         $items->with('rents')->with('transactions')->withSum('transactions', 'amount');
         $items->with('creater:id,name,email');

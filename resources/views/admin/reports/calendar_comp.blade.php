@@ -65,7 +65,6 @@
         <div class="row">
 
             <div class="col-md-12">
-                {{ $defaultView }}
                 <div id="calendar"></div>
             </div>
         </div>
@@ -114,8 +113,8 @@
                 meridiem: 'short'
             },
             eventClick: function(info) {
-                const id = info.event?._instance?.instanceId;
-
+                const id = info.event?._def?.publicId;
+                console.log(info);
                 if (!id) return; // Safety check in case instanceId is undefined
 
                 const eventDate = new Date(info.event.start); // Use `info.event.start` directly
@@ -136,7 +135,8 @@
 
                 // Construct the correct route URL dynamically
                 const routeBase = "{{ route('bookingsview', ['slug' => '__SLUG__']) }}";
-                const finalUrl = routeBase.replace('__SLUG__', slg) + "?booking_id=" + id;
+                const finalUrl = routeBase.replace('__SLUG__', slg) +
+                    "?booking_status=1&approved_at=approved&booking_id=" + id;
 
                 window.location.href = finalUrl;
             }

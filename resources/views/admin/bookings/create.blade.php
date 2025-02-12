@@ -1,12 +1,12 @@
 @extends('layouts.main')
 @section('script')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.5/perfect-scrollbar.min.js"
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.5/perfect-scrollbar.min.js"
         integrity="sha512-X41/A5OSxoi5uqtS6Krhqz8QyyD8E/ZbN7B4IaBSgqPLRbWVuXJXr9UwOujstj71SoVxh5vxgy7kmtd17xrJRw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.5/css/perfect-scrollbar.min.css"
         integrity="sha512-ygIxOy3hmN2fzGeNqys7ymuBgwSCet0LVfqQbWY10AszPMn2rB9JY0eoG0m1pySicu+nvORrBmhHVSt7+GI9VA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        crossorigin="anonymous" referrerpolicy="no-referrer" /> --}}
     <style>
         #end_slots h4 {
             font-size: 14px;
@@ -51,15 +51,15 @@
                             </div>
                             <div class="col-md-3">
                                 <label for="">Select Service</label>
-                                <select class="form-select" onchange="getrents(event)"  name="service_id" id="service_id">
+                                <select class="form-select" onchange="getrents(event)" name="service_id" id="service_id">
                                     <option value="">---Select---</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
                                 <label for="">Select Rent Items</label>
                                 <select class="form-select" name="rents[]" id="rents" multiple="multiple">
-                                        <option value="">---Select---</option>
-                                        
+                                    <option value="">---Select---</option>
+
                                 </select>
                                 <script>
                                     $("#rents").select2();
@@ -291,6 +291,7 @@
                 studio_id: sid,
                 slot_id: slot_id
             }, function(res) {
+                console.log(res);
                 const istamps = res.data;
                 const arr = istamps.filter(tsmp => tsmp.split(' ')[0] == val);
                 arr.forEach(ar => {
@@ -345,8 +346,10 @@
         }
         const getrents = (e) => {
             const sid = $("#studio_id").val();
-              let aurl = "{{ route('ajax_rents') }}"
-            $.post(`${aurl}`, {sid : sid}, function(res){
+            let aurl = "{{ route('ajax_rents') }}"
+            $.post(`${aurl}`, {
+                sid: sid
+            }, function(res) {
                 $("#rents").html(res);
             });
         }

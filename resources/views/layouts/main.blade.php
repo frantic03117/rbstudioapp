@@ -22,15 +22,16 @@
     <link rel="shortcut icon" href="favicons/images-favicon.ico">
     <script src="{{ url('public/js/jquery-jquery.min.js') }}"></script>
     <!-- plugin css -->
-    <link href="{{ url('public/css/jquery.vectormap-jquery-jvectormap-1.2.2.css') }}" rel="stylesheet" type="text/css">
+    {{-- <link href="{{ url('public/css/jquery.vectormap-jquery-jvectormap-1.2.2.css') }}" rel="stylesheet" type="text/css"> --}}
 
     <!-- preloader css -->
     <link rel="stylesheet" href="{{ url('public/css/css-preloader.min.css') }}" type="text/css">
 
     <!-- apexcharts -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="{{ url('public/js/apexcharts-apexcharts.min.js') }}"></script>
+    <script src="{{ url('public/js/select2.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url('public/css/select2.min.css') }}">
+    {{-- <script src="{{ url('public/js/apexcharts-apexcharts.min.js') }}"></script> --}}
     <!-- Bootstrap Css -->
     <link href="{{ url('public/css/css-bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css">
     <!-- Icons Css -->
@@ -202,6 +203,7 @@
                                     <i class="mdi mdi-arrow-right-circle me-1"></i> <span>View More..</span>
                                 </a>
                             </div>
+
                             <script>
                                 let page = 1;
                                 const nurl = "{{ route('notification') }}"
@@ -235,18 +237,14 @@
                                             </div>
                                         </a>`;
                                         });
-                                        $("#notifBox").append(elem);
+
                                         $("#notifCount").html(res.data.length)
                                         if (res.data.length == 0) {
                                             $("#loadMoreButton").hide()
                                         }
                                     })
                                 }
-                                getNotification(page);
-                                const loadMoreNotif = () => {
-                                    page++;
-                                    getNotification(page);
-                                };
+                                getNotification(1);
                             </script>
                         </div>
                     </div>
@@ -441,7 +439,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <script>
-                                document.write(new Date().getFullYear())
+                                2025
                             </script> &copy; R&B Studios
                         </div>
                         <div class="col-sm-6">
@@ -474,8 +472,9 @@
 
     @if (route('dashboard'))
         <!-- Plugins js-->
+        /*
         <script src="{{ url('public/js/jquery.vectormap-jquery-jvectormap-1.2.2.min.js') }}"></script>
-        <script src="{{ url('public/js/maps-jquery-jvectormap-world-mill-en.js') }}"></script>
+        <script src="{{ url('public/js/maps-jquery-jvectormap-world-mill-en.js') }}"></script> */
         <!-- dashboard init -->
     @endif
     <script src="{{ url('public/js/pages-dashboard.init.js') }}"></script>

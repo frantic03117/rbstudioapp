@@ -137,42 +137,94 @@ class AjaxController extends Controller
         ];
         return response()->json($res);
     }
+    // public function find_start_slot(Request $request)
+    // {
+    //     date_default_timezone_set('Asia/kolkata');
+    //     $request->validate([
+    //         'sdate' => 'required',
+    //         "studio_id" => "required",
+    //     ]);
+    //     $now =  Carbon::now();
+    //     $sid = $request->studio_id;
+    //     $sdate = Carbon::parse($request->sdate)->format('Y-m-d');
+    //     $studio = Studio::where('id', $sid)->first();
+    //     $opens = $studio->opens_at;
+    //     $close = $studio->ends_at;
+    //     $bid = $request->booking_id;
+    //     $isEdit = $request->isEdit;
+    //     $items = Slot::whereNotIn('id', function ($q) use ($sdate, $sid, $isEdit, $bid) {
+    //         $q->from('blocked_slots');
+    //         $q->where('bdate', $sdate)->select('slot_id')->where('studio_id', $sid);
+    //         if ($isEdit && $bid) {
+    //             $q->where('booking_id', '!=', $bid);
+    //         }
+    //     });
+    //     if ($request->mode) {
+    //         $items->where('start_at', '<=', $close)->where('start_at', '>=', $opens);
+    //     }
+    //     $slots = $items->get();
+    //     $modifiedObjects = collect($slots)->map(function ($object) use ($sdate) {
+    //         $object['date'] = $sdate;
+    //         return $object;
+    //     });
+    //     $res = [
+    //         'success' => true,
+    //         'data' => $modifiedObjects
+    //     ];
+    //     return response()->json($res);
+    // }
     public function find_start_slot(Request $request)
     {
-        date_default_timezone_set('Asia/kolkata');
+        date_default_timezone_set('Asia/Kolkata');
+
+        // Validate request input
         $request->validate([
-            'sdate' => 'required',
-            "studio_id" => "required",
+            'sdate' => 'required|date',
+            'studio_id' => 'required|exists:studios,id',
         ]);
-        $now =  Carbon::now();
+
+        // Extract request parameters
         $sid = $request->studio_id;
         $sdate = Carbon::parse($request->sdate)->format('Y-m-d');
-        $studio = Studio::where('id', $sid)->first();
-        $opens = $studio->opens_at;
-        $close = $studio->ends_at;
+        $studio = Studio::findOrFail($sid); // Use findOrFail to ensure studio exists
+        $opens = Carbon::parse($studio->opens_at);
+        $close = Carbon::parse($studio->ends_at);
         $bid = $request->booking_id;
         $isEdit = $request->isEdit;
-        $items = Slot::whereNotIn('id', function ($q) use ($sdate, $sid, $isEdit, $bid) {
-            $q->from('blocked_slots');
-            $q->where('bdate', $sdate)->select('slot_id')->where('studio_id', $sid);
+
+        // Start building the Slot query
+        $query = Slot::whereNotIn('id', function ($q) use ($sdate, $sid, $isEdit, $bid) {
+            $q->from('blocked_slots')
+                ->where('bdate', $sdate)
+                ->where('studio_id', $sid)
+                ->select('slot_id');
             if ($isEdit && $bid) {
+                // Exclude the current booking if we're in edit mode
                 $q->where('booking_id', '!=', $bid);
             }
         });
-        if ($request->mode) {
-            $items->where('start_at', '<=', $close)->where('start_at', '>=', $opens);
+
+        // Optional: Add time-based constraints if "mode" is passed
+        if ($request->has('mode') && $request->mode) {
+            $query->whereBetween('start_at', [$opens, $close]);
         }
-        $slots = $items->get();
-        $modifiedObjects = collect($slots)->map(function ($object) use ($sdate) {
-            $object['date'] = $sdate;
-            return $object;
+
+        // Execute the query and get the slots
+        $slots = $query->get();
+
+        // Modify the returned slots, adding the date field
+        $modifiedObjects = $slots->map(function ($slot) use ($sdate) {
+            $slot->date = $sdate; // Add the 'date' field
+            return $slot;
         });
-        $res = [
+
+        // Return the response with success and data
+        return response()->json([
             'success' => true,
-            'data' => $modifiedObjects
-        ];
-        return response()->json($res);
+            'data' => $modifiedObjects,
+        ]);
     }
+
     public function find_end_slot(Request $request)
     {
         $validator = Validator::make($request->all(), [
