@@ -15,6 +15,7 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PromoCodeController;
 use App\Http\Controllers\PolicyController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,6 +49,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('services', ServiceController::class);
     Route::resource('studio', StudioController::class);
     Route::resource('vendor', VendorController::class);
+    Route::resource('setting', SettingController::class);
     Route::get('add-resource/{id}', [StudioController::class, 'add_resource'])->name('add_resource');
     Route::get('delete_s_service/{id}', [StudioController::class, 'delete_s_service'])->name('delete_s_service');
     Route::post('add-resource/{id}', [StudioController::class, 'save_resource'])->name('studio.add_resource');
@@ -60,6 +62,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('booking', BookingController::class);
     Route::get('bookings/{slug}', [BookingController::class, 'custom_view'])->name('bookingsview');
     Route::get('query', [HomeController::class, 'queries'])->name('queries');
+
 
     Route::get('calendar', [HomeController::class, 'index'])->name('calendar');
     Route::get('generate-bill/{id}', [BookingController::class, 'generate_bill'])->name('generate_bill');

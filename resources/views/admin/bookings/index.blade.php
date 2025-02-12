@@ -349,14 +349,23 @@
                                                     @if ($b->booking_status != '2')
                                                         <a href="{{ route('booking.edit', $b->id) }}"
                                                             class="btn btn-warning btn-sm">Rescheule</a>
-                                                        {!! Form::open(['route' => ['booking.destroy', $b->id], 'method' => 'DELETE']) !!}
-                                                        <button class="btn btn-danger btn-sm">Cancel</button>
+                                                        {!! Form::open([
+                                                            'route' => ['booking.destroy', $b->id],
+                                                            'method' => 'DELETE',
+                                                            'onsubmit' => 'return confirmCancel()',
+                                                        ]) !!}
+                                                        <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
                                                         {!! Form::close() !!}
+
+                                                        <script>
+                                                            function confirmCancel() {
+                                                                return confirm("Are you sure you want to cancel this booking?");
+                                                            };
+                                                        </script>
                                                     @endif
                                                     @if ($b->booking_status == '2')
                                                         <button class="btn btn-sm btn-danger">Add Refund</button>
                                                     @endif
-
                                                     <a href="{{ route('generate_bill', $b->id) }}"
                                                         class="btn btn-sm btn-gradient">Billing</a>
                                                     <button data-bs-toggle="modal"
@@ -375,7 +384,6 @@
                                                                         class="dropdown-item text-capitalize">{{ $itm }}
                                                                         Booking</button></li>
                                                             @endforeach
-
                                                         </ul>
                                                     </div>
                                                     <button

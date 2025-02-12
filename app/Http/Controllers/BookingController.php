@@ -57,6 +57,7 @@ class BookingController extends Controller
         $service_id = $_GET['service_id'] ?? null;
         $bdf = $_GET['booking_date_form'] ?? null;
         $bdt = $_GET['booking_date_to'] ?? null;
+        $booking_id = $_GET['booking_id'] ?? null;
         $created_by = $_GET['created_by'] ?? null;
         $duration = $_GET['duration'] ?? null;
         $payment_status = $_GET['payment_status'] ?? null;
@@ -75,7 +76,9 @@ class BookingController extends Controller
         if ($type == "today") {
             $items->whereDate('booking_start_date', '=', date('Y-m-d'))->orderBy('booking_start_date', 'ASC');
         }
-
+        if ($booking_id) {
+            $items->where('id', $booking_id);
+        }
         if ($type == "past") {
             $items->whereDate('booking_start_date', '<', $now)->orderBy('booking_start_date', 'ASC');
         }
@@ -473,7 +476,7 @@ class BookingController extends Controller
             }
             $wp = User::where('id', '1')->first();
             $wt = floatval($wp->remember_token);
-            $message = $request->mode ?  "Booking has been created. Please make payment otherwise your request will be cancelled within {$wt} minutes." : "Admin Created a booking";
+            $message = $request->mode ?  "Booking has been created. Please make payment otherwise your request will be cancelled within {$wt} minutes." : "New booking has been created";
             $appmessage = $request->mode ?  "Your booking request has been placed. Please make payment within {$wt} minutes otherwise booking will be cancelled." : "Your booking request has been created.";
             $n_tdata = [
                 'user_id' => $user_id,

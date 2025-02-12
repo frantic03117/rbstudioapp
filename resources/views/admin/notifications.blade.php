@@ -35,7 +35,9 @@
                                 <td>
                                     Booking
                                 </td>
-
+                                <td>
+                                    Time
+                                </td>
                                 <td>
                                     Action
                                 </td>
@@ -82,10 +84,10 @@
                                             <li>
                                                 {{ $item->booking ? $item->booking?->duration . ' Hours' : '' }}
                                             </li>
-
-
-
                                         </ul>
+                                    </td>
+                                    <td>
+                                        {{ date('D, d M Y h:i A ', strtotime($item->created_at)) }}
                                     </td>
 
                                     <td>

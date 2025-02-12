@@ -63,7 +63,9 @@
             </div>
         </div>
         <div class="row">
+
             <div class="col-md-12">
+                {{ $defaultView }}
                 <div id="calendar"></div>
             </div>
         </div>
@@ -77,11 +79,11 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
             timeZone: 'local',
             headerToolbar: {
-                left: 'prev,next today',
+                left: 'prev,next,today,myCustomButton',
                 center: 'title',
                 right: 'dayGridMonth,timeGridDay,listWeek,timeGridWeek'
             },
-            initialView: 'timeGridDay',
+            initialView: "{{ $defaultView }}",
             displayEventTime: true,
             selectable: true,
             titleFormat: {
@@ -103,8 +105,6 @@
                     }
                 }
             },
-
-
             allDaySlot: true,
             eventClassNames: "cursor",
             events: evurl,
@@ -112,7 +112,35 @@
                 hour: 'numeric',
                 minute: '2-digit',
                 meridiem: 'short'
+            },
+            eventClick: function(info) {
+                const id = info.event?._instance?.instanceId;
+
+                if (!id) return; // Safety check in case instanceId is undefined
+
+                const eventDate = new Date(info.event.start); // Use `info.event.start` directly
+                const today = new Date();
+
+                // Remove time part for accurate comparison
+                eventDate.setHours(0, 0, 0, 0);
+                today.setHours(0, 0, 0, 0);
+
+                let slg = "";
+                if (eventDate.getTime() === today.getTime()) {
+                    slg = "today";
+                } else if (eventDate.getTime() > today.getTime()) {
+                    slg = "upcoming";
+                } else {
+                    slg = "past";
+                }
+
+                // Construct the correct route URL dynamically
+                const routeBase = "{{ route('bookingsview', ['slug' => '__SLUG__']) }}";
+                const finalUrl = routeBase.replace('__SLUG__', slg) + "?booking_id=" + id;
+
+                window.location.href = finalUrl;
             }
+
         });
         calendar.render();
     });

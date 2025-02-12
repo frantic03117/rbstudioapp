@@ -12,6 +12,7 @@ use App\Models\Studio\Service;
 use App\Models\Studio\Studio;
 use Illuminate\Support\Facades\DB;
 use App\Mail\CustomMail;
+use App\Models\Setting;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
@@ -59,6 +60,10 @@ class AdminController extends Controller
         $services = Service::whereIn('id', function ($q) use ($sid) {
             $q->from('service_studios')->where('studio_id', $sid)->select('service_id');
         })->get();
+        $finddview = Setting::where('col_name', 'Default Calender View')->first();
+        $defaultView = $finddview ?  $finddview['col_val'] : 'listWeek';
+        // return response()->json($defaultView);
+        // die;
         $boks = Booking::where('booking_status', '=', '1');
         if (Auth::user()->role != "Super") {
             $boks->where('vendor_id', Auth::user()->vendor_id);
@@ -116,7 +121,7 @@ class AdminController extends Controller
         $payment_received = Transaction::where(['status' => 'Success', 'type' => 'Credit'])->whereYear('transaction_date', now()->year)
             ->whereMonth('transaction_date', now()->month)->sum('amount');
         $totalamount += $payment_received;
-        $res = compact('title', 'today_booking', 'total_booking_month', 'approval', "vendors", "vid", "sid",  "studios", "services", "service_id", 'totalamount');
+        $res = compact('title', 'today_booking', 'defaultView', 'total_booking_month', 'approval', "vendors", "vid", "sid",  "studios", "services", "service_id", 'totalamount');
 
 
         return view('admin.dashboard', $res);
@@ -170,11 +175,12 @@ class AdminController extends Controller
         if (Auth::user()->role != "Super") {
             $itms->where('vendor_id', Auth::user()->vendor_id);
         }
+
         $itms->orderBy('is_read', 'asc');
         $itms->orderBy('created_at', 'desc');
         $items = $itms->paginate(50);
         $title = "Rb Notifications";
-        $data = compact('items', 'title');
+        $data = compact('items', 'title',);
         // return response()->json($data);
         return view('admin.notifications', $data);
     }
@@ -189,6 +195,7 @@ class AdminController extends Controller
         RbNotification::whereIn('id', $ids)->update(['is_read' => '1']);
         return redirect()->back()->with('success', 'Deleted successfuly');
     }
+    public function setting() {}
     public function users()
     {
         $title = "List of users";

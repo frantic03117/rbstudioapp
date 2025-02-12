@@ -81,6 +81,10 @@
             background-position: left !important;
             background-repeat: no-repeat !important;
         }
+
+        .fc .fc-button-group {
+            gap: 4px;
+        }
     </style>
     <script>
         const url = "{{ url('') }}";
@@ -270,6 +274,8 @@
                                     class="mdi mdi mdi-face-man font-size-16 align-middle me-1"></i> Profile</a>
                             <a class="dropdown-item" href="{{ route('notification') }}"><i
                                     class="mdi mdi-lock font-size-16 align-middle me-1"></i> Notifications</a>
+                            <a class="dropdown-item" href="{{ route('setting.index') }}"><i
+                                    class="mdi mdi-information font-size-16 align-middle me-1"></i> Setting</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ route('logout') }}"><i
                                     class="mdi mdi-logout font-size-16 align-middle me-1"></i> Logout</a>
@@ -402,7 +408,7 @@
                         <li>
                             <a href="{{ route('gallery.index') }}">
                                 <i class="fas fa-images"></i>
-                                <span data-key="t-store">Queires</span>
+                                <span data-key="t-store">Gallery</span>
                             </a>
                         </li>
                         <li>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Query;
+use App\Models\Setting;
 use App\Models\Vendor;
 use App\Models\User;
 use App\Models\Studio\Service;
@@ -40,6 +41,10 @@ class HomeController extends Controller
         $vid = $_GET['vendor_id'] ?? null;
         $sid = $_GET['studio_id'] ?? null;
         $service_id = $_GET['service_id'] ?? null;
+        $finddview = Setting::where('col_name', 'Default Calender View')->first();
+        $defaultView = $finddview ?  $finddview['col_val'] : 'listWeek';
+
+
         $arr = [];
         $studios = Studio::where('vendor_id', $vid)->get();
         $services = Service::whereIn('id', function ($q) use ($sid) {
@@ -67,7 +72,7 @@ class HomeController extends Controller
         }
 
 
-        $res = compact("title", "vendors", "vid", "sid", "arr", "studios", "services", "service_id");
+        $res = compact("title", "vendors", "vid", "sid", "arr", "studios", "services", "service_id", "defaultView");
         return view("admin.reports.calendar", $res);
     }
 

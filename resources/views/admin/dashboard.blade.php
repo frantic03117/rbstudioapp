@@ -24,6 +24,11 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-12 my-2">
+                <div class="w-100">
+                    <a href="{{ route('booking.create') }}" class="btn-gradient btn btn-sm">Add New Booking</a>
+                </div>
+            </div>
         </div>
         <!-- end page title -->
 
