@@ -187,7 +187,8 @@ class AjaxController extends Controller
         $close = Carbon::parse($studio->ends_at);
         $bid = $request->booking_id;
         $isEdit = $request->isEdit;
-        $currentTime = Carbon::now('Asia/Kolkata')->format('H:i:s');
+        $currentTime = now()->format('H:i:s'); // Get current time in "HH:MM:SS" format
+
         // Start building the Slot query
         $query = Slot::whereNotIn('id', function ($q) use ($sdate, $sid, $isEdit, $bid) {
             $q->from('blocked_slots')
@@ -220,6 +221,7 @@ class AjaxController extends Controller
         return response()->json([
             'success' => true,
             'data' => $modifiedObjects,
+            $currentTime
         ]);
     }
 
