@@ -176,14 +176,10 @@ class AjaxController extends Controller
     public function find_start_slot(Request $request)
     {
         date_default_timezone_set('Asia/Kolkata');
-
-        // Validate request input
         $request->validate([
             'sdate' => 'required|date',
             'studio_id' => 'required|exists:studios,id',
         ]);
-
-        // Extract request parameters
         $sid = $request->studio_id;
         $sdate = Carbon::parse($request->sdate)->format('Y-m-d');
         $studio = Studio::findOrFail($sid); // Use findOrFail to ensure studio exists
@@ -191,7 +187,7 @@ class AjaxController extends Controller
         $close = Carbon::parse($studio->ends_at);
         $bid = $request->booking_id;
         $isEdit = $request->isEdit;
-
+        $currentTime = Carbon::now('Asia/Kolkata')->format('H:i:s');
         // Start building the Slot query
         $query = Slot::whereNotIn('id', function ($q) use ($sdate, $sid, $isEdit, $bid) {
             $q->from('blocked_slots')
@@ -203,7 +199,9 @@ class AjaxController extends Controller
                 $q->where('booking_id', '!=', $bid);
             }
         });
-
+        $query->where(function ($q) use ($sdate, $currentTime) {
+            $q->where('start_at', '>=', $currentTime);
+        });
         // Optional: Add time-based constraints if "mode" is passed
         if ($request->has('mode') && $request->mode) {
             $query->whereBetween('start_at', [$opens, $close]);
