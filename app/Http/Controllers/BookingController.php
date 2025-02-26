@@ -600,6 +600,7 @@ class BookingController extends Controller
             'start_time' => $starttime,
             'end_time' => $endtime,
             'service' => $service,
+            'service_charge' => $service_charge,
             'success' => 0,
             'errors' => [],
             'message' => 'Current booking'
