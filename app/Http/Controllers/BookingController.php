@@ -584,6 +584,7 @@ class BookingController extends Controller
 
 
         $service_id = $request->service_id;
+        $service = Service::where('id', $service_id)->first();
         $service_charge = ServiceStudio::where(['service_id' => $service_id, 'studio_id' => $studio_id])->first();
         $starttime_c = Carbon::parse($request->start_time);
         $endtime_c = Carbon::parse($request->end_time);
@@ -598,6 +599,7 @@ class BookingController extends Controller
             'studio' => $studio,
             'start_time' => $starttime,
             'end_time' => $endtime,
+            'service' => $service,
             'success' => 0,
             'errors' => [],
             'message' => 'Current booking'
