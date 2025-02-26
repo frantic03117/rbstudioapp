@@ -571,7 +571,7 @@ class BookingController extends Controller
         $starttime = $request->start_time;
         $endtime = $request->end_time;
         $studio_id = $request->studio_id;
-        $studio = Studio::where('id', $studio_id)->first();
+        $studio = Studio::where('id', $studio_id)->with('images')->first();
         if ($request->items) {
             $itemids = $request->items;
             $totalCharges = DB::table('charges')
