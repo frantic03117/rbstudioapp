@@ -58,6 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::post('get_slots', [AjaxController::class, 'get_slots']);
+Route::post('pre_booking_details', [BookingController::class, 'pre_booking_details']);
 Route::get('countries', [ApiController::class, 'countries']);
 Route::get('rental', [RentController::class, 'index']);
 Route::get('services', [ApiController::class, 'services']);

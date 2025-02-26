@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BlockedSlot;
 use App\Models\Booking;
 use App\Models\BookingItem;
+use App\Models\ServiceStudio;
 use App\Models\Location\State;
 use App\Models\Location\City;
 use App\Models\Rent;
@@ -534,8 +535,8 @@ class BookingController extends Controller
             ->with('service:id,name')
             ->first();
         $paid = $booking->transactions_sum_amount;
-        $studio_price =
-            $rents =  $booking->rents;
+
+        $rents =  $booking->rents;
         $arr = [];
         foreach ($rents as $r) {
             array_push($arr, $r->pivot->charge * $r->pivot->uses_hours);
@@ -546,6 +547,52 @@ class BookingController extends Controller
         $booking['total_to_pay'] = ($booking->duration * $booking->studio_charge + $rentcharge) * 1.18;
         $booking['paid'] = $paid;
         $booking['net_payable'] = ($booking->duration * $booking->studio_charge + $rentcharge) * 1.18 - $paid - floatval($booking->promo_discount_calculated);
+        $booking['calculation'] = ['gst' => 18, 'discount' => ['partial' => '0', 'full' => '0', 'type' => 'percent']];
+        $data = [
+            'data' => $booking,
+            'success' => 0,
+            'errors' => [],
+            'message' => 'Current booking'
+        ];
+        return response()->json($data);
+    }
+    public function pre_booking_details(Request $request)
+    {
+        $request->validate([
+            'studio_id' => 'required|exists:studios,id',
+            'service_id' => 'required|exists:services,id',
+            'start_time' => 'required',
+            'end_time' => 'required',
+
+        ]);
+        $paid = 0;
+        $booking = [];
+
+        $rentcharge = 0;
+        $starttime = $request->start_time;
+        $endtime = $request->end_time;
+        $studio_id = $request->studio_id;
+
+        if ($request->items) {
+            $itemids = $request->items;
+            $totalCharges = DB::table('charges')
+                ->whereIn('item_id', $itemids)
+                ->where('studio_id', $studio_id)
+                ->sum('charge');
+            $rentcharge  = $totalCharges;
+        }
+
+
+
+        $service_id = $request->service_id;
+        $service_charge = ServiceStudio::where(['service_id' => $service_id, 'studio_id' => $studio_id])->first();
+        $starttime_c = Carbon::parse($request->start_time);
+        $endtime_c = Carbon::parse($request->end_time);
+        $durationInHours = $starttime_c->diffInHours($endtime_c);
+        $booking['rents_price'] = $rentcharge;
+        $booking['total_to_pay'] = ($durationInHours * $service_charge->charge + $rentcharge) * 1.18;
+        $booking['paid'] = $paid;
+        $booking['net_payable'] = ($durationInHours * $service_charge->charge + $rentcharge) * 1.18 - $paid - 0;
         $booking['calculation'] = ['gst' => 18, 'discount' => ['partial' => '0', 'full' => '0', 'type' => 'percent']];
         $data = [
             'data' => $booking,
