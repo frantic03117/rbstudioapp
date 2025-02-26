@@ -571,7 +571,7 @@ class BookingController extends Controller
         $starttime = $request->start_time;
         $endtime = $request->end_time;
         $studio_id = $request->studio_id;
-
+        $studio = Studio::where('id', $studio_id)->first();
         if ($request->items) {
             $itemids = $request->items;
             $totalCharges = DB::table('charges')
@@ -595,6 +595,9 @@ class BookingController extends Controller
         $booking['calculation'] = ['gst' => 18, 'discount' => ['partial' => '0', 'full' => '0', 'type' => 'percent']];
         $data = [
             'data' => $booking,
+            'studio' => $studio,
+            'start_time' => $starttime,
+            'end_time' => $endtime,
             'success' => 0,
             'errors' => [],
             'message' => 'Current booking'
