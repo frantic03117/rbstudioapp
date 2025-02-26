@@ -581,8 +581,6 @@ class BookingController extends Controller
             $rentcharge  = $totalCharges;
         }
 
-
-
         $service_id = $request->service_id;
         $service = Service::where('id', $service_id)->first();
         $service_charge = ServiceStudio::where(['service_id' => $service_id, 'studio_id' => $studio_id])->first();
@@ -601,7 +599,7 @@ class BookingController extends Controller
             'end_time' => $endtime,
             'service' => $service,
             'service_charge' => $service_charge,
-            'success' => 0,
+            'success' => 1,
             'errors' => [],
             'message' => 'Current booking'
         ];
