@@ -562,8 +562,7 @@ class BookingController extends Controller
             'studio_id' => 'required|exists:studios,id',
             'service_id' => 'required|exists:services,id',
             'start_time' => 'required',
-            'end_time' => 'required',
-
+            'end_time' => 'required'
         ]);
         $paid = 0;
         $booking = [];
