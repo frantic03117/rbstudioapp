@@ -412,7 +412,7 @@
                         <li>
                             <a href="{{ route('queries') }}">
                                 <i class="fas fa-id-card-alt"></i>
-                                <span data-key="t-store">Queires</span>
+                                <span data-key="t-store">Customer support</span>
                             </a>
                         </li>
 

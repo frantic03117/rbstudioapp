@@ -39,8 +39,10 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <button class="btn btn-primary btn-sm"
-                                                onclick="markResolved({{ $s->id }})">Mark Resolved</button>
+                                            @if ($s->is_resolved == '0')
+                                                <button class="btn btn-primary btn-sm"
+                                                    onclick="markResolved({{ $s->id }})">Mark Resolved</button>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
