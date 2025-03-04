@@ -368,11 +368,11 @@ class BookingController extends Controller
 
         // Calculate the duration in hours
         $duration = $end_date->diffInHours($start_date);
-        if ($request->mode && $duration < 2) {
+        if ($request->mode && $duration < 1) {
             $res = [
                 "success" => '0',
                 'errors' => [],
-                'message' => 'Booking Creation Failed. minimum 2 hours needed to book',
+                'message' => 'Booking Creation Failed. minimum 1 hours needed to book',
                 'data' => []
             ];
             return response()->json($res);
@@ -589,6 +589,11 @@ class BookingController extends Controller
         $service_charge = ServiceStudio::where(['service_id' => $service_id, 'studio_id' => $studio_id])->first();
         $starttime_c = Carbon::parse($request->start_time);
         $endtime_c = Carbon::parse($request->end_time);
+
+        $s_d = Carbon::parse($starttime_c)->minute(0)->second(0)->format('Y-m-d H:i:s');
+        $e_d = Carbon::parse($endtime_c)->minute(0)->second(0)->format('Y-m-d H:i:s');
+
+
         $durationInHours = $starttime_c->diffInHours($endtime_c);
         $booking['rents_price'] = $rentcharge;
         $booking['total_to_pay'] = ($durationInHours * $service_charge->charge + $rentcharge) * 1.18;
@@ -598,10 +603,11 @@ class BookingController extends Controller
         $data = [
             'data' => $booking,
             'studio' => $studio,
-            'start_time' => $starttime,
-            'end_time' => $endtime,
+            'start_time' => $s_d,
+            'end_time' => $e_d,
             'service' => $service,
             'service_charge' => $service_charge,
+
             'success' => 1,
             'errors' => [],
             'message' => 'Current booking'
