@@ -564,16 +564,19 @@ class BookingController extends Controller
         $request->validate([
             'studio_id' => 'required|exists:studios,id',
             'service_id' => 'required|exists:services,id',
-            'start_time' => 'required',
+            'start_slot' => 'required',
             'end_time' => 'required'
         ]);
         $paid = 0;
         $booking = [];
 
         $rentcharge = 0;
-        $starttime = $request->start_time;
+
         $endtime = $request->end_time;
         $studio_id = $request->studio_id;
+        $fslot = Slot::where('id', $request->start_slot)->first();
+        $ftime = $fslot->start_at;
+        $starttime = date('Y-m-d H:i:s', strtotime($ftime));
         $studio = Studio::where('id', $studio_id)->with('images')->first();
         if ($request->items) {
             $itemids = $request->items;
@@ -587,7 +590,7 @@ class BookingController extends Controller
         $service_id = $request->service_id;
         $service = Service::where('id', $service_id)->first();
         $service_charge = ServiceStudio::where(['service_id' => $service_id, 'studio_id' => $studio_id])->first();
-        $starttime_c = Carbon::parse($request->start_time);
+        $starttime_c = Carbon::parse($starttime);
         $endtime_c = Carbon::parse($request->end_time);
 
         $s_d = Carbon::parse($starttime_c)->minute(0)->second(0)->format('Y-m-d H:i:s');
@@ -603,7 +606,7 @@ class BookingController extends Controller
         $data = [
             'data' => $booking,
             'studio' => $studio,
-            'start_time' => $request->start_time,
+            'start_time' => $starttime,
             'end_time' => $e_d,
             'service' => $service,
             'service_charge' => $service_charge,
