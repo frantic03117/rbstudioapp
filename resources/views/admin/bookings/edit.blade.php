@@ -1,22 +1,23 @@
 @extends('layouts.main')
 @section('script')
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.5/perfect-scrollbar.min.js"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.5/perfect-scrollbar.min.js"
         integrity="sha512-X41/A5OSxoi5uqtS6Krhqz8QyyD8E/ZbN7B4IaBSgqPLRbWVuXJXr9UwOujstj71SoVxh5vxgy7kmtd17xrJRw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.5/css/perfect-scrollbar.min.css"
         integrity="sha512-ygIxOy3hmN2fzGeNqys7ymuBgwSCet0LVfqQbWY10AszPMn2rB9JY0eoG0m1pySicu+nvORrBmhHVSt7+GI9VA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-<style>
-    #end_slots h4{
-        font-size:14px;
-    }
-    #end_slots label{
-        border:1px solid #B92D53;
-        padding:5px 8px;
-        font-size:14px;
-    }
-</style>
+    <style>
+        #end_slots h4 {
+            font-size: 14px;
+        }
+
+        #end_slots label {
+            border: 1px solid #B92D53;
+            padding: 5px 8px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 @section('content')
     <section>
@@ -46,7 +47,8 @@
                                 <select class="form-select" name="service_id" id="service_id">
                                     <option value="">---Select---</option>
                                     @foreach ($services as $s)
-                                        <option value="{{ $s->id }}" @selected($booking->service_id == $s->id)>{{ $s->name }}</option>
+                                        <option value="{{ $s->id }}" @selected($booking->service_id == $s->id)>{{ $s->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -54,36 +56,40 @@
                             <div class="col-md-3">
                                 <label for="">Booking Start Date</label>
                                 <input type="date" onchange="getEndDate(event)" min="{{ date('Y-m-d') }}"
-                                    name="booking_start_date" value="{{ date('Y-m-d', strtotime($booking->booking_start_date)) }}" id="booking_start_date" class="form-control">
+                                    name="booking_start_date"
+                                    value="{{ date('Y-m-d', strtotime($booking->booking_start_date)) }}"
+                                    id="booking_start_date" class="form-control">
                             </div>
                             <div class="col-md-3">
                                 <label for="">Select Start Time</label>
-                                <select class="form-select"  name="start_slot" id="start_slot">
+                                <select class="form-select" name="start_slot" id="start_slot">
                                     <option value="">---Select---</option>
-                                    @foreach($slots as $s)
-                                        <option value="{{$s->id}}" @selected($booking->start_at == $s->start_at)>{{$s->start_at}}</option>
+                                    @foreach ($slots as $s)
+                                        <option value="{{ $s->id }}" @selected($booking->start_at == $s->start_at)>{{ $s->start_at }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
-                            
-                              
-                             <div class="col-md-3">
+
+
+                            <div class="col-md-3">
                                 <label for="">Select End Date</label>
-                                <select  onchange="get_EndTimes(event)" class="form-select"  name="end_date" id="end_date_s">
+                                <select onchange="get_EndTimes(event)" class="form-select" name="end_date" id="end_date_s">
                                     <option value="">---Select---</option>
-                                    <option selected>{{date('d-M-Y', strtotime($booking->booking_end_date))}}</option>
+                                    <option selected>{{ date('d-M-Y', strtotime($booking->booking_end_date)) }}</option>
                                 </select>
                             </div>
-                             <div class="col-md-3">
+                            <div class="col-md-3">
                                 <label for="">Select End Time</label>
-                                <select class="form-select"  name="end_slot" id="end_time_s">
+                                <select class="form-select" name="end_slot" id="end_time_s">
                                     <option value="">---Select---</option>
-                                     <option value="{{$booking->booking_end_date}}" selected>{{date('h:i A', strtotime($booking->booking_end_date))}}</option>
+                                    <option value="{{ $booking->booking_end_date }}" selected>
+                                        {{ date('h:i A', strtotime($booking->booking_end_date)) }}</option>
                                 </select>
                             </div>
 
-                           
-                            
+
+
                             <div class="col-md-6">
                                 <div class="row gy-2">
                                     <div class="col-md-6">
@@ -109,43 +115,48 @@
                                     </div>
                                 </div>
                             </div>
-                             <div class="col-md-12 mb-2">
+                            <div class="col-md-12 mb-2">
                                 <div class="w-100 bg-gradient pt-2 ps-2">
-                                    <input type="checkbox" id="gst_applicable" @checked($dgst) onclick="gst_applicable_is(event)"  /> <label for="gst_applicable">GST Applicable</label>
+                                    <input type="checkbox" id="gst_applicable" @checked($dgst)
+                                        onclick="gst_applicable_is(event)" /> <label for="gst_applicable">GST
+                                        Applicable</label>
                                 </div>
                             </div>
-                            <div class="col-md-3 gst_box" @if(!$dgst) style="display:none;" @endif>
+                            <div class="col-md-3 gst_box" @if (!$dgst) style="display:none;" @endif>
                                 <label for="">Enter Address</label>
-                                <input type="text" name="address" value="{{$dgst?->address}}" class="form-control" />
+                                <input type="text" name="address" value="{{ $dgst?->address }}" class="form-control" />
                             </div>
-                            <div class="col-md-3 gst_box" @if(!$dgst) style="display:none;" @endif>
+                            <div class="col-md-3 gst_box" @if (!$dgst) style="display:none;" @endif>
                                 <label for="">Enter GST</label>
-                                <input type="text" name="gst" class="form-control" value="{{$dgst?->gst}}" />
+                                <input type="text" name="gst" class="form-control" value="{{ $dgst?->gst }}" />
                             </div>
-                            
-                            <div class="col-md-2 gst_box" @if(!$dgst) style="display:none;" @endif>
+
+                            <div class="col-md-2 gst_box" @if (!$dgst) style="display:none;" @endif>
                                 <label for="">Select State</label>
                                 <select name="state_id" onchange="getCity(event)" class="form-select">
-                                        <option value="">---Select---</option>
-                                        @foreach($states as $st)
-                                        <option value="{{$st->id}}" @selected($dgst?->state_id == $st->id)>{{$st->state}}</option>
-                                        @endforeach
+                                    <option value="">---Select---</option>
+                                    @foreach ($states as $st)
+                                        <option value="{{ $st->id }}" @selected($dgst?->state_id == $st->id)>
+                                            {{ $st->state }}</option>
+                                    @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-2 gst_box" @if(!$dgst) style="display:none;" @endif>
+                            <div class="col-md-2 gst_box" @if (!$dgst) style="display:none;" @endif>
                                 <label for="">Select District</label>
-                                  <select name="city_id" id="city_id"  class="form-select">
-                                        <option value="">---Select---</option>
-                                        @foreach($cities as $st)
-                                        <option value="{{$st->id}}" @selected($dgst?->city_id == $st->id)>{{$st->city}}</option>
-                                        @endforeach
+                                <select name="city_id" id="city_id" class="form-select">
+                                    <option value="">---Select---</option>
+                                    @foreach ($cities as $st)
+                                        <option value="{{ $st->id }}" @selected($dgst?->city_id == $st->id)>
+                                            {{ $st->city }}</option>
+                                    @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-2 gst_box" @if(!$dgst) style="display:none;" @endif>
+                            <div class="col-md-2 gst_box" @if (!$dgst) style="display:none;" @endif>
                                 <label for="">Enter Pincode</label>
-                                <input type="text" name="pincode"  value="{{$dgst?->pincode}}"  class="form-control" />
+                                <input type="text" name="pincode" value="{{ $dgst?->pincode }}"
+                                    class="form-control" />
                             </div>
-                            
+
                             <div class="col-md-12">
                                 <button class="btn btn-gradient shadow">Submit</button>
                             </div>
@@ -157,11 +168,11 @@
         </div>
     </section>
     <script>
-    const gst_applicable_is  = (e) => {
-            if(e.target.checked == true){
+        const gst_applicable_is = (e) => {
+            if (e.target.checked == true) {
                 $(".gst_box").css('display', 'block');
-            }else{
-                 $(".gst_box").css('display', 'none');
+            } else {
+                $(".gst_box").css('display', 'none');
             }
         }
         const getStudiosList = (e) => {
@@ -206,17 +217,23 @@
             }
         };
         const getEndDate = (e) => {
-             get_slot_start();
+            get_slot_start();
         };
-         const get_slot_start = () => {
+        const get_slot_start = () => {
             let output = " <option value=''>---Select---</option>";
             const sdate = $("#booking_start_date").val();
-             let sid = $("#studio_id").val();
-             let bid = "{{$booking->id}}";
-            $.post("{{route('find_start_slot')}}", {sdate : sdate, studio_id : sid, isEdit : true, booking_id :  bid}, function(res){
-                if(res?.success){
+            let sid = $("#studio_id").val();
+            let bid = "{{ $booking->id }}";
+            $.post("{{ route('find_start_slot') }}", {
+                sdate: sdate,
+                studio_id: sid,
+                isEdit: true,
+                booking_id: bid
+            }, function(res) {
+                if (res?.success) {
                     res.data.forEach((slt) => {
-                        output += `<option value="${slt.id}">${moment(sdate + ' ' +slt.start_at).format('hh:mm A')}</option>`;
+                        output +=
+                            `<option value="${slt.id}">${moment(sdate + ' ' +slt.start_at).format('hh:mm A')}</option>`;
                     });
                     $("#start_slot").html(output);
                 }
@@ -256,20 +273,24 @@
             $(`#labels${i}`).addClass('btn-gradient')
 
         };
-        
-        $("#start_slot").on('change', function(){
+
+        $("#start_slot").on('change', function() {
             const slot_id = $(this).val();
-             const sdate = $("#booking_start_date").val();
+            const sdate = $("#booking_start_date").val();
             let sid = $("#studio_id").val();
-             let output = ``;
-             let vd = sid;
-            $.post(`{{route('find_end_slot')}}`, {sdate : sdate, studio_id : sid, slot_id: slot_id}, function(res){
-                if(res?.success){
+            let output = ``;
+            let vd = sid;
+            $.post(`{{ route('find_end_slot') }}`, {
+                sdate: sdate,
+                studio_id: sid,
+                slot_id: slot_id
+            }, function(res) {
+                if (res?.success) {
                     generate_dates(res.data);
                     res.data.forEach((slt, i) => {
-                        if(slt.split(' ')[0] != vd){
+                        if (slt.split(' ')[0] != vd) {
                             vd = slt.split(' ')[0];
-                             output += `<h4 class="d-block w-100">${vd}</h4>`;
+                            output += `<h4 class="d-block w-100">${vd}</h4>`;
                         }
                         output += `<li>
                                         <label class="cursor-pointer" for="endslt${i}">
@@ -283,7 +304,8 @@
                 }
             })
         });
-         function generate_dates(timestamps) {
+
+        function generate_dates(timestamps) {
             const uniqueDates = [];
             timestamps.forEach(timestamp => {
                 const date = moment(timestamp).format('YYYY-MM-DD');
@@ -293,18 +315,22 @@
             });
             let output = '<option value="">---Select---</option>';
             uniqueDates.forEach(arr => {
-                output += `<option value="${arr}">${arr}</option>`;
+                output += `<option value="${arr}">${moment(arr).format('DD-MM-YYYY')}</option>`;
             });
             $("#end_date_s").html(output)
         }
-          const get_EndTimes = (e) => {
-              const sdate = $("#booking_start_date").val();
-             let sid = $("#studio_id").val();
+        const get_EndTimes = (e) => {
+            const sdate = $("#booking_start_date").val();
+            let sid = $("#studio_id").val();
             const val = e.target.value;
             const slot_id = $("#start_slot").val();
             let output = "";
-            
-            $.post(`{{route('find_end_slot')}}`, {sdate : sdate, studio_id : sid, slot_id: slot_id}, function(res){
+
+            $.post(`{{ route('find_end_slot') }}`, {
+                sdate: sdate,
+                studio_id: sid,
+                slot_id: slot_id
+            }, function(res) {
                 const istamps = res.data;
                 const arr = istamps.filter(tsmp => tsmp.split(' ')[0] == val);
                 arr.forEach(ar => {
@@ -312,9 +338,9 @@
                 });
                 $("#end_time_s").html(output)
             });
-            
+
         }
-          const getCity = (e) => {
+        const getCity = (e) => {
             const cid = e.target.value;
             let aurl = "{{ route('ajax_cities') }}"
             $.post(`${aurl}`, {

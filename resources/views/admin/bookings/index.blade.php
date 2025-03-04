@@ -284,6 +284,8 @@
                                         <td>
                                             @if ($b->booking_status == '0')
                                                 <span class="badge bg-warning text-white">Pending</span>
+                                                <a href="{{ route('confirm_booking', ['id' => $b->id]) }}"
+                                                    class="btn btn-danger btn-sm">Confirm Now</a>
                                             @endif
                                             @if ($b->booking_status == '1')
                                                 <span class="badge bg-success text-white">Confirm</span>
