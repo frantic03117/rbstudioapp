@@ -360,6 +360,9 @@
                                     <span data-key="t-maps">Bookings</span>
                                 </a>
                                 <ul class="sub-menu mm-collapse" aria-expanded="false">
+                                    <li><a href="{{ route('bookingsview', 'today') }}?approved_at=pending"
+                                            data-key="t-g-maps">Approval Pending
+                                            Booking</a></li>
                                     <li><a href="{{ route('bookingsview', 'today') }}?booking_status=1"
                                             data-key="t-g-maps">Today
                                             Booking</a></li>
