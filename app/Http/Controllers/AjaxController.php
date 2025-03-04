@@ -200,9 +200,11 @@ class AjaxController extends Controller
                 $q->where('booking_id', '!=', $bid);
             }
         });
-        $query->where(function ($q) use ($sdate, $currentTime) {
-            $q->where('start_at', '>=', $currentTime);
-        });
+        if ($sdate == date('Y-m-d')) {
+            $query->where(function ($q) use ($sdate, $currentTime) {
+                $q->where('start_at', '>=', $currentTime);
+            });
+        }
         // Optional: Add time-based constraints if "mode" is passed
         if ($request->has('mode') && $request->mode) {
             $query->whereBetween('start_at', [$opens, $close]);
