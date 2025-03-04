@@ -577,7 +577,7 @@ class BookingController extends Controller
         $fslot = Slot::where('id', $request->start_slot)->first();
         $ftime = $fslot->start_at;
         $starttime = date('Y-m-d H:i:s', strtotime($ftime));
-        $studio = Studio::where('id', $studio_id)->with('images')->first();
+        $studio = Studio::where('id', $studio_id)->with('vendor:id,name,mobile')->with('images')->first();
         if ($request->items) {
             $itemids = $request->items;
             $totalCharges = DB::table('charges')
@@ -586,17 +586,12 @@ class BookingController extends Controller
                 ->sum('charge');
             $rentcharge  = $totalCharges;
         }
-
         $service_id = $request->service_id;
         $service = Service::where('id', $service_id)->first();
         $service_charge = ServiceStudio::where(['service_id' => $service_id, 'studio_id' => $studio_id])->first();
         $starttime_c = Carbon::parse($starttime);
         $endtime_c = Carbon::parse($request->end_time);
-
-        $s_d = Carbon::parse($starttime_c)->minute(0)->second(0)->format('Y-m-d H:i:s');
         $e_d = Carbon::parse($endtime_c)->minute(0)->second(0)->format('Y-m-d H:i:s');
-
-
         $durationInHours = $starttime_c->diffInHours($endtime_c);
         $booking['rents_price'] = $rentcharge;
         $booking['total_to_pay'] = ($durationInHours * $service_charge->charge + $rentcharge) * 1.18;
