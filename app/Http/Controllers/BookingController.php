@@ -605,9 +605,10 @@ class BookingController extends Controller
             'studio' => $studio,
             'start_time' => $s_d,
             'end_time' => $e_d,
+
             'service' => $service,
             'service_charge' => $service_charge,
-
+            'duration' =>  $durationInHours,
             'success' => 1,
             'errors' => [],
             'message' => 'Current booking'
