@@ -298,7 +298,7 @@ class BookingController extends Controller
     }
     public function confirm_booking($id)
     {
-        Booking::where('id', $id)->update(['booking_status' => '1']);
+        Booking::where('id', $id)->update(['booking_status' => '1', 'approved_at' => date('Y-m-d H:i:s')]);
         return redirect()->back()->with('success', 'Booking confirmed successfully');
     }
 
