@@ -198,11 +198,9 @@ class ApiController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
-            if (in_array($extension, ['jpg', 'jpeg', 'png'])) {
-                $filename = date('ymdhis') . $file->getClientOriginalName();
-                $file->move(public_path('uploads'), $filename);
-                $data['image'] = $filename;
-            }
+            $filename = date('ymdhis') . $file->getClientOriginalName();
+            $file->move(public_path('uploads'), $filename);
+            $data['image'] = $filename;
         }
 
         if (DB::table('queries')->insert($data)) {
