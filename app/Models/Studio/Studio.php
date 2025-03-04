@@ -20,7 +20,7 @@ class Studio extends Model
 
     public function vendor(): HasOne
     {
-        return $this->hasOne(Vendor::class, "vendors.id", "vendor_id")
+        return $this->hasOne(Vendor::class, "id", "vendor_id")
             ->join("users", "users.vendor_id", "=", "vendors.id")->where('role', 'Admin')
             ->select('vendors.*', 'users.email', 'users.mobile');
     }

@@ -81,7 +81,7 @@ class ApiController extends Controller
         }
         $sid = $request->service_id;
 
-        $studios = Studio::with('country:id,country')->with('state:id,state')->with('district:id,city')->with('images')->with('vendor:id,name,mobile')
+        $studios = Studio::with('country:id,country')->with('state:id,state')->with('district:id,city')->with('images')->with('vendor')
             ->with('products');
         if ($sid) {
             $studios->with(['charges' => function ($q) use ($sid) {

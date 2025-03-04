@@ -577,7 +577,7 @@ class BookingController extends Controller
         $fslot = Slot::where('id', $request->start_slot)->first();
         $ftime = $fslot->start_at;
         $starttime = date('Y-m-d H:i:s', strtotime($ftime));
-        $studio = Studio::where('id', $studio_id)->with('vendor:id,name,mobile')->with('images')->first();
+        $studio = Studio::where('id', $studio_id)->with('vendor')->with('images')->first();
         if ($request->items) {
             $itemids = $request->items;
             $totalCharges = DB::table('charges')
