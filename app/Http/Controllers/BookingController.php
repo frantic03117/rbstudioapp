@@ -603,9 +603,8 @@ class BookingController extends Controller
         $data = [
             'data' => $booking,
             'studio' => $studio,
-            'start_time' => date('Y-m-d H:i:s', strtotime($request->start_time)),
+            'start_time' => $request->start_time,
             'end_time' => $e_d,
-
             'service' => $service,
             'service_charge' => $service_charge,
             'duration' =>  $durationInHours,
