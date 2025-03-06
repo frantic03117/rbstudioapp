@@ -39,7 +39,7 @@ Route::get('terms/{url}', [ApiController::class, 'terms']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('contact_us', [ApiController::class, 'contact_us']);
     Route::get('contact_us', [ApiController::class, 'queries']);
-    Route::delete('contact_us/{id}', [ApiController::class, 'delete_query']);
+    Route::post('contact_us/delete/{id}', [ApiController::class, 'delete_query']);
     Route::get('bookings', [ApiController::class, 'bookings']);
     Route::get('bookings/{id}', [BookingController::class, 'show']);
     Route::get('policies', [ApiController::class, 'policies']);
