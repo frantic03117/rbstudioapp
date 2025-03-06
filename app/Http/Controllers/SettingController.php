@@ -18,7 +18,7 @@ class SettingController extends Controller
         $items = Setting::all();
         $setting = new Setting();
         $method = "POST";
-        $url = route('setting.create');
+        $url = route('setting.store');
         $res = compact('title', 'items', 'setting', 'url', 'method');
         return view('admin.setting', $res);
     }
