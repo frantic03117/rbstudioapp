@@ -11,9 +11,11 @@ use App\Models\Studio\Studio;
 use App\Models\Location\City;
 use App\Models\Location\Country;
 use App\Models\Location\State;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 
 class ApiController extends Controller
@@ -211,6 +213,18 @@ class ApiController extends Controller
             ];
             return response()->json($data);
         }
+    }
+    public function cancel_booking()
+    {
+        $fdata =  [
+            'booking_status' => '0',
+            'payment_status' => '0'
+        ];
+        $gettimelimit = Setting::where('id', '2')->first();
+        $minutes =  $gettimelimit ?  floatval($gettimelimit->col_val) > 0 ?  floatval($gettimelimit->col_val) :  30 : 30;
+        $timelimit = Carbon::now()->subMinutes($minutes)->format('Y-m-d H:i:s');
+        Booking::where($fdata)->where('created_at', '<=',  $timelimit)->delete();
+        return true;
     }
     public function queries()
     {

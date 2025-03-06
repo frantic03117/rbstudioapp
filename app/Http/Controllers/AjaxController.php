@@ -267,7 +267,6 @@ class AjaxController extends Controller
         for ($i = 1; $i <= $hours; $i++) {
             // $bedate = date('Y-m-d H:0:0', strtotime($bsdate)+$i*3600);
             $bedate = Carbon::parse($bsdate)->addHours($i)->minute(0)->second(0)->format('Y-m-d H:i:s');
-
             $innerBook = Booking::where('booking_start_date', $bsdate)->where('booking_end_date', $bedate)->where('studio_id', $sid)->where('booking_status',  '0')->count();
             $outerBook = Booking::where('booking_start_date', '>', $bsdate)->where('booking_start_date', '<', $bedate)->where('studio_id', $sid)->where('booking_status',  '0')->count();
             #$lcrosBook = Booking::where('booking_end_date', '>', $bsdate)->where('studio_id', $sid)->count();

@@ -30,7 +30,7 @@ use App\Http\Controllers\HomeController;
 Route::post('enter-mobile', [AuthController::class, 'enter_mobile']);
 Route::post('verify-mobile', [AuthController::class, 'verify_otp']);
 Route::post('register', [AuthController::class, 'register']);
-
+Route::get('cancel-booking', [ApiController::class, 'cancel_booking']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
