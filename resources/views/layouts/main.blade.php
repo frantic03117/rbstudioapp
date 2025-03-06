@@ -218,32 +218,6 @@
                                         playSound(); // This is optional, but can help in cases where interaction is required
                                     });
                                 };
-                                const getNotification = (pg) => {
-                                    const nourl = "{{ route('web_notification') }}?page=" + pg;
-                                    let elem = "";
-                                    $.get(nourl, function(res) {
-                                        const items = res.data;
-
-
-                                        items.forEach((obj, index) => {
-                                            if (index == 0) {
-                                                playSound();
-                                            }
-                                            elem += `   <a href="${nurl}" class="text-reset notification-item p-2 border flex-grow-1">
-                                            <h6 class="mb-1">${obj.title}</h6>
-                                            <div class="font-size-13 text-muted">
-                                                <p class="mb-1">${obj.title} for  ${obj.user.name} </p>
-                                            </div>
-                                        </a>`;
-                                        });
-
-                                        $("#notifCount").html(res.data.length)
-                                        if (res.data.length == 0) {
-                                            $("#loadMoreButton").hide()
-                                        }
-                                    })
-                                }
-                                getNotification(1);
                             </script>
                         </div>
                     </div>
