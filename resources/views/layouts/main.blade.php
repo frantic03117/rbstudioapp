@@ -128,7 +128,7 @@
                             </span>
                             <span class="logo-lg">
                                 <img src="{{ url('public/images/logo.png') }}" alt="" height="24">
-                                <span class="logo-txt">Wingo </span>
+                                <span class="logo-txt">R & B Studios </span>
                             </span>
                         </a>
 
@@ -185,12 +185,11 @@
 
 
                     <div class="dropdown d-inline-block">
-                        <button type="button" class="btn header-item noti-icon position-relative"
-                            id="page-header-notifications-dropdown" data-bs-auto-close="outside"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="{{ route('notification') }}" type="button"
+                            class="btn header-item noti-icon position-relative">
                             <i class="fas fa-bell"></i>
                             <span class="badge bg-danger rounded-pill" id="notifCount">5</span>
-                        </button>
+                        </a>
                         <div data-simplebar style="max-height: 230px;"
                             class="dropdown-menu dropdown-menu-lg dropdown-menu-outside dropdown-menu-end p-0"
                             aria-labelledby="page-header-notifications-dropdown">
