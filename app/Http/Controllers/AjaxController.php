@@ -202,9 +202,10 @@ class AjaxController extends Controller
         })
             ->whereNotExists(function ($q) use ($sdate, $sid, $isEdit, $bid) {
                 $q->from('bookings')
-                    ->whereDate('booking_start_date', $sdate) // Ensure booking is for the same date
+                    ->whereIn('booking_status', ['1', '0'])
+                    ->whereDate('booking_start_date', $sdate)
                     ->where('studio_id', $sid)
-                    ->whereColumn('bookings.start_at', '<', 'slots.end_at')  // Overlap check
+                    ->whereColumn('bookings.start_at', '<', 'slots.end_at')
                     ->whereColumn('bookings.end_at', '>', 'slots.start_at');
                 if ($isEdit && $bid) {
                     $q->where('id', '!=', $bid);
