@@ -54,10 +54,6 @@
                                 <div class="form-group mb-4">
                                     <button class="btn btn-primary w-100 btn-block">LOGIN</button>
                                 </div>
-                                <div class="form-group">
-                                    <div class="text-start">New Member? <a href="#!">Sign up Now</a></div>
-                                    <a href="#!" class="forgot-password">Forgot Password?</a>
-                                </div>
                             </form>
                         </div>
                     </div>

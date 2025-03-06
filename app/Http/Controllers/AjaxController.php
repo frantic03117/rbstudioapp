@@ -187,7 +187,8 @@ class AjaxController extends Controller
         $close = Carbon::parse($studio->ends_at);
         $bid = $request->booking_id;
         $isEdit = $request->isEdit;
-        $currentTime = now()->format('H:i:s'); // Get current time in "HH:MM:SS" format
+        $currentTime = now()->format('H:i:s');
+
 
         // Start building the Slot query
         $query = Slot::whereNotIn('id', function ($q) use ($sdate, $sid, $isEdit, $bid) {
@@ -196,10 +197,20 @@ class AjaxController extends Controller
                 ->where('studio_id', $sid)
                 ->select('slot_id');
             if ($isEdit && $bid) {
-                // Exclude the current booking if we're in edit mode
                 $q->where('booking_id', '!=', $bid);
             }
-        });
+        })
+            ->whereNotExists(function ($q) use ($sdate, $sid, $isEdit, $bid) {
+                $q->from('bookings')
+                    ->whereDate('booking_start_date', $sdate) // Ensure booking is for the same date
+                    ->where('studio_id', $sid)
+                    ->whereColumn('bookings.start_at', '<', 'slots.end_at')  // Overlap check
+                    ->whereColumn('bookings.end_at', '>', 'slots.start_at');
+                if ($isEdit && $bid) {
+                    $q->where('id', '!=', $bid);
+                }
+            });
+
         if ($sdate == date('Y-m-d')) {
             $query->where(function ($q) use ($sdate, $currentTime) {
                 $q->where('start_at', '>=', $currentTime);
