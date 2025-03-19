@@ -368,11 +368,11 @@ class BookingController extends Controller
 
         // Calculate the duration in hours
         $duration = $end_date->diffInHours($start_date);
-        if ($request->mode && $duration < 1) {
+        if ($request->mode && $duration < 2) {
             $res = [
                 "success" => '0',
                 'errors' => [],
-                'message' => 'Booking Creation Failed. minimum 1 hours needed to book',
+                'message' => 'Booking Creation Failed. minimum 2 hours needed to book',
                 'data' => []
             ];
             return response()->json($res);
