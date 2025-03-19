@@ -601,7 +601,7 @@ class BookingController extends Controller
         $data = [
             'data' => $booking,
             'studio' => $studio,
-            'start_time' => $starttime,
+            'start_time' => Carbon::parse($starttime)->minute(0)->second(0)->format('Y-m-d H:i:s'),
             'end_time' => $e_d,
             'service' => $service,
             'service_charge' => $service_charge,
