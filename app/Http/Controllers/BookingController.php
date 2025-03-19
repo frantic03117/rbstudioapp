@@ -404,7 +404,13 @@ class BookingController extends Controller
 
 
         if ($overlappingBookings > 0) {
-            return response()->json(['error' => 'Time slot already booked'], 400);
+            $res = [
+                "success" => '0',
+                'errors' => [],
+                'message' => 'Booking Creation Failed. Incorrect booking dates',
+                'data' => []
+            ];
+            return response()->json($res);
         }
 
         if ($bsum == 0 && $d < 25) {
