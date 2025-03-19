@@ -515,7 +515,7 @@ class BookingController extends Controller
             $data = [
                 'data' => [],
                 'success' => 0,
-                'errors' => ['booking' => 'Invalid Booking Slots'],
+                'errors' => 'Invalid booking slots, try another slot.',
                 'message' => 'Create bookings'
             ];
             if ($request->mode) {
