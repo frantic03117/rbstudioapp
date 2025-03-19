@@ -388,8 +388,8 @@ class BookingController extends Controller
             return response()->json($res);
             die;
         }
-        $innerBook = Booking::where('booking_start_date', '<=', $s_d)->where('booking_end_date', '>=', $e_d)->where('studio_id', $studio_id)->where('booking_status', '1')->count();
-        $outerBook = Booking::where('booking_start_date', '>', $s_d)->where('booking_start_date', '<', $e_d)->where('studio_id', $studio_id)->where('booking_status', '1')->count();
+        $innerBook = Booking::where('booking_start_date', '<=', $s_d)->where('booking_end_date', '>=', $e_d)->where('studio_id', $studio_id)->whereIn('booking_status', ['1', '0'])->count();
+        $outerBook = Booking::where('booking_start_date', '>', $s_d)->where('booking_start_date', '<', $e_d)->where('studio_id', $studio_id)->whereIn('booking_status', ['1', '0'])->count();
         $bsum = $innerBook +  $outerBook;
         $d = Carbon::parse($b_s_date)->diffInHours(Carbon::parse($b_e_date));
 
