@@ -390,8 +390,22 @@ class BookingController extends Controller
         }
         $innerBook = Booking::where('booking_start_date', '<=', $s_d)->where('booking_end_date', '>=', $e_d)->where('studio_id', $studio_id)->whereIn('booking_status', ['1', '0'])->count();
         $outerBook = Booking::where('booking_start_date', '>', $s_d)->where('booking_start_date', '<', $e_d)->where('studio_id', $studio_id)->whereIn('booking_status', ['1', '0'])->count();
-        $bsum = $innerBook +  $outerBook;
+        $overlappingBookings = Booking::where('studio_id', $studio_id)
+            ->whereIn('booking_status', ['1', '0'])
+            ->where(function ($query) use ($s_d, $e_d) {
+                $query->where(function ($q) use ($s_d, $e_d) {
+                    $q->where('booking_start_date', '<', $e_d) // Overlaps before the new end time
+                        ->where('booking_end_date', '>', $s_d); // Overlaps after the new start time
+                });
+            })
+            ->count();
+        $bsum = $innerBook +  $outerBook + $overlappingBookings;
         $d = Carbon::parse($b_s_date)->diffInHours(Carbon::parse($b_e_date));
+
+
+        if ($overlappingBookings > 0) {
+            return response()->json(['error' => 'Time slot already booked'], 400);
+        }
 
         if ($bsum == 0 && $d < 25) {
             $user = User::where('mobile', $mobile)->first();
