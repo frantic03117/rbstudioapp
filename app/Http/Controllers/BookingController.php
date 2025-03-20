@@ -301,9 +301,19 @@ class BookingController extends Controller
         Booking::where('id', $id)->update(['booking_status' => '1', 'approved_at' => date('Y-m-d H:i:s')]);
         $booking =  Booking::where('id', $id)->first();
         $user = User::where('id', $booking->user_id)->first();
-
+        $msg = "Hello you have booked the studio on {$booking->booking_start_date}.  Please Note: This is a non-cancellable booking. Cancellation will incur a 50% charge. Setup and packup time will be added to your booking hours. See you at the studios !! R AND B STUDIOS";
+        $udata = [
+            'user_id' => $user->id,
+            'booking_id' => $booking->id,
+            'studio_id' => $booking->studio_id,
+            'vendor_id' => $booking->vendor_id,
+            'type' => 'Booking',
+            'title' => 'Booking Cancelled',
+            'message' => $msg
+        ];
+        RbNotification::insert($udata);
         if ($user->fcm_token) {
-            $this->send_notification($user->fcm_token, 'Booking Confirmed', 'Your booking has been confirmed', $user->id);
+            $this->send_notification($user->fcm_token, 'Booking Confirmed', $msg, $user->id);
         }
         return redirect()->back()->with('success', 'Booking confirmed successfully');
     }
@@ -804,6 +814,16 @@ class BookingController extends Controller
         if ($user->fcm_token) {
             $this->send_notification($user->fcm_token, 'Booking Cancelled', $msg, $user->id);
         }
+        $udata = [
+            'user_id' => $user->id,
+            'booking_id' => $booking->id,
+            'studio_id' => $booking->studio_id,
+            'vendor_id' => $booking->vendor_id,
+            'type' => 'Booking',
+            'title' => 'Booking Cancelled',
+            'message' => $msg
+        ];
+        RbNotification::insert($udata);
         Booking::where('id', $booking->id)->update(['booking_status' => '2']);
         BlockedSlot::where('booking_id', $booking->id)->delete();
         return redirect()->back()->with('success', 'Booking Cancelled');
@@ -914,12 +934,23 @@ class BookingController extends Controller
     public function approve_booking($id)
     {
         date_default_timezone_set('Asia/kolkata');
-        $item = Booking::where('id', $id)->first();
-        $user = User::where('id', $item->user_id)->first();
+        $booking = Booking::where('id', $id)->first();
+        $user = User::where('id', $booking->user_id)->first();
+        $msg = "Hello you have booked the studio on {$booking->booking_start_date}. Please Note: This is a non-cancellable booking. Cancellation will incur a 50% charge. Setup and packup time will be added to your booking hours. See you at the studios !! R AND B STUDIOS";
+        $udata = [
+            'user_id' => $user->id,
+            'booking_id' => $booking->id,
+            'studio_id' => $booking->studio_id,
+            'vendor_id' => $booking->vendor_id,
+            'type' => 'Booking',
+            'title' => 'Booking Cancelled',
+            'message' => $msg
+        ];
+        RbNotification::insert($udata);
         Booking::where('id', $id)->update(['approved_at' => date('Y-m-d H:i:s')]);
         BlockedSlot::where('booking_id', $id)->delete();
         if ($user && $user->fcm_token) {
-            $this->send_notification($user->fcm_token, 'Booking Approved', 'Your booking request has been approved. Please make payment', $item->user_id);
+            $this->send_notification($user->fcm_token, 'Booking Approved', 'Your booking request has been approved. Please make payment', $booking->user_id);
         }
 
         return redirect()->back()->with('success', 'Approved Successfully');
