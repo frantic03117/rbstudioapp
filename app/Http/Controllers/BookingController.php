@@ -299,6 +299,12 @@ class BookingController extends Controller
     public function confirm_booking($id)
     {
         Booking::where('id', $id)->update(['booking_status' => '1', 'approved_at' => date('Y-m-d H:i:s')]);
+        $booking =  Booking::where('id', $id)->first();
+        $user = User::where('id', $booking->user_id)->first();
+
+        if ($user->fcm_token) {
+            $this->send_notification($user->fcm_token, 'Booking Confirmed', 'Your booking has been confirmed', $user->id);
+        }
         return redirect()->back()->with('success', 'Booking confirmed successfully');
     }
 
@@ -792,6 +798,12 @@ class BookingController extends Controller
      */
     public function destroy(Booking $booking)
     {
+        $booking =  Booking::where('id', $booking->id)->first();
+        $user = User::where('id', $booking->user_id)->first();
+        $msg = "Hello {$user->name}, on {$booking->booking_start_date} has been cancelled. Hope to see you again at the studio. Thanks R AND B STUDIOS";
+        if ($user->fcm_token) {
+            $this->send_notification($user->fcm_token, 'Booking Cancelled', $msg, $user->id);
+        }
         Booking::where('id', $booking->id)->update(['booking_status' => '2']);
         BlockedSlot::where('booking_id', $booking->id)->delete();
         return redirect()->back()->with('success', 'Booking Cancelled');
