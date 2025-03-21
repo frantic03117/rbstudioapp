@@ -601,7 +601,8 @@ class BookingController extends Controller
             'studio_id' => 'required|exists:studios,id',
             'service_id' => 'required|exists:services,id',
             'start_slot' => 'required',
-            'end_time' => 'required'
+            'end_time' => 'required',
+            'start_time' => 'required'
         ]);
         $paid = 0;
         $booking = [];
@@ -612,7 +613,9 @@ class BookingController extends Controller
         $studio_id = $request->studio_id;
         $fslot = Slot::where('id', $request->start_slot)->first();
         $ftime = $fslot->start_at;
-        $starttime = date('Y-m-d H:i:s', strtotime($ftime));
+        $start_date = date('Y-m-d', strtotime($request->start_time));
+        $f_time = date('H:i:s', strtotime($ftime));
+        $starttime = $start_date . ' ' . $f_time;
         $studio = Studio::where('id', $studio_id)->with('vendor')->with('images')->first();
         if ($request->items) {
             $itemids = $request->items;
