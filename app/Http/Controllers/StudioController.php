@@ -461,8 +461,10 @@ class StudioController extends Controller
         $transaction = Transaction::where('order_id', $order_id)->first();
         $bitem = Booking::where('id', $bid)->first();
         $res = compact('transaction');
-        return response()->json(['data' => $res, 'success' => $data[0]["order_status"]]);
-        die;
+        $status = $data[0]["order_status"];
+        return redirect()->route('success_page_response', ['type' => $status]);
+        // return response()->json(['data' => $res, 'success' => $data[0]["order_status"]]);
+        // die;
         return view('admin.bookings.success', $res);
     }
     public function pay_cancel(Request $request)
