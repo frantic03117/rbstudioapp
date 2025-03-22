@@ -10,20 +10,22 @@ use App\Models\ServiceStudio;
 use App\Models\Studio\Charge;
 use App\Models\Studio\Service;
 use App\Models\Studio\Studio;
-use App\Models\Studio\StudioService;
+
 use App\Models\StudioImage;
 use App\Models\RbNotification;
 use App\Models\Vendor;
 use App\Models\Booking;
 use App\Models\Transaction;
-use Illuminate\Http\RedirectResponse;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Traits\RbTrait;
 
 class StudioController extends Controller
 {
+    use RbTrait;
     function __construct()
     {
         $this->middleware(['permission:studios-list|studios-create|studios-edit|studios-delete'], ['only' => ['index', 'store']]);
