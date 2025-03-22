@@ -188,8 +188,6 @@ class AjaxController extends Controller
         $bid = $request->booking_id;
         $isEdit = $request->isEdit;
         $currentTime = now()->format('H:i:s');
-
-
         // Start building the Slot query
         $query = Slot::whereNotIn('id', function ($q) use ($sdate, $sid, $isEdit, $bid) {
             $q->from('blocked_slots')

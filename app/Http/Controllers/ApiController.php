@@ -141,7 +141,7 @@ class ApiController extends Controller
     {
         //  \Artisan::call('route:clear');
         $uid = auth('sanctum')->user()->id;
-        $items = Booking::orderBy('bookings.id', 'DESC')->where('created_by', $uid);
+        $items = Booking::orderBy('bookings.id', 'DESC')->where('user_id', $uid);
         $items->with('user:id,name,email,mobile')->withSum('transactions', 'amount')->with('studio:id,name,address,longitude,latitude');
         $items->with('rents')->with('vendor')->with('service');
         $bookings = $items->paginate(10);
