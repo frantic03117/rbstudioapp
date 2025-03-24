@@ -111,5 +111,6 @@ Route::post('pay_now/{id}', [StudioController::class, 'pay_now']);
 Route::any('pay_response', [StudioController::class, 'pay_response'])->name('pay_response');
 Route::any('pay_cancel', [StudioController::class, 'pay_cancel'])->name('pay_cancel');
 Route::any('success_page/{id}', [TransactionController::class, 'success_page'])->name('success_page');
-Route::any('payment-response/{type}', [TransactionController::class, 'success_page'])->name('success_page_response');
+Route::any('payment-response/{type}/{id}', [TransactionController::class, 'success_page_order_id'])->name('success_page_response');
 Route::get('add-payment-online/{id}', [StudioController::class, 'add_payment_online'])->name('pay-online');
+Route::get('check-status/{id}', [StudioController::class, 'checkOrderStatus'])->name('checkOrderStatus');

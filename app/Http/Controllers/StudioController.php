@@ -462,7 +462,7 @@ class StudioController extends Controller
         $bitem = Booking::where('id', $bid)->first();
         $res = compact('transaction');
         $status = $data[0]["order_status"];
-        return redirect()->route('success_page_response', ['type' => $status]);
+        return redirect()->route('success_page_response', ['type' => $status, 'id' => $order_id]);
         // return response()->json(['data' => $res, 'success' => $data[0]["order_status"]]);
         // die;
         return view('admin.bookings.success', $res);
@@ -497,5 +497,35 @@ class StudioController extends Controller
         return response()->json(['data' => $res, 'success' => 'Cancelled']);
         die;
         return view('admin.bookings.success', $res);
+    }
+
+    public function checkOrderStatus($order_id)
+    {
+        $working_key = env('CCA_KEY'); // Shared by CCAvenue
+        $access_code = env('CCA_ACCESS_CODE');
+
+        $merchant_json_data = json_encode(["order_no" => $order_id, "reference_no" => '113605218448']);
+        // echo json_encode($merchant_json_data);
+        // die;
+        $encrypted_data = $this->encrypt($merchant_json_data, $working_key);
+
+        $final_data = "enc_request=" . $encrypted_data . "&access_code=" . $access_code . "&command=orderStatusTracker&request_type=JSON&response_type=JSON";
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://api.ccavenue.com/apis/servlet/DoWebTrans");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $final_data);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        if (!$response) {
+            return null;
+        }
+
+        $decrypted_response = $this->decrypt($response, $working_key);
+        return json_decode($decrypted_response, true);
     }
 }

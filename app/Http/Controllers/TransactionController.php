@@ -109,6 +109,12 @@ class TransactionController extends Controller
         $res = compact('transaction');
         return view('admin.bookings.success', $res);
     }
+    public function success_page_order_id($id)
+    {
+        $transaction = Transaction::where('order_id', $id)->first();
+        $res = compact('transaction');
+        return view('admin.bookings.success', $res);
+    }
 
     /**
      * Display the specified resource.
