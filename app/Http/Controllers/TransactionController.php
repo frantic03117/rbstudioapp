@@ -111,6 +111,7 @@ class TransactionController extends Controller
     }
     public function success_page_order_id($id)
     {
+        echo $id;
         $transaction = Transaction::where('order_id', $id)->first();
         return response()->json($transaction);
         die;
