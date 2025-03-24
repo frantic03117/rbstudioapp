@@ -119,6 +119,9 @@ class StudioController extends Controller
             'latitude' => $request->latitude,
             'created_at' => date('Y-m-d H:i:s')
         ];
+        if ($request->mobile) {
+            $data['mobile'] = $request->mobile;
+        }
         $sid = Studio::insertGetId($data);
         foreach ($imgs as $img) {
             $idata = [
@@ -239,6 +242,9 @@ class StudioController extends Controller
             'latitude' => $request->latitude,
             'updated_At' => date('Y-m-d H:i:s')
         ];
+        if ($request->mobile) {
+            $data['mobile'] = $request->mobile;
+        }
         Studio::where('id', $studio->id)->update($data);
 
         return redirect()->back()->with('success', 'Studio Created Successfully');

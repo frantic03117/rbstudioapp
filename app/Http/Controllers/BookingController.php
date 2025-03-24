@@ -835,7 +835,7 @@ class BookingController extends Controller
     {
         date_default_timezone_set('Asia/kolkata');
         $wp = User::where('id', '1')->first();
-        $wt = floatval($wp->remember_token);
+        $wt = floatval($wp->remember_token) ?? 120;
         $thirtyMinutesAgo = Carbon::now()->subMinutes($wt)->format('Y-m-d H:i:s');
         $bookings = Booking::where('booking_status', '0')->where('created_at', '<', $thirtyMinutesAgo)->get();
         foreach ($bookings as $booking) {

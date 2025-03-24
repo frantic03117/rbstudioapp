@@ -4,13 +4,13 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                      
+
                     <div class="w-100 mb-2 text-end">
                         <a href="{{ route('studio.index') }}" class="btn btn-gradient">Back</a>
                     </div>
                     <div class="w-100">
                         {!! Form::open(['route' => 'studio.store', 'files' => 'true']) !!}
-                      <input type="hidden" name="services" class="w-100 d-block" id="services" />
+                        <input type="hidden" name="services" class="w-100 d-block" id="services" />
                         <div class="row gy-4 ">
                             <div class="col-md-12 p-1 bg-gradient">
                                 Personal Details
@@ -28,6 +28,10 @@
                                 <label for="">Studio name</label>
                                 {!! Form::text('name', old('name'), ['class' => 'form-control']) !!}
                             </div>
+                            <div class="col-md-3">
+                                <label for="">Studio Mobile</label>
+                                {!! Form::text('mobile', old('mobile'), ['class' => 'form-control']) !!}
+                            </div>
                             <div class="col-md-5">
                                 <label for="">Select Services</label>
                                 <div class="d-flex flex-wrap gap-2  flex-wrap">
@@ -35,8 +39,9 @@
                                         <label class="btn shadow border border-light btn-light"
                                             for="services{{ $s->id }}">
                                             <span class="">{{ $s->name }}</span>
-                                            <input  type="checkbox" class="service_box" name="service_id[]" id="services{{ $s->id }}"
-                                                value="{{ $s->id }}" data-text="{{$s->name}}">
+                                            <input type="checkbox" class="service_box" name="service_id[]"
+                                                id="services{{ $s->id }}" value="{{ $s->id }}"
+                                                data-text="{{ $s->name }}">
                                         </label>
                                     @endforeach
                                 </div>
@@ -54,42 +59,43 @@
                                         </tr>
                                     </thead>
                                     <tbody id="service_amount_box">
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
-                           
+
                             <div class="col-md-2">
                                 @php
                                     $stimes = ['05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00'];
-                                    $etimes = ['20:00', '21:00','22:00', '23:00'];
+                                    $etimes = ['20:00', '21:00', '22:00', '23:00'];
                                 @endphp
                                 <label for="">Booking Start At</label>
-                              
+
                                 <select class="form-select" name="opens_at">
                                     <option value="">---Select---</option>
-                                    @foreach($stimes as $s)
-                                        <option value="{{$s}}">{{$s}}</option>
+                                    @foreach ($stimes as $s)
+                                        <option value="{{ $s }}">{{ $s }}</option>
                                     @endforeach
-                                    
+
                                 </select>
                             </div>
                             <div class="col-md-2">
                                 <label for="">Booking End At</label>
-                                 <select class="form-select" name="ends_at">
+                                <select class="form-select" name="ends_at">
                                     <option value="">---Select---</option>
-                                    @foreach($etimes as $s)
-                                        <option value="{{$s}}">{{$s}}</option>
+                                    @foreach ($etimes as $s)
+                                        <option value="{{ $s }}">{{ $s }}</option>
                                     @endforeach
-                                    
+
                                 </select>
                             </div>
                             <div class="col-md-12">
-                                <label class="w-100 h-100 border border-dashed cursor-pointer  border-danger p-4 rounded-3" for="upload_images">Upload Images
-                                <input type="file" name="images[]" onchange="getImagesPreview(event)" id="upload_images"
-                                    class="form-control d-none" multiple>
-                                <div class="d-flex gap-2 flex-wrap" id="images"></div>
-                            </label>
+                                <label class="w-100 h-100 border border-dashed cursor-pointer  border-danger p-4 rounded-3"
+                                    for="upload_images">Upload Images
+                                    <input type="file" name="images[]" onchange="getImagesPreview(event)"
+                                        id="upload_images" class="form-control d-none" multiple>
+                                    <div class="d-flex gap-2 flex-wrap" id="images"></div>
+                                </label>
                             </div>
 
 
@@ -207,20 +213,25 @@
             });
         };
         let arr = [];
-        $(".service_box").each(function(e){
-            $(this).on('click', function(){
+        $(".service_box").each(function(e) {
+            $(this).on('click', function() {
                 const isChecked = $(this).is(":checked");
                 const sval = $(this).val();
-                const text= $(this).data('text');
-               
-                if(isChecked){
-                     arr.push({'id' : sval, 'text': text, 'amount': "", 'isPermissable' : "0"});
-                }else{
-                   let idx = arr.findIndex(obj => obj.id == sval);
-                   arr.splice(idx, 1);
+                const text = $(this).data('text');
+
+                if (isChecked) {
+                    arr.push({
+                        'id': sval,
+                        'text': text,
+                        'amount': "",
+                        'isPermissable': "0"
+                    });
+                } else {
+                    let idx = arr.findIndex(obj => obj.id == sval);
+                    arr.splice(idx, 1);
                 }
                 let output = ``
-                arr.forEach((ar,i) => {
+                arr.forEach((ar, i) => {
                     output += ` <tr>
                         <td>${i + 1}</td>
                         <td>${ar.text}</td>
@@ -234,7 +245,7 @@
                         </td>
                         </tr>`;
                 });
-               
+
                 $("#service_amount_box").html(output);
             })
         })
@@ -244,10 +255,10 @@
             $("#services").val(JSON.stringify(arr));
         }
         const addToPermissable = (e, id) => {
-           
-            if(e.target.checked){
+
+            if (e.target.checked) {
                 arr[id].isPermissable = "1"
-            }else{
+            } else {
                 arr[id].isPermissable = "0"
             }
             $("#services").val(JSON.stringify(arr));
