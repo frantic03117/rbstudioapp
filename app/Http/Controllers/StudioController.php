@@ -505,20 +505,27 @@ class StudioController extends Controller
         $access_code = "AVDJ41KL72BL40JDLB";
         $request_string =   $order_id . "|";
         $encrypted_data = $this->encrypt($request_string, $working_key);
-        $final_data = "enc_request=" . $encrypted_data .
-            "&access_code=" . $access_code .
-            "&command=orderStatusTracker" .
-            "&request_type=JSON" .
-            "&response_type=JSON";
+        $final_data = http_build_query([
+            "status" => '1',
+            "enc_request"    => $encrypted_data,
+            "access_code"    => $access_code,
+            "command"        => "orderStatusTracker",
+            "request_type"   => "JSON",
+            "response_type"  => "JSON"
+        ]);
+
+        // Send API Request to CCAvenue
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://api.ccavenue.com/apis/servlet/DoWebTrans");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $final_data);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/x-www-form-urlencoded"]);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 
         $response = curl_exec($ch);
         curl_close($ch);
+
         return response()->json($response);
         if (!$response) {
             return null;
