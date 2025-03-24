@@ -501,16 +501,15 @@ class StudioController extends Controller
 
     public function checkOrderStatus($order_id)
     {
-        $working_key = env('CCA_KEY'); // Shared by CCAvenue
-        $access_code = env('CCA_ACCESS_CODE');
-
-        $merchant_json_data = json_encode(["order_no" => $order_id, "reference_no" => '113605218448']);
-        // echo json_encode($merchant_json_data);
-        // die;
-        $encrypted_data = $this->encrypt($merchant_json_data, $working_key);
-
-        $final_data = "enc_request=" . $encrypted_data . "&access_code=" . $access_code . "&command=orderStatusTracker&request_type=JSON&response_type=JSON";
-
+        $working_key = "7D819C910B5DA518C0636C14A83DD434"; // Shared by CCAvenue
+        $access_code = "AVDJ41KL72BL40JDLB";
+        $request_string =   $order_id . "|";
+        $encrypted_data = $this->encrypt($request_string, $working_key);
+        $final_data = "enc_request=" . $encrypted_data .
+            "&access_code=" . $access_code .
+            "&command=orderStatusTracker" .
+            "&request_type=JSON" .
+            "&response_type=JSON";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://api.ccavenue.com/apis/servlet/DoWebTrans");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -520,7 +519,7 @@ class StudioController extends Controller
 
         $response = curl_exec($ch);
         curl_close($ch);
-
+        return response()->json($response);
         if (!$response) {
             return null;
         }
