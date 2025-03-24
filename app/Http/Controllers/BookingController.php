@@ -570,7 +570,7 @@ class BookingController extends Controller
      */
     public function show(Booking $booking, $id)
     {
-        $booking = Booking::where('id', $id)->with('studio')->with('transactions')->withSum('transactions', 'amount')->with('rents')
+        $booking = Booking::where('id', $id)->with('studio')->with('transactions')->withSum('transactions', 'amount')->with('rents')->with('gst')
             ->with('service:id,name')
             ->first();
         $paid = $booking->transactions_sum_amount;

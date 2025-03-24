@@ -53,19 +53,20 @@ class Booking extends Model
     {
         return $this->belongsToMany(Rent::class, BookingItem::class, 'booking_id', 'item_id')->withPivot('charge', 'uses_hours');
     }
-    public function creater(){
-          return $this->belongsTo(User::class, 'created_by', 'id');
+    public function creater()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
-    public function service(){
-         return $this->belongsTo(Service::class, 'service_id', 'id');
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id', 'id');
     }
-    public function gst(){
+    public function gst()
+    {
         return $this->hasOne(BookingGst::class, 'booking_id', 'id');
     }
-    public function transactions(){
+    public function transactions()
+    {
         return $this->hasMany(Transaction::class, 'booking_id', 'id')->where('status', 'Success');
     }
-  
-
-
 }
