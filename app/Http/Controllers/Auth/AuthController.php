@@ -32,7 +32,7 @@ class AuthController extends Controller
             $check = User::where(['mobile' =>  $mobile])->first();
             $otp  = mt_rand(1111, 9999);
             if ($check) {
-                if($check->role != "User"){
+                if ($check->role != "User") {
                     $data = [
                         'errors' => ['message' => ['Invalid mobile number']],
                         'data' => [],
@@ -42,18 +42,16 @@ class AuthController extends Controller
                     return response()->json($data, 200);
                 }
                 $isSend = $this->send_otp($mobile, $otp);
-                User::where('id', $check['id'])->update(['otp' => $otp, 'otp_verified' => '0', 'updated_at' => date('Y-m-d H:i:s'), 'fcm_token'=> null]);
-                
-                 
+                User::where('id', $check['id'])->update(['otp' => $otp, 'otp_verified' => '0', 'updated_at' => date('Y-m-d H:i:s'), 'fcm_token' => null]);
             } else {
                 User::insert(['mobile' => $mobile, 'otp' => $otp, 'created_at' => date('Y-m-d'), 'updated_at' => date('Y-m-d H:i:s')]);
                 $isSend = $this->send_otp($mobile, $otp);
             }
-           
+
             $data = [
                 'fcm' => $check ? $check->fcm_token : "",
                 'errors' => $isSend,
-                'data' => ['otp' => $otp, 'mobile' => $mobile],
+                'data' => ['OTP' => $otp, 'mobile' => $mobile],
                 'success' => 1,
                 'message' =>  'Otp has been sent to your mobile number.'
             ];
@@ -83,7 +81,7 @@ class AuthController extends Controller
             'mobile' => $mobile,
             'otp' => $otp,
             'role' => 'User'
-        ]; 
+        ];
         $user = User::where($data)->where('updated_at', '>=', date('Y-m-d H:i:s', strtotime($stime)))->first();
         if ($user) {
             User::where('id',  $user['id'])->update(['otp_verified' => '1', 'mobile_verified_at' => date('Y-m-d H:i:s'), 'otp' => '']);
