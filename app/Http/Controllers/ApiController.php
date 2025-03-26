@@ -140,8 +140,12 @@ class ApiController extends Controller
     public function bookings()
     {
         //  \Artisan::call('route:clear');
+        $booking_status = $_GET['booking_status'] ?? null;
         $uid = auth('sanctum')->user()->id;
         $items = Booking::orderBy('bookings.id', 'DESC')->where('user_id', $uid);
+        if ($booking_status) {
+            $items->where('booking_status', $booking_status);
+        }
         $items->with('user:id,name,email,mobile')->withSum('transactions', 'amount')->with('studio:id,name,address,longitude,latitude');
         $items->with('rents')->with('vendor')->with('service');
         $bookings = $items->paginate(10);
@@ -265,7 +269,6 @@ class ApiController extends Controller
         date_default_timezone_set('Asia/kolkata');
         $validator = Validator::make($request->all(), [
             'keyword' => 'required'
-
         ]);
         if ($validator->fails()) {
             $data = [
