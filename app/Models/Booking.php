@@ -63,7 +63,7 @@ class Booking extends Model
     }
     public function gst()
     {
-        return $this->hasOne(BookingGst::class, 'booking_id', 'id');
+        return $this->hasOne(BookingGst::class, 'id', 'gst_id');
     }
     public function transactions()
     {
