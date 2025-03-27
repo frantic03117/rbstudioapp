@@ -270,7 +270,16 @@ class AjaxController extends Controller
             $outerBook = Booking::where('booking_start_date', '>', $bsdate)->where('booking_start_date', '<', $bedate)->where('studio_id', $sid)->where('booking_status',  '0')->count();
             #$lcrosBook = Booking::where('booking_end_date', '>', $bsdate)->where('studio_id', $sid)->count();
             #$ucrosBook = Booking::where('booking_start_date', '>', $bedate)->where('studio_id', $sid)->count();
-            $sum = $innerBook + $outerBook;
+            $overlappingBookings = Booking::where('studio_id', $sid)
+                ->whereIn('booking_status', ['1', '0'])
+                ->where(function ($query) use ($bsdate, $bedate) {
+                    $query->where(function ($q) use ($bsdate, $bedate) {
+                        $q->where('booking_start_date', '<', $bedate)
+                            ->where('booking_end_date', '>', $bsdate);
+                    });
+                })
+                ->count();
+            $sum = $innerBook + $outerBook + $overlappingBookings;
             if ($sum == 0) {
                 array_push($arr, $bedate);
             }
