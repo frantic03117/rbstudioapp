@@ -143,11 +143,16 @@ class ApiController extends Controller
         $booking_status = $_GET['booking_status'] ?? null;
         $uid = auth('sanctum')->user()->id;
         $items = Booking::orderBy('bookings.id', 'DESC')->where('user_id', $uid);
+        if ($booking_status == "0") {
+            $items->where('booking_status', "0");
+        }
         if ($booking_status) {
             $items->where('booking_status', $booking_status);
+            $items->where('booking_start_date', '>=', date('Y-m-d H:i:s'));
         }
         $items->with('user:id,name,email,mobile')->withSum('transactions', 'amount')->with('studio:id,name,address,longitude,latitude');
         $items->with('rents')->with('vendor')->with('service');
+
         $bookings = $items->paginate(10);
         return response()->json($bookings);
     }
