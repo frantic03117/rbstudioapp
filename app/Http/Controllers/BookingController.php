@@ -617,14 +617,7 @@ class BookingController extends Controller
         $f_time = date('H:i:s', strtotime($ftime));
         $starttime = $start_date . ' ' . $f_time;
         $studio = Studio::where('id', $studio_id)->with('vendor')->with('images')->first();
-        if ($request->items) {
-            $itemids = $request->items;
-            $totalCharges = DB::table('charges')
-                ->whereIn('item_id', $itemids)
-                ->where('studio_id', $studio_id)
-                ->sum('charge');
-            $rentcharge  = $totalCharges;
-        }
+
         $service_id = $request->service_id;
         $service = Service::where('id', $service_id)->first();
         $service_charge = ServiceStudio::where(['service_id' => $service_id, 'studio_id' => $studio_id])->first();
@@ -632,11 +625,22 @@ class BookingController extends Controller
         $endtime_c = Carbon::parse($request->end_time);
         $e_d = Carbon::parse($endtime_c)->minute(0)->second(0)->format('Y-m-d H:i:s');
         $durationInHours = $starttime_c->diffInHours($endtime_c);
+
+
+        if ($request->items) {
+            $itemids = $request->items;
+            $totalCharges = DB::table('charges')
+                ->whereIn('item_id', $itemids)
+                ->where('studio_id', $studio_id)
+                ->sum('charge');
+            $rentcharge  = floatval($totalCharges) * floatval($durationInHours);
+        }
         $booking['rents_price'] = $rentcharge;
         $booking['total_to_pay'] = ($durationInHours * $service_charge->charge + $rentcharge) * 1.18;
         $booking['paid'] = $paid;
         $booking['net_payable'] = ($durationInHours * $service_charge->charge + $rentcharge) * 1.18 - $paid - 0;
         $booking['calculation'] = ['gst' => 18, 'discount' => ['partial' => '0', 'full' => '0', 'type' => 'percent']];
+
         $data = [
             'data' => $booking,
             'studio' => $studio,
