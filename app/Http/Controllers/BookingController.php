@@ -694,7 +694,6 @@ class BookingController extends Controller
         $f_time = date('H:i:s', strtotime($ftime));
         $starttime = $start_date . ' ' . $f_time;
         $studio = Studio::where('id', $studio_id)->with('vendor')->with('images')->first();
-
         $service_id = $request->service_id;
         $service = Service::where('id', $service_id)->first();
         $service_charge = ServiceStudio::where(['service_id' => $service_id, 'studio_id' => $studio_id])->first();
@@ -702,6 +701,40 @@ class BookingController extends Controller
         $endtime_c = Carbon::parse($request->end_time);
         $e_d = Carbon::parse($endtime_c)->minute(0)->second(0)->format('Y-m-d H:i:s');
         $durationInHours = $starttime_c->diffInHours($endtime_c);
+
+        $formatedstarttime = Carbon::parse($starttime)->minute(0)->second(0)->format('Y-m-d H:i:s');
+        $extra_hours = 0;
+        $extra_charge_per_hour = 200;
+        $start_time = strtotime($formatedstarttime);
+        $end_time = strtotime($e_d);
+
+        // Define extra charge period (11 PM - 8 AM)
+        $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
+        $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00') + 86400;
+        $same_date_before_open =   $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+
+
+        while ($start_time < $end_time) {
+            if ($start_time > $night_start || $start_time < $same_date_before_open) {
+                if ($start_time <= $morning_end || $start_time < $same_date_before_open) {
+                    $extra_hours++;
+                }
+            }
+            $start_time = strtotime('+1 hour', $start_time);
+        }
+
+
+        // Apply extra charge only if extra hours exist
+        $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
+
+        // Base amount
+        $base_amount = $durationInHours * $service_charge->charge;
+
+        // Final total calculation including GST (18%)
+        $total_amount = ($base_amount + $extra_charge) * 1.18;
+
+
+
 
 
         if ($request->items) {
@@ -713,14 +746,16 @@ class BookingController extends Controller
             $rentcharge  = floatval($totalCharges) * floatval($durationInHours);
         }
         $booking['rents_price'] = $rentcharge;
-        $booking['total_to_pay'] = ($durationInHours * $service_charge->charge + $rentcharge) * 1.18;
+        $totalpayable =  ($durationInHours * $service_charge->charge + $rentcharge + $extra_charge) * 1.18;
+        $booking['total_to_pay'] = $totalpayable;
         $booking['paid'] = $paid;
-        $booking['net_payable'] = ($durationInHours * $service_charge->charge + $rentcharge) * 1.18 - $paid - 0;
+        $booking['net_payable'] = $totalpayable - $paid - 0;
         $booking['calculation'] = ['gst' => 18, 'discount' => ['partial' => '0', 'full' => '0', 'type' => 'percent']];
 
         $data = [
             'data' => $booking,
             'studio' => $studio,
+            'extra_charge' => $extra_charge,
             'start_time' => Carbon::parse($starttime)->minute(0)->second(0)->format('Y-m-d H:i:s'),
             'end_time' => $e_d,
             'service' => $service,
