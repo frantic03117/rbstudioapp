@@ -353,20 +353,49 @@ class StudioController extends Controller
     }
     public function pay_now(Request $request, $id)
     {
-        $item =  Booking::where('id', $id)->where('approved_at', '!=', null)->with('rents')->withSum('transactions', 'amount')->with('studio')->with('vendor')->with('service')->with('user')->first();
-        $rents =  $item->rents;
-        $arr = [];
-        foreach ($rents as $r) {
-            array_push($arr, $r->pivot->charge * $r->pivot->uses_hours);
-        }
-        $isPartial = $request->isPartial;
-        $rentcharge = array_sum($arr);
-        $amount =  ($item->duration * $item->studio_charge + $rentcharge) * 1.18 - $item->transactions_sum_amount - floatval($item->promo_discount_calculated);
+        $booking = Booking::where('id', $id)->with('studio')->with('transactions')->withSum('transactions', 'amount')->with('rents')->with('gst')
+            ->with('service:id,name')
+            ->first();
 
+
+        $extra_charge_per_hour = 200;
+        $extra_hours = 0;
+
+        $start_time = strtotime($booking['booking_start_date']);
+        $end_time = strtotime($booking['booking_end_date']);
+
+        // Define extra charge period (11 PM - 8 AM)
+        $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
+        $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+
+        // Fix: Use next day's 8 AM **only if booking crosses midnight**
+        if ($start_time >= $night_start) {
+            $morning_end += 86400;
+        }
+
+
+        while ($start_time < $end_time) {
+            // Fix: Use AND (`&&`) instead of OR (`||`)
+            if ($start_time >= $night_start || $start_time < $morning_end) {
+                $extra_hours++;
+            }
+            $start_time = strtotime('+1 hour', $start_time);
+        }
+        $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
+        $rents = $booking->rents;
+        $rentcharge = 0;
+        foreach ($rents as $r) {
+            $rentcharge += $r->pivot->charge * $r->pivot->uses_hours;
+        }
+        $paid = $booking->transactions_sum_amount;
+        $totalPaable = $booking->duration * $booking->studio_charge + $rentcharge + $extra_charge;
+        $withgst =  $totalPaable * 1.18;
+        $netPending = $withgst - $paid - floatval($booking->promo_discount_calculated);
+        $isPartial = $request->isPartial;
         if ($isPartial) {
-            $payment_value =  $amount * $item->partial_percent * 0.01;
+            $payment_value =  $netPending * $booking->partial_percent * 0.01;
         } else {
-            $payment_value = $amount;
+            $payment_value = $netPending;
         }
         $mid = env('CCA_MID');
         $working_key = env('CCA_KEY'); //Shared by CCAVENUES
@@ -396,10 +425,10 @@ class StudioController extends Controller
             'type' => 'Credit',
             'amount' => $payment_value,
             'order_id' => $custom_order_id,
-            'studio_id' => $item->studio_id,
-            'user_id' => $item->user_id,
+            'studio_id' => $booking->studio_id,
+            'user_id' => $booking->user_id,
             'booking_id' => $id,
-            'vendor_id' => $item->vendor_id,
+            'vendor_id' => $booking->vendor_id,
             'init_resp' => json_encode($fdata),
             'mode' => 'CCA',
             'created_at' => date('Y-m-d H:i:s')
