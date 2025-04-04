@@ -152,9 +152,55 @@ class BookingController extends Controller
         if ($booking_tenure == "past") {
             $items->where('booking_start_date', '<', $now);
         }
-        $bookings = $items->paginate(10);
-        // return response()->json($bookings);
-        // die;
+        $extra_charge_per_hour = 200;
+        $bookings = $items->paginate(10)->appends(request()->query());
+        $bookings->getCollection()->transform(
+            function ($b) use ($extra_charge_per_hour) {
+
+                $extra_hours = 0;
+
+                $start_time = strtotime($b['booking_start_date']);
+                $end_time = strtotime($b['booking_end_date']);
+
+                // Define extra charge period (11 PM - 8 AM)
+                $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
+                $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00') + 86400;
+                $same_date_before_open =   $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+                // ✅ Fix: Ensure we only check for bookings that OVERLAP with extra charge period
+                $arr = [date('Y-m-d H:i:s',  $start_time)];
+                while ($start_time < $end_time) {
+                    if ($start_time > $night_start || $start_time < $same_date_before_open) {
+                        if ($start_time <= $morning_end || $start_time < $same_date_before_open) {
+                            $extra_hours++;
+                        }
+                    }
+                    $start_time = strtotime('+1 hour', $start_time);
+                    $bdate =  date('Y-m-d H:i A',  $start_time);
+                }
+
+
+                // Apply extra charge only if extra hours exist
+                $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
+
+                // Base amount
+                $base_amount = $b['duration'] * $b['studio_charge'];
+
+                // Final total calculation including GST (18%)
+                $total_amount = ($base_amount + $extra_charge) * 1.18;
+                $b['extra_charge'] = $extra_charge;
+                // Add the calculated total to the booking object
+                $b['total_amount'] = round($total_amount, 2);
+                $rents = $b->rents;
+                $rent_charge = 0;
+                foreach ($rents as $r) {
+                    $rent_charge += $r->pivot->charge * $r->pivot->uses_hours;
+                }
+                $b['rent_charges'] = $rent_charge;
+                return $b;
+            }
+        );
+
+
         $stds = Studio::where('id', '>', '0');
         if ($vid > 0) {
             $stds->where('vendor_id', $vid);
@@ -173,6 +219,7 @@ class BookingController extends Controller
         $res = compact('title', 'type', 'bookings', 'keyword', 'vendors', 'vendor_id', 'studio_id', 'service_id', 'approved_at', 'booking_status', 'payment_status', 'duration', 'created_by', 'bdf', 'services', 'bdt', 'studios');
         // return response()->json($bookings);
         // die;
+
         if (isset($_GET['export']) && $_GET['export'] == "excel") {
             return Excel::download(new BookingExport($type), 'bookings.xlsx');
         }
@@ -270,9 +317,51 @@ class BookingController extends Controller
         if ($booking_tenure == "past") {
             $items->where('booking_start_date', '<', $now);
         }
-        $bookings = $items->paginate(10);
-        // return response()->json($bookings);
-        // die;
+        $bookings = $items->paginate(10)->appends(request()->query());
+        $extra_charge_per_hour = 200;
+        $bookings->getCollection()->transform(
+            function ($b) use ($extra_charge_per_hour) {
+
+                $extra_hours = 0;
+
+                $start_time = strtotime($b['booking_start_date']);
+                $end_time = strtotime($b['booking_end_date']);
+
+                // Define extra charge period (11 PM - 8 AM)
+                $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
+                $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00') + 86400;
+                $same_date_before_open =   $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+
+                while ($start_time < $end_time) {
+                    if ($start_time > $night_start || $start_time < $same_date_before_open) {
+                        if ($start_time <= $morning_end || $start_time < $same_date_before_open) {
+                            $extra_hours++;
+                        }
+                    }
+                    $start_time = strtotime('+1 hour', $start_time);
+                }
+
+
+                // Apply extra charge only if extra hours exist
+                $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
+
+                // Base amount
+                $base_amount = $b['duration'] * $b['studio_charge'];
+
+                // Final total calculation including GST (18%)
+                $total_amount = ($base_amount + $extra_charge) * 1.18;
+                $b['extra_charge'] = $extra_charge;
+                // Add the calculated total to the booking object
+                $b['total_amount'] = round($total_amount, 2);
+                $rents = $b->rents;
+                $rent_charge = 0;
+                foreach ($rents as $r) {
+                    $rent_charge += $r->pivot->charge * $r->pivot->uses_hours;
+                }
+                $b['rent_charges'] = $rent_charge;
+                return $b;
+            }
+        );
         $stds = Studio::where('id', '>', '0');
         if ($vid > 0) {
             $stds->where('vendor_id', $vid);

@@ -294,42 +294,51 @@
                                                 <span class="badge bg-danger text-white">Cancelled</span>
                                             @endif
                                             @if ($b->booking_status != '2')
-                                                @php
+                                                {{-- @php
                                                     $rents = $b->rents;
                                                     $arr = [];
                                                     foreach ($rents as $r) {
                                                         array_push($arr, $r->pivot->charge * $r->pivot->uses_hours);
                                                     }
                                                     $rentcharge = array_sum($arr);
+
                                                     $extra_charge_per_hour = 200;
                                                     $extra_hours = 0;
 
-                                                    $start_time = strtotime($b->booking_start_time);
-                                                    $end_time = strtotime($b->booking_end_time);
+                                                    $start_time = strtotime($b['booking_start_date']);
+                                                    $end_time = strtotime($b['booking_end_date']);
 
-                                                    // Define studio extra charge hours
-                                                    $night_start = strtotime('23:00:00');
-                                                    $morning_end = strtotime('08:00:00') + 86400; // Adding 24 hours for next day
+                                                    $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
+                                                    $morning_end =
+                                                        strtotime(date('Y-m-d', $start_time) . ' 08:00:00') + 86400;
 
-                                                    // Calculate extra hours if booking overlaps
-                                                    while ($start_time < $end_time) {
-                                                        if ($start_time >= $night_start || $start_time < $morning_end) {
-                                                            $extra_hours++;
+                                                    if ($start_time < $morning_end || $end_time > $night_start) {
+                                                        while ($start_time < $end_time) {
+                                                            if (
+                                                                $start_time >= $night_start ||
+                                                                $start_time < $morning_end
+                                                            ) {
+                                                                $extra_hours++;
+                                                            }
+                                                            $start_time = strtotime('+1 hour', $start_time);
                                                         }
-                                                        $start_time = strtotime('+1 hour', $start_time);
                                                     }
 
-                                                    // Calculate extra charge
-                                                    $extra_charge = $extra_hours * $extra_charge_per_hour;
-                                                @endphp
+                                                    // Calculate extra charge (only if extra hours exist)
+                                                    $extra_charge =
+                                                        $extra_hours > 0 ? $extra_hours * $extra_charge_per_hour : 0;
+                                                @endphp --}}
                                                 <ul class="list-unstyled text-nowrap">
 
                                                     <li>
-                                                        Total Amount :
-                                                        {{ $total = ($rentcharge + $b->duration * $b->studio_charge + $extra_charge) * 1.18 }}
+                                                        Total Amount : {{ $b->total_amount }}
+
                                                     </li>
                                                     <li>
-                                                        Overnight Charges : {{ $extra_charge }}
+                                                        Overnight Charges : {{ $b->extra_charge }}
+                                                    </li>
+                                                    <li>
+                                                        rentcharge : {{ $b->rent_charges }}
                                                     </li>
                                                     <li>
                                                         Promo : {{ $b->promo_code }}
@@ -343,9 +352,9 @@
                                                     </li>
                                                     <li>
                                                         Remaining Amount :
-                                                        {{ $remainingamount = floor($total - $paid - $discount) }}
+                                                        {{ $remainingamount = floor($b->total_amount - $paid - $discount) }}
                                                     </li>
-                                                    @if (floor($total - $paid - $discount) > 0 && $b->approved_at != null)
+                                                    @if (floor($b->total_amount - $paid - $discount) > 0 && $b->approved_at != null)
                                                         <li>
                                                             <div class="d-flex gap-2">
                                                                 <form action="{{ route('pay_now', $b->id) }}"
@@ -427,7 +436,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        {!! $bookings->links() !!}
+                        {{ $bookings->appends(request()->query())->links() }}
                     </div>
                 </div>
             </div>

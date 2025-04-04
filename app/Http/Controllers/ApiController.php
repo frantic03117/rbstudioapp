@@ -152,8 +152,38 @@ class ApiController extends Controller
         }
         $items->with('user:id,name,email,mobile')->withSum('transactions', 'amount')->with('studio:id,name,address,longitude,latitude');
         $items->with('rents')->with('vendor')->with('service');
-
         $bookings = $items->paginate(10);
+        $extra_charge_per_hour = 200;
+        $bookings->getCollection()->transform(
+            function ($b) use ($extra_charge_per_hour) {
+                $extra_hours = 0;
+                $start_time = strtotime($b['booking_start_date']);
+                $end_time = strtotime($b['booking_end_date']);
+                $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
+                $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00') + 86400;
+                $same_date_before_open =   $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+                while ($start_time < $end_time) {
+                    if ($start_time > $night_start || $start_time < $same_date_before_open) {
+                        if ($start_time <= $morning_end || $start_time < $same_date_before_open) {
+                            $extra_hours++;
+                        }
+                    }
+                    $start_time = strtotime('+1 hour', $start_time);
+                }
+                $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
+                $base_amount = $b['duration'] * $b['studio_charge'];
+                $total_amount = ($base_amount + $extra_charge) * 1.18;
+                $b['extra_charge'] = $extra_charge;
+                $b['total_amount'] = round($total_amount, 2);
+                $rents = $b->rents;
+                $rent_charge = 0;
+                foreach ($rents as $r) {
+                    $rent_charge += $r->pivot->charge * $r->pivot->uses_hours;
+                }
+                $b['rent_charges'] = $rent_charge;
+                return $b;
+            }
+        );
         return response()->json($bookings);
     }
     public function terms($url)
