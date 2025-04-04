@@ -391,6 +391,9 @@ class StudioController extends Controller
         $totalPaable = $booking->duration * $booking->studio_charge + $rentcharge + $extra_charge;
         $withgst =  $totalPaable * 1.18;
         $netPending = $withgst - $paid - floatval($booking->promo_discount_calculated);
+
+
+
         $isPartial = $request->isPartial;
         if ($isPartial) {
             $payment_value =  $netPending * $booking->partial_percent * 0.01;

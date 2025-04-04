@@ -664,49 +664,25 @@ class BookingController extends Controller
 
         $start_time = strtotime($booking['booking_start_date']);
         $end_time = strtotime($booking['booking_end_date']);
-
-        // Define extra charge period (11 PM - 8 AM)
         $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
         $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
-
-        // Fix: Use next day's 8 AM **only if booking crosses midnight**
         if ($start_time >= $night_start) {
             $morning_end += 86400;
         }
-
-
         while ($start_time < $end_time) {
-            // Fix: Use AND (`&&`) instead of OR (`||`)
             if ($start_time >= $night_start || $start_time < $morning_end) {
                 $extra_hours++;
             }
             $start_time = strtotime('+1 hour', $start_time);
         }
-
-
-
-        // Apply extra charge only if extra hours exist
         $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
-
-
-        // Add the calculated total to the booking object
-
         $rents = $booking->rents;
         $rent_charge = 0;
         foreach ($rents as $r) {
             $rent_charge += $r->pivot->charge * $r->pivot->uses_hours;
         }
-
-
-
-
-
-
         $paid = $booking->transactions_sum_amount;
-
         $rents =  $booking->rents;
-
-
         $booking['rents_price'] = $rent_charge;
         $booking['extra_charge'] = $extra_charge;
         $totalPaable = $booking->duration * $booking->studio_charge + $rent_charge + $extra_charge;
