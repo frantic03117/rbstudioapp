@@ -67,13 +67,11 @@ class BookingController extends Controller
         $keyword = $_GET['keyword'] ?? null;
         $vid = Auth::user()->vendor_id;
         $now = date('Y-m-d H:i:s');
-
         $title = "List of Booking";
         $items = Booking::where('id', '>', '0');
         if ($booking_id) {
             $items->where('id', $booking_id);
         } else {
-
             if ($type == "upcoming") {
                 $items->whereDate('booking_start_date', '>', $now)->orderBy('booking_start_date', 'ASC');
             }
@@ -148,7 +146,7 @@ class BookingController extends Controller
                 $items->where('approved_at', '!=', null);
             }
         }
-        $items->with('vendor')->with('service:id,name,icon,approval_required')->with('user:id,name,email,mobile')->with('studio:id,name,address');
+        $items->with('vendor')->with('service:id,name,icon,approval_required')->with('user:id,name,email,mobile')->with('studio:id,name,address,opens_at,ends_at');
         $items->with('rents')->with('transactions')->withSum('transactions', 'amount');
         $items->with('creater:id,name,email');
         if ($booking_tenure == "past") {
