@@ -24,10 +24,7 @@ class TransactionController extends Controller
         if (Auth::user()->role != "Super") {
             $items->where('vendor_id', Auth::user()->vendor_id);
         }
-
         $transactions = $items->with('user')->with('booking')->orderBy('id', 'DESC')->paginate(40);
-        // return response()->json($transactions);
-        // die;
         $res = compact('title', 'transactions');
         return view('admin.reports.transactions', $res);
     }
@@ -73,6 +70,7 @@ class TransactionController extends Controller
         ];
         $amount = $request->amount;
         if (Transaction::insert($data)) {
+            $notmessage = "Payment Received!! We’ve received your payment of (₹{$amount})/- Your booking is confirmed. See you at the studios. ";
             $item =  Booking::where('id', $bid)->with('rents')->withSum('transactions', 'amount')->with('studio')->with('vendor')->with('service')->with('user')->first();
             $ndata = [
                 'user_id' => $item->user->id,
@@ -80,7 +78,7 @@ class TransactionController extends Controller
                 'studio_id' => $item->studio_id,
                 'vendor_id' => $item->vendor_id,
                 'title' => 'Payment Received',
-                'message' => 'Transaction of amount ₹' . $amount,
+                'message' => $notmessage,
                 "is_read" => "0",
                 'created_at' => date('Y-m-d H:i:s'),
                 'type' => 'Payment'
@@ -97,8 +95,9 @@ class TransactionController extends Controller
             if (ceil($remainamount) <= 1) {
                 Booking::where('id', $bid)->update(['payment_status' => '1', 'booking_status' => '1']);
             }
+
             if ($item->user && $item->user->fcm_token) {
-                $this->send_notification($item->user->fcm_token, 'Transaction of amount ₹' . $amount, 'Your payment of ₹' . $amount . ' has been received successfully.', $booking->user_id, 'Payment');
+                $this->send_notification($item->user->fcm_token, $notmessage, $booking->user_id, 'Payment');
             }
             return redirect()->back()->with('success', 'Transaction Created Successfully');
         }

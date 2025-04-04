@@ -19,7 +19,6 @@ use App\Models\RbNotification;
 use App\Models\Vendor;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -129,8 +128,7 @@ class BookingController extends Controller
 
 
             if ($approved_at == "pending") {
-
-                $items->where('approved_at', null);
+                $items->where('approved_at', null)->where('booking_status', "0");
             } else {
                 if ($booking_status) {
                     $items->where('booking_status', $booking_status);
@@ -428,33 +426,24 @@ class BookingController extends Controller
             ];
             return response()->json($res);
         }
-
         if ($bsum == 0 && $d < 25) {
             $user = User::where('mobile', $mobile)->first();
-            $updata =  ['name' => $request->name, 'mobile' => $mobile, 'email' => $email, 'is_verified' => '1', 'otp_verified' => '1'];
-
-            // if($user){
-            //     User::where(['id' => $user->id])->update($updata);
-            // }
+            $updata =  ['mobile' => $mobile, 'email' => $email, 'is_verified' => '1', 'otp_verified' => '1'];
+            if ($request->name) {
+                $updata['name'] = $request->name;
+            }
+            if ($email) {
+                $updata['email'] = $email;
+            }
+            if ($mobile) {
+                $updata['email'] = $mobile;
+            }
             $user_id = !$user ? User::insertGetId($updata) :  $user->id;
             $studio = Studio::where('id', $studio_id)->first();
             $vendor_id = $studio['vendor_id'];
-            $vendor = Vendor::where('id', $vendor_id)->first();
             $bsdate = $b_s_date;
             $bedate = $b_e_date;
-            $prefix = $vendor->bill_prefix;
-            $lastBill = Booking::where('vendor_id', $vendor_id)->orderBy('id', 'DESC')->first();
             $serviceStudio = DB::table('service_studios')->where('service_id', $service_id)->where('studio_id', $studio_id)->first();
-            if (!$lastBill) {
-                $nexbill = $prefix . '0001';
-            } else {
-                $bill = str_replace($prefix, '', $lastBill->bill_no);
-                $nb = (int) $bill + 1;
-                $bc = (int)strlen($nb);
-                $zeros = 5 - $bc;
-                $nexbill = $prefix . str_pad((string) $nb, 4, '0', STR_PAD_LEFT);
-            }
-
             $bdata = [
                 'user_id' => $user_id,
                 'studio_id' => $studio_id,
@@ -469,9 +458,13 @@ class BookingController extends Controller
                 "booking_status" => $request->mode ? "0" : "1",
                 "studio_charge" => $serviceStudio->charge,
                 'created_by' => auth('sanctum')->user()->id ?? auth()->user()->id,
-                "approved_at" => $request->mode  ? $serviceStudio->is_permissable == "0" ? date('Y-m-d H:i:s') : null : date('Y-m-d H:i:s'),
                 "created_at" =>  date('Y-m-d H:i:s')
             ];
+            if ($request->mode) {
+                $bdata['approved_at'] = $serviceStudio->is_permissable == "0" ? date('Y-m-d H:i:s') : null;
+            } else {
+                $bdata['approved_at'] = date('Y-m-d H:i:s');
+            }
             $bid = Booking::insertGetId($bdata);
             if ($request->gst && !$request->gst_id) {
                 $gdata = [
@@ -518,10 +511,8 @@ class BookingController extends Controller
                 ];
                 BlockedSlot::insert($ndata);
             }
-            $wp = User::where('id', '1')->first();
-            $wt = floatval($wp->remember_token);
-            $message = $request->mode ?  "Booking has been created. Please make payment otherwise your request will be cancelled within {$wt} minutes." : "New booking has been created";
-            $appmessage = $request->mode ?  "Your booking request has been placed. Please make payment within {$wt} minutes otherwise booking will be cancelled." : "Your booking request has been created.";
+            $message =   $serviceStudio->is_permissable ? "Booking Pending!! Your booking is pending for approval. Contact us for assistance if required. " : "Payment Pending!! Please complete the payment within 2 hours to secure your booking. Otherwise, it will be automatically canceled.";
+            $appmessage =  $message;
             $n_tdata = [
                 'user_id' => $user_id,
                 'booking_id' => $bid,
@@ -774,7 +765,6 @@ class BookingController extends Controller
             ];
             BlockedSlot::insert($ndata);
         }
-
         if ($request->gst) {
             DB::table('booking_gsts')->where('booking_id', $bid)->delete();
             $gdata = [
@@ -788,11 +778,11 @@ class BookingController extends Controller
                 "pincode" => $request->pincode,
                 "created_at" =>  date('Y-m-d H:i:s')
             ];
-
             DB::table('booking_gsts')->insert($gdata);
         }
         if ($user && $user->fcm_token) {
-            $this->send_notification($user->fcm_token, 'Booking Rescheduled', 'Your booking request has been rescheduled. Please make payment if any due.', $user->id);
+            $msg  = "Booking Rescheduled!! Your booking has been modified. Check your updated booking for details. Please make any necessary payments, if required, for the same. ";
+            $this->send_notification($user->fcm_token, 'Booking Rescheduled', $msg, $user->id);
         }
         if ($request->mode) {
             $res = [
@@ -815,9 +805,11 @@ class BookingController extends Controller
      */
     public function destroy(Booking $booking)
     {
+        $bid = $booking->id;
         $booking =  Booking::where('id', $booking->id)->first();
         $user = User::where('id', $booking->user_id)->first();
-        $msg = "Hello {$user->name}, on {$booking->booking_start_date} has been cancelled. Hope to see you again at the studio. Thanks R AND B STUDIOS";
+        $msg = "Booking Canceled!! Your booking with ID {$bid} has been canceled. Contact us for assistance if required. ";
+        // $msg = "Hello {$user->name}, on {$booking->booking_start_date} has been cancelled. Hope to see you again at the studio. Thanks R AND B STUDIOS";
         if ($user->fcm_token) {
             $this->send_notification($user->fcm_token, 'Booking Cancelled', $msg, $user->id);
         }
@@ -943,21 +935,22 @@ class BookingController extends Controller
         date_default_timezone_set('Asia/kolkata');
         $booking = Booking::where('id', $id)->first();
         $user = User::where('id', $booking->user_id)->first();
-        $msg = "Hello you have booked the studio on {$booking->booking_start_date}. Please Note: This is a non-cancellable booking. Cancellation will incur a 50% charge. Setup and packup time will be added to your booking hours. See you at the studios !! R AND B STUDIOS";
+
+        $msg = "Booking Approved!! Your booking with ID {$id} has been approved. You can now proceed with the payment to confirm your reservation within 2 Hours. Otherwise, it will be automatically canceled.";
         $udata = [
             'user_id' => $user->id,
             'booking_id' => $booking->id,
             'studio_id' => $booking->studio_id,
             'vendor_id' => $booking->vendor_id,
             'type' => 'Booking',
-            'title' => 'Booking Cancelled',
+            'title' => 'Booking Approved',
             'message' => $msg
         ];
         RbNotification::insert($udata);
         Booking::where('id', $id)->update(['approved_at' => date('Y-m-d H:i:s')]);
         BlockedSlot::where('booking_id', $id)->delete();
         if ($user && $user->fcm_token) {
-            $this->send_notification($user->fcm_token, 'Booking Approved', 'Your booking request has been approved. Please make payment', $booking->user_id);
+            $this->send_notification($user->fcm_token, $msg, $booking->user_id);
         }
 
         return redirect()->back()->with('success', 'Approved Successfully');
