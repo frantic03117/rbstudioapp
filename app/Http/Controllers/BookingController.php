@@ -164,19 +164,22 @@ class BookingController extends Controller
 
                 // Define extra charge period (11 PM - 8 AM)
                 $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
-                $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00') + 86400;
-                $same_date_before_open =   $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
-                // ✅ Fix: Ensure we only check for bookings that OVERLAP with extra charge period
-                $arr = [date('Y-m-d H:i:s',  $start_time)];
+                $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+
+                // Fix: Use next day's 8 AM **only if booking crosses midnight**
+                if ($start_time >= $night_start) {
+                    $morning_end += 86400;
+                }
+
+
                 while ($start_time < $end_time) {
-                    if ($start_time > $night_start || $start_time < $same_date_before_open) {
-                        if ($start_time <= $morning_end || $start_time < $same_date_before_open) {
-                            $extra_hours++;
-                        }
+                    // Fix: Use AND (`&&`) instead of OR (`||`)
+                    if ($start_time >= $night_start || $start_time < $morning_end) {
+                        $extra_hours++;
                     }
                     $start_time = strtotime('+1 hour', $start_time);
-                    $bdate =  date('Y-m-d H:i A',  $start_time);
                 }
+
 
 
                 // Apply extra charge only if extra hours exist
@@ -329,14 +332,18 @@ class BookingController extends Controller
 
                 // Define extra charge period (11 PM - 8 AM)
                 $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
-                $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00') + 86400;
-                $same_date_before_open =   $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+                $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+
+                // Fix: Use next day's 8 AM **only if booking crosses midnight**
+                if ($start_time >= $night_start) {
+                    $morning_end += 86400;
+                }
+
 
                 while ($start_time < $end_time) {
-                    if ($start_time > $night_start || $start_time < $same_date_before_open) {
-                        if ($start_time <= $morning_end || $start_time < $same_date_before_open) {
-                            $extra_hours++;
-                        }
+                    // Fix: Use AND (`&&`) instead of OR (`||`)
+                    if ($start_time >= $night_start || $start_time < $morning_end) {
+                        $extra_hours++;
                     }
                     $start_time = strtotime('+1 hour', $start_time);
                 }
@@ -650,19 +657,61 @@ class BookingController extends Controller
         $booking = Booking::where('id', $id)->with('studio')->with('transactions')->withSum('transactions', 'amount')->with('rents')->with('gst')
             ->with('service:id,name')
             ->first();
+
+
+        $extra_charge_per_hour = 200;
+        $extra_hours = 0;
+
+        $start_time = strtotime($booking['booking_start_date']);
+        $end_time = strtotime($booking['booking_end_date']);
+
+        // Define extra charge period (11 PM - 8 AM)
+        $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
+        $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+
+        // Fix: Use next day's 8 AM **only if booking crosses midnight**
+        if ($start_time >= $night_start) {
+            $morning_end += 86400;
+        }
+
+
+        while ($start_time < $end_time) {
+            // Fix: Use AND (`&&`) instead of OR (`||`)
+            if ($start_time >= $night_start || $start_time < $morning_end) {
+                $extra_hours++;
+            }
+            $start_time = strtotime('+1 hour', $start_time);
+        }
+
+
+
+        // Apply extra charge only if extra hours exist
+        $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
+
+
+        // Add the calculated total to the booking object
+
+        $rents = $booking->rents;
+        $rent_charge = 0;
+        foreach ($rents as $r) {
+            $rent_charge += $r->pivot->charge * $r->pivot->uses_hours;
+        }
+
+
+
+
+
+
         $paid = $booking->transactions_sum_amount;
 
         $rents =  $booking->rents;
-        $arr = [];
-        foreach ($rents as $r) {
-            array_push($arr, $r->pivot->charge * $r->pivot->uses_hours);
-        }
-        $rentcharge = array_sum($arr);
 
-        $booking['rents_price'] = $rentcharge;
-        $booking['total_to_pay'] = ($booking->duration * $booking->studio_charge + $rentcharge) * 1.18;
+
+        $booking['rents_price'] = $rent_charge;
+        $booking['extra_charge'] = $extra_charge;
+        $booking['total_to_pay'] = ($booking->duration * $booking->studio_charge + $rent_charge + $extra_charge) * 1.18;
         $booking['paid'] = $paid;
-        $booking['net_payable'] = ($booking->duration * $booking->studio_charge + $rentcharge) * 1.18 - $paid - floatval($booking->promo_discount_calculated);
+        $booking['net_payable'] = ($booking->duration * $booking->studio_charge + $rent_charge) * 1.18 - $paid - floatval($booking->promo_discount_calculated);
         $booking['calculation'] = ['gst' => 18, 'discount' => ['partial' => '0', 'full' => '0', 'type' => 'percent']];
         $data = [
             'data' => $booking,
@@ -710,18 +759,22 @@ class BookingController extends Controller
 
         // Define extra charge period (11 PM - 8 AM)
         $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
-        $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00') + 86400;
-        $same_date_before_open =   $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+        $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+
+        // Fix: Use next day's 8 AM **only if booking crosses midnight**
+        if ($start_time >= $night_start) {
+            $morning_end += 86400;
+        }
 
 
         while ($start_time < $end_time) {
-            if ($start_time > $night_start || $start_time < $same_date_before_open) {
-                if ($start_time <= $morning_end || $start_time < $same_date_before_open) {
-                    $extra_hours++;
-                }
+            // Fix: Use AND (`&&`) instead of OR (`||`)
+            if ($start_time >= $night_start || $start_time < $morning_end) {
+                $extra_hours++;
             }
             $start_time = strtotime('+1 hour', $start_time);
         }
+
 
 
         // Apply extra charge only if extra hours exist
