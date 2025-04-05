@@ -686,9 +686,10 @@ class BookingController extends Controller
         $booking['rents_price'] = $rent_charge;
         $booking['extra_charge'] = $extra_charge;
         $totalPaable = $booking->duration * $booking->studio_charge + $rent_charge + $extra_charge;
-        $booking['total_to_pay'] = $totalPaable * 1.18;
+        $withgst = $totalPaable * 1.18;
+        $booking['total_to_pay'] = $withgst;
         $booking['paid'] = $paid;
-        $booking['net_payable'] = $totalPaable * 1.18 - $paid - floatval($booking->promo_discount_calculated);
+        $booking['net_payable'] = $withgst  - $paid - floatval($booking->promo_discount_calculated);
         $booking['calculation'] = ['gst' => 18, 'discount' => ['partial' => '0', 'full' => '0', 'type' => 'percent']];
         $data = [
             'data' => $booking,

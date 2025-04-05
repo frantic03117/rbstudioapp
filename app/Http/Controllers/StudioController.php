@@ -353,7 +353,9 @@ class StudioController extends Controller
     }
     public function pay_now(Request $request, $id)
     {
-        $booking = Booking::where('id', $id)->with('studio')->with('transactions')->withSum('transactions', 'amount')->with('rents')->with('gst')
+        $booking = Booking::where('id', $id)->with('studio')
+            ->with('transactions')->withSum('transactions', 'amount')
+            ->with('rents')->with('gst')
             ->with('service:id,name')
             ->first();
 
@@ -464,25 +466,65 @@ class StudioController extends Controller
         ];
         Transaction::where('order_id', $order_id)->update($udata);
         if ($data[0]["order_status"] == "Success") {
-
-            $item =  Booking::where('id', $bid)->with('rents')->withSum('transactions', 'amount')->with('studio')->with('vendor')->with('service')->with('user')->first();
-            $rents =  $item->rents;
-            $arr = [];
-            foreach ($rents as $r) {
-                array_push($arr, $r->pivot->charge * $r->pivot->uses_hours);
-            }
-            $rentcharge = array_sum($arr);
-            $discount = floatval($item->promo_discount_calculated);
-            $amount =  $item->duration * $item->studio_charge + $rentcharge - $item->transactions_sum_amount - $discount;
             Booking::where('id', $bid)->update(['booking_status' => '1']);
+            //$item =  Booking::where('id', $bid)->with('rents')->withSum('transactions', 'amount')->with('studio')->with('vendor')->with('service')->with('user')->first();
+
+            $booking = Booking::where('id', $bid)->with('studio')
+                ->with('transactions')->withSum('transactions', 'amount')
+                ->with('rents')->with('gst')
+                ->with('service:id,name')
+                ->first();
+
+
+            $extra_charge_per_hour = 200;
+            $extra_hours = 0;
+
+            $start_time = strtotime($booking['booking_start_date']);
+            $end_time = strtotime($booking['booking_end_date']);
+
+            // Define extra charge period (11 PM - 8 AM)
+            $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
+            $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+
+            // Fix: Use next day's 8 AM **only if booking crosses midnight**
+            if ($start_time >= $night_start) {
+                $morning_end += 86400;
+            }
+
+
+            while ($start_time < $end_time) {
+                // Fix: Use AND (`&&`) instead of OR (`||`)
+                if ($start_time >= $night_start || $start_time < $morning_end) {
+                    $extra_hours++;
+                }
+                $start_time = strtotime('+1 hour', $start_time);
+            }
+            $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
+            $rents = $booking->rents;
+            $rentcharge = 0;
+            foreach ($rents as $r) {
+                $rentcharge += $r->pivot->charge * $r->pivot->uses_hours;
+            }
+            $paid = $booking->transactions_sum_amount;
+            $totalPaable = $booking->duration * $booking->studio_charge + $rentcharge + $extra_charge;
+            $withgst =  $totalPaable * 1.18;
+            $netPending = $withgst - $paid - floatval($booking->promo_discount_calculated);
+
+
+
+
+            $amount = $netPending;
+
+
+
             if (ceil($amount) <= 1) {
                 Booking::where('id', $bid)->update(['payment_status' => '1', 'booking_status' => '1']);
             }
             $ndata = [
-                'user_id' => $item->user->id,
+                'user_id' => $booking->user->id,
                 'booking_id' => $bid,
-                'studio_id' => $item->studio_id,
-                'vendor_id' => $item->vendor_id,
+                'studio_id' => $booking->studio_id,
+                'vendor_id' => $booking->vendor_id,
                 'title' => 'Payment Received',
                 'message' => 'Transaction of amount ₹' . $amount,
                 "is_read" => "0",
@@ -490,8 +532,8 @@ class StudioController extends Controller
                 'type' => 'Payment'
             ];
             RbNotification::insert($ndata);
-            $user = $item->user;
-            $appmessage  = "Your booking has been successfully created. Your payment has been received.";
+            $user = $booking->user;
+            $appmessage  = "Booking Reserved!! Your booking has been reserved with Booking ID {$bid}";
             if ($user && $user->fcm_token) {
                 $this->send_notification($user->fcm_token, 'Booking Created', $appmessage, $user->id);
             }
