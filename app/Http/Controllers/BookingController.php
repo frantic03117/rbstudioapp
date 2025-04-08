@@ -932,8 +932,21 @@ class BookingController extends Controller
             ];
             DB::table('booking_gsts')->insert($gdata);
         }
+        $msg  = "Booking Rescheduled!! Your booking has been modified. Check your updated booking for details. Please make any necessary payments, if required, for the same. ";
+        $ndata = [
+            'user_id' => $user_id,
+            'booking_id' => $bid,
+            'studio_id' => $studio_id,
+            'vendor_id' => $studio['vendor_id'],
+            'title' => 'Booking Rescheduled',
+            'message' => $msg,
+            "is_read" => "0",
+            'created_at' => date('Y-m-d H:i:s'),
+            'type' => 'Booking'
+        ];
+        DB::table('notifications')->insert($ndata);
         if ($user && $user->fcm_token) {
-            $msg  = "Booking Rescheduled!! Your booking has been modified. Check your updated booking for details. Please make any necessary payments, if required, for the same. ";
+
             $this->send_notification($user->fcm_token, 'Booking Rescheduled', $msg, $user->id);
         }
         if ($request->mode) {
