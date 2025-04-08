@@ -392,21 +392,21 @@ class BookingController extends Controller
         Booking::where('id', $id)->update(['booking_status' => '1', 'approved_at' => date('Y-m-d H:i:s')]);
         $booking =  Booking::where('id', $id)->first();
         $user = User::where('id', $booking->user_id)->first();
-        $msg = "Hello you have booked the studio on {$booking->booking_start_date}.  Please Note: This is a non-cancellable booking. Cancellation will incur a 50% charge. Setup and packup time will be added to your booking hours. See you at the studios !! R AND B STUDIOS";
+        $msg = "Booking Reserved!! Your booking has been reserved with Booking ID $id";
         $udata = [
             'user_id' => $user->id,
             'booking_id' => $booking->id,
             'studio_id' => $booking->studio_id,
             'vendor_id' => $booking->vendor_id,
             'type' => 'Booking',
-            'title' => 'Booking Cancelled',
+            'title' => 'Booking Reserved',
             'message' => $msg
         ];
         RbNotification::insert($udata);
         if ($user->fcm_token) {
-            $this->send_notification($user->fcm_token, 'Booking Confirmed', $msg, $user->id);
+            $this->send_notification($user->fcm_token, 'Booking Reserved', $msg, $user->id);
         }
-        return redirect()->back()->with('success', 'Booking confirmed successfully');
+        return redirect()->back()->with('success', 'Booking Reserved successfully');
     }
 
     /**
