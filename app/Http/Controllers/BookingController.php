@@ -612,13 +612,13 @@ class BookingController extends Controller
                 'studio_id' => $studio_id,
                 'vendor_id' => $vendor_id,
                 'type' => 'Booking',
-                'title' => 'Booking Pending',
+                'title' =>  $serviceStudio->is_permissable ? 'Booking Pending' : 'Payment Pending',
                 "message" => $message,
                 "created_at" => date('Y-m-d H:i:s')
             ];
             RbNotification::insert($n_tdata);
             if ($user && $user->fcm_token) {
-                $this->send_notification($user->fcm_token, 'Booking Pending', $appmessage, $user->id);
+                $this->send_notification($user->fcm_token, $serviceStudio->is_permissable ? 'Booking Pending' : 'Payment Pending', $appmessage, $user->id);
             }
             if ($request->mode) {
                 $res = [
