@@ -97,7 +97,7 @@ class TransactionController extends Controller
             }
 
             if ($item->user && $item->user->fcm_token) {
-                $this->send_notification($item->user->fcm_token, $notmessage, $booking->user_id, 'Payment');
+                $this->send_notification($item->user->fcm_token, 'Payment Received', $notmessage, $booking->user_id, 'Payment');
             }
             return redirect()->back()->with('success', 'Transaction Created Successfully');
         }

@@ -612,13 +612,13 @@ class BookingController extends Controller
                 'studio_id' => $studio_id,
                 'vendor_id' => $vendor_id,
                 'type' => 'Booking',
-                'title' => 'Booking Created ',
+                'title' => 'Booking Pending',
                 "message" => $message,
                 "created_at" => date('Y-m-d H:i:s')
             ];
             RbNotification::insert($n_tdata);
             if ($user && $user->fcm_token) {
-                $this->send_notification($user->fcm_token, 'Booking Created', $appmessage, $user->id);
+                $this->send_notification($user->fcm_token, 'Booking Pending', $appmessage, $user->id);
             }
             if ($request->mode) {
                 $res = [
@@ -963,7 +963,7 @@ class BookingController extends Controller
         $msg = "Booking Canceled!! Your booking with ID {$bid} has been canceled. Contact us for assistance if required. ";
         // $msg = "Hello {$user->name}, on {$booking->booking_start_date} has been cancelled. Hope to see you again at the studio. Thanks R AND B STUDIOS";
         if ($user->fcm_token) {
-            $this->send_notification($user->fcm_token, 'Booking Cancelled', $msg, $user->id);
+            $this->send_notification($user->fcm_token, 'Booking Cancelled', $msg, $user->id, 'Booking Canceled');
         }
         $udata = [
             'user_id' => $user->id,
