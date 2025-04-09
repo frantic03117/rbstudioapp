@@ -404,6 +404,9 @@
                                                     <button data-bs-toggle="modal"
                                                         data-bs-target="#staticBackdrop{{ $b->id }}{{ $b->studio->id }}"
                                                         class="btn btn-sm btn-primary">Add Item</button>
+                                                    <button data-bs-toggle="modal"
+                                                        data-bs-target="#staticBackdropExtra{{ $b->id }}"
+                                                        class="btn btn-sm btn-primary">Add Extra Amount</button>
                                                     <div class="dropdown inline-block">
                                                         <button class="btn btn-success  btn-sm dropdown-toggle"
                                                             type="button" data-bs-toggle="dropdown"
@@ -427,6 +430,10 @@
                                                     @include('admin.bookings.booking_items', [
                                                         'bid' => $b->id,
                                                         'sid' => $b->studio->id,
+                                                    ])
+                                                    @include('admin.bookings.ExtraAmontPopup', [
+                                                        'bid' => $b->id,
+                                                        'items' => $b->extra_added,
                                                     ])
                                                 </div>
                                             @endif

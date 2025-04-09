@@ -3,14 +3,16 @@
     <section>
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
+
+                <div class="col-md-3">
                     <div class="text-end">
+
                         <a href="{{ route('download_bill', $booking->id) }}" class="btn btn-gradient">Download</a>
                         <a href="{{ route('booking.index') }}" class="btn btn-gradient">Back</a>
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="w-100" style="max-width: 800px;margin:0 auto;background:#ccc;">
+                    <div class="w-100" style="max-width: 800px;background:#ccc;">
                         <table class="table table-sm table-bordered" style="background:#ccc;border:2px solid #ccc;">
                             <tbody>
                                 <tr>
@@ -18,7 +20,7 @@
                                         <h2>
                                             {{ $studio->name }}
                                         </h2>
-                                        
+
                                         <p>
                                             {{ $studio->address . ' , ' . $studio->district?->city . ' , ' . $studio->state?->state . ' , ' . $studio->country?->country . ' , ' . $studio->pincode }}
                                         </p>
@@ -42,10 +44,11 @@
                                             </p>
                                             <p>
                                                 <b>Booking Status :</b>
-                                                <span class="badge p-2 {{$booking->booking_status == '2' ? 'bg-danger' : 'bg-gradient'}}">
-                                                    {{$bstatus[$booking->booking_status]}}
+                                                <span
+                                                    class="badge p-2 {{ $booking->booking_status == '2' ? 'bg-danger' : 'bg-gradient' }}">
+                                                    {{ $bstatus[$booking->booking_status] }}
                                                 </span>
-                                              
+
                                             </p>
                                         </div>
                                     </td>
@@ -57,7 +60,7 @@
                                             <p>
                                                 <b>Bill No : </b> {{ $booking->bill_no }}
                                             </p>
-                                          
+
                                         </div>
                                     </td>
                                 </tr>
@@ -119,7 +122,6 @@
                                             {{ date('h:i A', strtotime($booking->booking_end_date)) }}
                                         </div>
                                     </td>
-
                                 </tr>
                                 <tr>
                                     <td colspan="12">
@@ -211,7 +213,7 @@
                                         </td>
                                         <!--<td>-->
                                         <!--    <div class="d-flex gap-1">-->
-                                        <!--        <a href="{{route('booking_item.destroy', $item->id)}}" class="btn btn-soft-danger btn-sm border-danger">Delete</a>-->
+                                        <!--        <a href="{{ route('booking_item.destroy', $item->id) }}" class="btn btn-soft-danger btn-sm border-danger">Delete</a>-->
                                         <!--    </div>-->
                                         <!--</td>-->
                                     </tr>
@@ -249,7 +251,7 @@
                                                 @endphp
                                             </div>
                                         </td>
-                                       
+
                                     </tr>
                                 @endforeach
                                 <tr>
@@ -288,9 +290,10 @@
                                     </td>
                                     <td colspan="2">
                                         {!! Form::open(['route' => ['booking.discount']]) !!}
-                                        <input type="hidden" name="booking_id" value="{{$booking->id}}">
+                                        <input type="hidden" name="booking_id" value="{{ $booking->id }}">
                                         <div class="input-group">
-                                            <input type="text" name="discount" id="discount" value="{{$d = $booking->discount}}" class="form-control">
+                                            <input type="text" name="discount" id="discount"
+                                                value="{{ $d = $booking->discount }}" class="form-control">
                                             <button class="btn btn-gradient">Submit</button>
                                         </div>
                                         {!! Form::close() !!}
@@ -301,10 +304,11 @@
 
                                     </td>
                                     <td colspan="2">
-                                       Payment Status
+                                        Payment Status
                                     </td>
                                     <td colspan="2">
-                                        <span class="badge bg-gradient p-2">{{ $pstatus[$booking->payment_status] }}</span>
+                                        <span
+                                            class="badge bg-gradient p-2">{{ $pstatus[$booking->payment_status] }}</span>
                                     </td>
                                 </tr>
                                 <tr>

@@ -147,13 +147,15 @@ class BookingController extends Controller
             }
         }
         $items->with('vendor')->with('service:id,name,icon,approval_required')->with('user:id,name,email,mobile')->with('studio:id,name,address,opens_at,ends_at');
-        $items->with('rents')->with('transactions')->withSum('transactions', 'amount');
+        $items->with('rents')->with('extra_added')->withSum('extra_added', 'amount')->with('transactions')->withSum('transactions', 'amount');
         $items->with('creater:id,name,email');
         if ($booking_tenure == "past") {
             $items->where('booking_start_date', '<', $now);
         }
         $extra_charge_per_hour = 200;
         $bookings = $items->paginate(10)->appends(request()->query());
+        // return response()->json($bookings);
+        // die;
         $bookings->getCollection()->transform(
             function ($b) use ($extra_charge_per_hour) {
 
@@ -187,9 +189,9 @@ class BookingController extends Controller
 
                 // Base amount
                 $base_amount = $b['duration'] * $b['studio_charge'];
-
+                $extra_added = $b['extra_added_sum_amount'];
                 // Final total calculation including GST (18%)
-                $total_amount = ($base_amount + $extra_charge) * 1.18;
+                $total_amount = ($base_amount + $extra_charge + $extra_added) * 1.18;
                 $b['extra_charge'] = $extra_charge;
                 // Add the calculated total to the booking object
                 $b['total_amount'] = round($total_amount, 2);
@@ -315,7 +317,7 @@ class BookingController extends Controller
             $items->where('approved_at', '!=', null);
         }
         $items->with('vendor')->with('user:id,name,email,mobile')->with('studio:id,name,address');
-        $items->with('rents')->with('transactions')->withSum('transactions', 'amount');
+        $items->with('rents')->withSum('extra_added', 'amount')->with('transactions')->withSum('transactions', 'amount');
         $items->with('creater:id,name,email');
         if ($booking_tenure == "past") {
             $items->where('booking_start_date', '<', $now);
@@ -354,9 +356,9 @@ class BookingController extends Controller
 
                 // Base amount
                 $base_amount = $b['duration'] * $b['studio_charge'];
-
+                $extra_added = $b['extra_added_sum_amount'];
                 // Final total calculation including GST (18%)
-                $total_amount = ($base_amount + $extra_charge) * 1.18;
+                $total_amount = ($base_amount + $extra_charge +  $extra_added) * 1.18;
                 $b['extra_charge'] = $extra_charge;
                 // Add the calculated total to the booking object
                 $b['total_amount'] = round($total_amount, 2);
@@ -1021,7 +1023,7 @@ class BookingController extends Controller
     }
     public function generate_bill($id)
     {
-        $booking = Booking::where('id', $id)->with('gst')->first();
+        $booking = Booking::where('id', $id)->withSum('extra_added', 'amount')->with('gst')->first();
         $studio = Studio::where('vendor_id', $booking->vendor_id)
             ->with('country')->with('state')->with('district')
             ->first();

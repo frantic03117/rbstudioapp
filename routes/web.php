@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ExtraBookingAmountController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RentController;
 use App\Http\Controllers\RoleController;
@@ -60,6 +61,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('employee', UserController::class);
     Route::resource('gallery', GalleryController::class);
     Route::resource('booking', BookingController::class);
+    Route::resource('extra-amount', ExtraBookingAmountController::class);
     Route::get('bookings/{slug}', [BookingController::class, 'custom_view'])->name('bookingsview');
     Route::get('bookings/make-confirm/{id}', [BookingController::class, 'confirm_booking'])->name('confirm_booking');
     Route::get('query', [HomeController::class, 'queries'])->name('queries');

@@ -355,7 +355,7 @@ class StudioController extends Controller
     {
         $booking = Booking::where('id', $id)->with('studio')
             ->with('transactions')->withSum('transactions', 'amount')
-            ->with('rents')->with('gst')
+            ->with('rents')->withSum('extra_added', 'amount')->with('gst')
             ->with('service:id,name')
             ->first();
 
@@ -375,7 +375,7 @@ class StudioController extends Controller
             $morning_end += 86400;
         }
 
-
+        $extra_added = $booking['extra_added_sum_amount'] ?? 0;
         while ($start_time < $end_time) {
             // Fix: Use AND (`&&`) instead of OR (`||`)
             if ($start_time >= $night_start || $start_time < $morning_end) {
@@ -390,7 +390,7 @@ class StudioController extends Controller
             $rentcharge += $r->pivot->charge * $r->pivot->uses_hours;
         }
         $paid = $booking->transactions_sum_amount;
-        $totalPaable = $booking->duration * $booking->studio_charge + $rentcharge + $extra_charge;
+        $totalPaable = $booking->duration * $booking->studio_charge + $rentcharge + $extra_charge + $extra_added;
         $withgst =  $totalPaable * 1.18;
         $netPending = $withgst - $paid - floatval($booking->promo_discount_calculated);
 
@@ -471,11 +471,11 @@ class StudioController extends Controller
 
             $booking = Booking::where('id', $bid)->with('studio')
                 ->with('transactions')->withSum('transactions', 'amount')
-                ->with('rents')->with('gst')
+                ->with('rents')->withSum('extra_added', 'amount')->with('gst')
                 ->with('service:id,name')
                 ->first();
 
-
+            $extra_added = $booking['extra_added_sum_amount'] ?? 0;
             $extra_charge_per_hour = 200;
             $extra_hours = 0;
 
@@ -506,7 +506,7 @@ class StudioController extends Controller
                 $rentcharge += $r->pivot->charge * $r->pivot->uses_hours;
             }
             $paid = $booking->transactions_sum_amount;
-            $totalPaable = $booking->duration * $booking->studio_charge + $rentcharge + $extra_charge;
+            $totalPaable = $booking->duration * $booking->studio_charge + $rentcharge + $extra_charge + $extra_added;
             $withgst =  $totalPaable * 1.18;
             $netPending = $withgst - $paid - floatval($booking->promo_discount_calculated);
 

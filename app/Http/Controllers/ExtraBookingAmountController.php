@@ -35,7 +35,13 @@ class ExtraBookingAmountController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'amount' => 'required|numeric',
+            'booking_id' => 'required|exists:bookings,id'
+        ]);
+        $data = $request->except('_token');
+        ExtraBookingAmount::insert($data);
+        return redirect()->back()->with('success', 'Extra booking amount added');
     }
 
     /**
@@ -78,8 +84,9 @@ class ExtraBookingAmountController extends Controller
      * @param  \App\Models\ExtraBookingAmount  $extraBookingAmount
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ExtraBookingAmount $extraBookingAmount)
+    public function destroy(ExtraBookingAmount $extraBookingAmount, $id)
     {
-        //
+        ExtraBookingAmount::where('id', $id)->delete();
+        return redirect()->back()->with('success', 'Amount removed successfully');
     }
 }

@@ -69,4 +69,8 @@ class Booking extends Model
     {
         return $this->hasMany(Transaction::class, 'booking_id', 'id')->where('status', 'Success');
     }
+    public function extra_added()
+    {
+        return $this->hasMany(ExtraBookingAmount::class, 'booking_id', 'id');
+    }
 }
