@@ -656,14 +656,11 @@ class BookingController extends Controller
      */
     public function show(Booking $booking, $id)
     {
-        $booking = Booking::where('id', $id)->with('studio')->with('transactions')->withSum('transactions', 'amount')->with('rents')->with('gst')
+        $booking = Booking::where('id', $id)->with('studio')->with('transactions')->withSum('transactions', 'amount')->withSum('extra_added', 'amount')->with('rents')->with('gst')
             ->with('service:id,name')
             ->first();
-
-
         $extra_charge_per_hour = 200;
         $extra_hours = 0;
-
         $start_time = strtotime($booking['booking_start_date']);
         $end_time = strtotime($booking['booking_end_date']);
         $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
@@ -687,7 +684,7 @@ class BookingController extends Controller
         $rents =  $booking->rents;
         $booking['rents_price'] = $rent_charge;
         $booking['extra_charge'] = $extra_charge;
-        $totalPaable = $booking->duration * $booking->studio_charge + $rent_charge + $extra_charge;
+        $totalPaable = $booking->duration * $booking->studio_charge + $rent_charge + $extra_charge + $booking['extra_added_sum_amount'];
         $withgst = $totalPaable * 1.18;
         $booking['total_to_pay'] = $withgst;
         $booking['paid'] = $paid;

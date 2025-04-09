@@ -151,7 +151,7 @@ class ApiController extends Controller
             $items->where('booking_start_date', '>=', date('Y-m-d H:i:s'));
         }
         $items->with('user:id,name,email,mobile')->withSum('transactions', 'amount')->with('studio:id,name,address,longitude,latitude');
-        $items->with('rents')->with('vendor')->with('service');
+        $items->with('rents')->withSum('extra_added', 'amount')->with('vendor')->with('service');
         $bookings = $items->paginate(10);
         $extra_charge_per_hour = 200;
         $bookings->getCollection()->transform(
