@@ -264,10 +264,21 @@
 
                                     </td>
                                     <td colspan="2">
+                                        Extra Added Amount
+                                    </td>
+                                    <td>
+                                        {{ $booking->extra_added_sum_amount ?? 0 }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8">
+
+                                    </td>
+                                    <td colspan="2">
                                         Sub Total
                                     </td>
                                     <td colspan="2">
-                                        {{ $subt = array_sum($arr) + $booking->studio_charge * $booking->duration }}
+                                        {{ $subt = array_sum($arr) + $booking->studio_charge * $booking->duration + $booking->extra_added_sum_amount }}
                                     </td>
                                 </tr>
                                 <tr>
