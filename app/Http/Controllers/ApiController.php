@@ -142,7 +142,7 @@ class ApiController extends Controller
         //  \Artisan::call('route:clear');
         $booking_status = $_GET['booking_status'] ?? null;
         $uid = auth('sanctum')->user()->id;
-        $items = Booking::orderBy('bookings.id', 'DESC')->where('user_id', $uid);
+        $items = Booking::orderBy('bookings.booking_start_date', 'ASC')->where('user_id', $uid);
         if ($booking_status == "0") {
             $items->where('booking_status', "0");
         }
