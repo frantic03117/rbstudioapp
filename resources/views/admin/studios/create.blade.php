@@ -144,6 +144,7 @@
                                 <label for="">Enter Latitude</label>
                                 {!! Form::text('latitude', old('latitude'), ['class' => 'form-control']) !!}
                             </div>
+                            <div class="col-md-12"></div>
                             <div class="col-md-6">
                                 <label for="">Studio Info</label>
                                 <textarea name="description" id="editor1" cols="30" rows="10"></textarea>
