@@ -37,7 +37,7 @@ Route::any('logout', [AdminController::class, 'logout'])->name('logout');
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/policy/{url}', [HomeController::class, 'terms'])->name('terms');
-
+Route::get('admin/generate-bill/{id}', [BookingController::class, 'generate_bill'])->name('generate_bill');
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     // Route::get('/das', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -68,7 +68,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
 
     Route::get('calendar', [HomeController::class, 'index'])->name('calendar');
-    Route::get('generate-bill/{id}', [BookingController::class, 'generate_bill'])->name('generate_bill');
+    // Route::get('generate-bill/{id}', [BookingController::class, 'generate_bill'])->name('generate_bill');
     Route::post('generate-bill/{id}', [BookingController::class, 'save_bill'])->name('save_bill');
     Route::get('download_bill/{id}', [BookingController::class, 'download_bill'])->name('download_bill');
     Route::post('booking_item-add', [BookingController::class, 'booking_item_add'])->name('booking_item.add');
