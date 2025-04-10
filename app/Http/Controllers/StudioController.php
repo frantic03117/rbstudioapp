@@ -533,7 +533,7 @@ class StudioController extends Controller
             ];
             RbNotification::insert($ndata);
             $user = $booking->user;
-            $appmessage  = "Booking Reserved!! Your booking has been reserved with Booking ID {$bid}";
+            $appmessage  = "Your booking has been reserved with Booking ID {$bid}";
             if ($user && $user->fcm_token) {
                 $this->send_notification($user->fcm_token, 'Booking Reserved', $appmessage, $user->id);
             }

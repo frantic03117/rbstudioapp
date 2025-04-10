@@ -394,7 +394,7 @@ class BookingController extends Controller
         Booking::where('id', $id)->update(['booking_status' => '1', 'approved_at' => date('Y-m-d H:i:s')]);
         $booking =  Booking::where('id', $id)->first();
         $user = User::where('id', $booking->user_id)->first();
-        $msg = "Booking Reserved!! Your booking has been reserved with Booking ID $id";
+        $msg = "Your booking has been reserved with Booking ID $id";
         $udata = [
             'user_id' => $user->id,
             'booking_id' => $booking->id,
@@ -606,7 +606,7 @@ class BookingController extends Controller
                 ];
                 BlockedSlot::insert($ndata);
             }
-            $message =   $serviceStudio->is_permissable ? "Booking Pending!! Your booking is pending for approval. Contact us for assistance if required. " : "Payment Pending!! Please complete the payment within 2 hours to secure your booking. Otherwise, it will be automatically canceled.";
+            $message =   $serviceStudio->is_permissable ? "Your booking is pending for approval. Contact us for assistance if required. " : "Please complete the payment within 2 hours to secure your booking. Otherwise, it will be automatically canceled.";
             $appmessage =  $message;
             $n_tdata = [
                 'user_id' => $user_id,
@@ -931,7 +931,7 @@ class BookingController extends Controller
             ];
             DB::table('booking_gsts')->insert($gdata);
         }
-        $msg  = "Booking Rescheduled!! Your booking has been modified. Check your updated booking for details. Please make any necessary payments, if required, for the same. ";
+        $msg  = "Your booking has been modified. Check your updated booking for details. Please make any necessary payments, if required, for the same. ";
         $ndata = [
             'user_id' => $user_id,
             'booking_id' => $bid,
@@ -972,7 +972,7 @@ class BookingController extends Controller
         $bid = $booking->id;
         $booking =  Booking::where('id', $booking->id)->first();
         $user = User::where('id', $booking->user_id)->first();
-        $msg = "Booking Canceled!! Your booking with ID {$bid} has been canceled. Contact us for assistance if required. ";
+        $msg = "Booking Canceled Your booking with ID {$bid} has been canceled. Contact us for assistance if required. ";
         // $msg = "Hello {$user->name}, on {$booking->booking_start_date} has been cancelled. Hope to see you again at the studio. Thanks R AND B STUDIOS";
         if ($user->fcm_token) {
             $this->send_notification($user->fcm_token, 'Booking Cancelled', $msg, $user->id, 'Booking Canceled');
@@ -1100,7 +1100,7 @@ class BookingController extends Controller
         $booking = Booking::where('id', $id)->first();
         $user = User::where('id', $booking->user_id)->first();
 
-        $msg = "Booking Approved!! Your booking with ID {$id} has been approved. You can now proceed with the payment to confirm your reservation within 2 Hours. Otherwise, it will be automatically canceled.";
+        $msg = "Your booking with ID {$id} has been approved. You can now proceed with the payment to confirm your reservation within 2 Hours. Otherwise, it will be automatically canceled.";
         $udata = [
             'user_id' => $user->id,
             'booking_id' => $booking->id,

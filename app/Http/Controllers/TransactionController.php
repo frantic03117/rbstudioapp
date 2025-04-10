@@ -70,7 +70,7 @@ class TransactionController extends Controller
         ];
         $amount = $request->amount;
         if (Transaction::insert($data)) {
-            $notmessage = "Payment Received!! We’ve received your payment of (₹{$amount})/- Your booking is confirmed. See you at the studios. ";
+            $notmessage = "We’ve received your payment of (₹{$amount})/- Your booking is confirmed. See you at the studios. ";
             $item =  Booking::where('id', $bid)->with('rents')->withSum('transactions', 'amount')->with('studio')->with('vendor')->with('service')->with('user')->first();
             $ndata = [
                 'user_id' => $item->user->id,
