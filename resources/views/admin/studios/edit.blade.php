@@ -168,11 +168,18 @@
                                 <label for="">Alert Color</label>
                                 {!! Form::color('color', $studio->color, ['class' => 'form-control']) !!}
                             </div>
-                            <div class="col-md-12">
-                                <label for="">Enter Details</label>
+                            <div class="col-md-6">
+                                <label for="">studio Info</label>
                                 <textarea name="description" id="editor1" cols="30" rows="10">{!! $studio->description !!}</textarea>
                                 <script>
                                     CKEDITOR.replace('editor1')
+                                </script>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Equipment Info</label>
+                                <textarea name="equipment_info" id="equipment_info" cols="30" rows="10">{!! $studio->equipment_info !!}</textarea>
+                                <script>
+                                    CKEDITOR.replace('equipment_info')
                                 </script>
                             </div>
                             <div class="col-md-12 p-1 bg-gradient">

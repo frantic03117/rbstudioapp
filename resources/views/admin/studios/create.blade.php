@@ -144,18 +144,24 @@
                                 <label for="">Enter Latitude</label>
                                 {!! Form::text('latitude', old('latitude'), ['class' => 'form-control']) !!}
                             </div>
-                            <div class="col-md-12">
-                                <label for="">Enter Details</label>
+                            <div class="col-md-6">
+                                <label for="">Studio Info</label>
                                 <textarea name="description" id="editor1" cols="30" rows="10"></textarea>
                                 <script>
                                     CKEDITOR.replace('editor1')
                                 </script>
                             </div>
-                            <div class="col-md-12 p-1 bg-gradient">
-                                Terms & Condition
+                            <div class="col-md-6">
+                                <label for="">Equipment Info</label>
+                                <textarea name="equipment_info" id="equipment_info" cols="30" rows="10"></textarea>
+                                <script>
+                                    CKEDITOR.replace('equipment_info')
+                                </script>
                             </div>
 
+
                             <div class="col-md-12">
+                                <label for="">Terms & Conditions</label>
                                 <textarea name="terms" id="editor" cols="30" rows="10"></textarea>
                                 <script>
                                     CKEDITOR.replace('editor')
