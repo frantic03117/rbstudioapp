@@ -11,7 +11,7 @@
 
 <body>
 
-    <button id="rzp-button">Pay with Razorpay</button>
+    <button id="rzp-button" class="d-none" style="opacity:0;">Pay with Razorpay</button>
 
     <script>
         const options = {
@@ -23,13 +23,20 @@
             order_id: "{{ $goi }}",
             handler: function(response) {
                 fetch("{{ route('paymentCallbackRazorpay') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify(response)
-                });
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify(response)
+                    }).then(res => res.json())
+                    .then(data => {
+                        window.location.href = "{{ route('success_page', ['id' => $custom_order_id]) }}"
+                    })
+                    .catch(error => {
+                        console.error('Payment callback failed:', error);
+                        alert("Something went wrong. Please contact support.");
+                    });
             }
         };
         const rzp = new Razorpay(options);

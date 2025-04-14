@@ -357,7 +357,7 @@
                                                     @if (floor($b->total_amount - $paid - $discount) > 0 && $b->approved_at != null)
                                                         <li>
                                                             <div class="d-flex gap-2">
-                                                                <form action="{{ route('pay_now', $b->id) }}"
+                                                                <form action="{{ route('pay_now_razorpay', $b->id) }}"
                                                                     method="POST">
                                                                     @csrf
                                                                     <button class="btn btn-gradient btn-sm text-xs">Pay

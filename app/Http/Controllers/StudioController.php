@@ -661,6 +661,8 @@ class StudioController extends Controller
         } else {
             $payment_value = $netPending;
         }
+        // echo $payment_value;
+        // die;
         $mid = env('CCA_MID');
         $working_key = env('CCA_KEY');
         $access_code = env('CCA_AC');
@@ -668,9 +670,11 @@ class StudioController extends Controller
         $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
         $order = $api->order->create([
             'receipt' => $custom_order_id,
-            'amount' => $payment_value  * 100,
+            'amount' =>  ceil($payment_value) * 100,
             'currency' => 'INR',
         ]);
+
+        // return response()->json($order);
         $tdata = [
             'transaction_date' => date('Y-m-d'),
             'type' => 'Credit',
@@ -681,14 +685,14 @@ class StudioController extends Controller
             'user_id' => $booking->user_id,
             'booking_id' => $id,
             'vendor_id' => $booking->vendor_id,
-            'init_resp' => json_encode($order),
+            'init_resp' => json_encode($order->toArray()),
             'mode' => 'Razorpay',
             'created_at' => date('Y-m-d H:i:s')
         ];
         Transaction::insert($tdata);
         $razorpay_key = env('RAZORPAY_KEY');
         $goi = $order['id'];
-        $res = compact('razorpay_key', 'order', 'payment_value', 'booking', 'goi');
+        $res = compact('razorpay_key', 'order', 'payment_value', 'booking', 'goi', 'custom_order_id');
         return view('admin.bookings.razorpay_payment', $res);
     }
     public function paymentCallbackRazorpay(Request $request)
@@ -710,7 +714,7 @@ class StudioController extends Controller
                 if ($orderData['status'] == "paid") {
                     Transaction::where('id', $transctionfound['id'])->update([
                         'status' => 'Success',
-                        'gateway_payment_id' => $input['razorpay_payment_id'],
+                        'ret_resp' => json_encode($orderData->toArray())
                     ]);
                     $bid = $transctionfound->booking_id;
                     Booking::where('id', $bid)->update(['booking_status' => '1']);

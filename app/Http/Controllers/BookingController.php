@@ -154,7 +154,7 @@ class BookingController extends Controller
         }
         $extra_charge_per_hour = 200;
         $bookings = $items->paginate(10)->appends(request()->query());
-        // return response()->json($bookings);
+        //return response()->json($bookings);
         // die;
         $bookings->getCollection()->transform(
             function ($b) use ($extra_charge_per_hour) {
@@ -190,17 +190,18 @@ class BookingController extends Controller
                 // Base amount
                 $base_amount = $b['duration'] * $b['studio_charge'];
                 $extra_added = $b['extra_added_sum_amount'];
-                // Final total calculation including GST (18%)
-                $total_amount = ($base_amount + $extra_charge + $extra_added) * 1.18;
-                $b['extra_charge'] = $extra_charge;
-                // Add the calculated total to the booking object
-                $b['total_amount'] = round($total_amount, 2);
                 $rents = $b->rents;
                 $rent_charge = 0;
                 foreach ($rents as $r) {
                     $rent_charge += $r->pivot->charge * $r->pivot->uses_hours;
                 }
                 $b['rent_charges'] = $rent_charge;
+                // Final total calculation including GST (18%)
+                $total_amount = ($base_amount + $extra_charge + $extra_added + $rent_charge) * 1.18;
+                $b['extra_charge'] = $extra_charge;
+                // Add the calculated total to the booking object
+                $b['total_amount'] = round($total_amount, 2);
+
                 return $b;
             }
         );
@@ -222,7 +223,7 @@ class BookingController extends Controller
         // }
         $services = $svs->get();
         $res = compact('title', 'type', 'bookings', 'keyword', 'vendors', 'vendor_id', 'studio_id', 'service_id', 'approved_at', 'booking_status', 'payment_status', 'duration', 'created_by', 'bdf', 'services', 'bdt', 'studios');
-        // return response()->json($bookings);
+        //return response()->json($bookings);
         // die;
 
         if (isset($_GET['export']) && $_GET['export'] == "excel") {

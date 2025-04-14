@@ -110,11 +110,14 @@ Route::prefix('ajax')->middleware(['auth'])->group(function () {
 Route::get('ajax/delete-bookings-cron', [BookingController::class, 'cron_destroy_booking'])->name('cron_destroy_booking');
 Route::get('ajax/events', [AdminController::class, 'events'])->name('events');
 Route::any('ajax/paymentCallbackRazorpay', [StudioController::class, 'paymentCallbackRazorpay'])->name('paymentCallbackRazorpay');
-Route::post('add-payment-online/{id}', [StudioController::class, 'pay_now'])->name('pay_now');
+// Route::post('add-payment-online/{id}', [StudioController::class, 'pay_now'])->name('pay_now'); cca venue payment
+Route::post('add-payment-online/{id}', [StudioController::class, 'pay_now_razorpay'])->name('pay_now');
 Route::post('pay_now/{id}', [StudioController::class, 'pay_now']);
+Route::post('pay_now_razorpay/{id}', [StudioController::class, 'pay_now_razorpay'])->name('pay_now_razorpay');
 Route::any('pay_response', [StudioController::class, 'pay_response'])->name('pay_response');
 Route::any('pay_cancel', [StudioController::class, 'pay_cancel'])->name('pay_cancel');
 Route::any('success_page/{id}', [TransactionController::class, 'success_page'])->name('success_page');
 Route::any('payment-response/{type}/{id}', [TransactionController::class, 'success_page_order_id'])->name('success_page_response');
-Route::get('add-payment-online/{id}', [StudioController::class, 'add_payment_online'])->name('pay-online');
+// Route::get('add-payment-online/{id}', [StudioController::class, 'add_payment_online'])->name('pay-online');
+Route::get('add-payment-online/{id}', [StudioController::class, 'pay_now_razorpay'])->name('pay-online');
 Route::get('check-status/{id}', [StudioController::class, 'checkOrderStatus'])->name('checkOrderStatus');
