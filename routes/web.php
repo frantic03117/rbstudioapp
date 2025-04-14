@@ -109,6 +109,7 @@ Route::prefix('ajax')->middleware(['auth'])->group(function () {
 });
 Route::get('ajax/delete-bookings-cron', [BookingController::class, 'cron_destroy_booking'])->name('cron_destroy_booking');
 Route::get('ajax/events', [AdminController::class, 'events'])->name('events');
+Route::any('ajax/paymentCallbackRazorpay', [StudioController::class, 'paymentCallbackRazorpay'])->name('paymentCallbackRazorpay');
 Route::post('add-payment-online/{id}', [StudioController::class, 'pay_now'])->name('pay_now');
 Route::post('pay_now/{id}', [StudioController::class, 'pay_now']);
 Route::any('pay_response', [StudioController::class, 'pay_response'])->name('pay_response');

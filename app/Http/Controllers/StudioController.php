@@ -16,12 +16,13 @@ use App\Models\RbNotification;
 use App\Models\Vendor;
 use App\Models\Booking;
 use App\Models\Transaction;
-
+use Razorpay\Api\Api;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\RbTrait;
+
 
 class StudioController extends Controller
 {
@@ -444,6 +445,8 @@ class StudioController extends Controller
         $res = compact('encrypted_data', 'working_key', 'access_code');
         return view('admin.bookings.cca_venue', $res);
     }
+
+
     public function pay_response(Request $request)
     {
         $order_id = $request->orderNo;
@@ -511,14 +514,7 @@ class StudioController extends Controller
             $totalPaable = $booking->duration * $booking->studio_charge + $rentcharge + $extra_charge + $extra_added;
             $withgst =  $totalPaable * 1.18;
             $netPending = $withgst - $paid - floatval($booking->promo_discount_calculated);
-
-
-
-
             $amount = $netPending;
-
-
-
             if (ceil($amount) <= 1) {
                 Booking::where('id', $bid)->update(['payment_status' => '1', 'booking_status' => '1']);
             }
@@ -581,6 +577,7 @@ class StudioController extends Controller
         return view('admin.bookings.success', $res);
     }
 
+
     public function checkOrderStatus($order_id)
     {
         $working_key = "7D819C910B5DA518C0636C14A83DD434"; // Shared by CCAvenue
@@ -596,7 +593,7 @@ class StudioController extends Controller
             "response_type"  => "JSON"
         ]);
 
-        // Send API Request to CCAvenue
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://api.ccavenue.com/apis/servlet/DoWebTrans");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -615,5 +612,165 @@ class StudioController extends Controller
 
         $decrypted_response = $this->decrypt($response, $working_key);
         return json_decode($decrypted_response, true);
+    }
+    public function pay_now_razorpay(Request $request, $id)
+    {
+        $booking = Booking::where('id', $id)->with('studio')
+            ->with('transactions')->withSum('transactions', 'amount')
+            ->with('rents')->withSum('extra_added', 'amount')->with('gst')
+            ->with('service:id,name')->with('user')
+            ->first();
+
+
+        $extra_charge_per_hour = 200;
+        $extra_hours = 0;
+
+        $start_time = strtotime($booking['booking_start_date']);
+        $end_time = strtotime($booking['booking_end_date']);
+
+        // Define extra charge period (11 PM - 8 AM)
+        $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
+        $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+
+        // Fix: Use next day's 8 AM **only if booking crosses midnight**
+        if ($start_time >= $night_start) {
+            $morning_end += 86400;
+        }
+
+        $extra_added = $booking['extra_added_sum_amount'] ?? 0;
+        while ($start_time < $end_time) {
+            // Fix: Use AND (`&&`) instead of OR (`||`)
+            if ($start_time >= $night_start || $start_time < $morning_end) {
+                $extra_hours++;
+            }
+            $start_time = strtotime('+1 hour', $start_time);
+        }
+        $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
+        $rents = $booking->rents;
+        $rentcharge = 0;
+        foreach ($rents as $r) {
+            $rentcharge += $r->pivot->charge * $r->pivot->uses_hours;
+        }
+        $paid = $booking->transactions_sum_amount;
+        $totalPaable = $booking->duration * $booking->studio_charge + $rentcharge + $extra_charge + $extra_added;
+        $withgst =  $totalPaable * 1.18;
+        $netPending = $withgst - $paid - floatval($booking->promo_discount_calculated);
+        $isPartial = $request->isPartial;
+        if ($isPartial) {
+            $payment_value =  $netPending * $booking->partial_percent * 0.01;
+        } else {
+            $payment_value = $netPending;
+        }
+        $mid = env('CCA_MID');
+        $working_key = env('CCA_KEY');
+        $access_code = env('CCA_AC');
+        $custom_order_id = time() . '_' . $id;
+        $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
+        $order = $api->order->create([
+            'receipt' => $custom_order_id,
+            'amount' => $payment_value  * 100,
+            'currency' => 'INR',
+        ]);
+        $tdata = [
+            'transaction_date' => date('Y-m-d'),
+            'type' => 'Credit',
+            'amount' => $payment_value,
+            'order_id' => $custom_order_id,
+            'studio_id' => $booking->studio_id,
+            'gateway_order_id' => $order['id'],
+            'user_id' => $booking->user_id,
+            'booking_id' => $id,
+            'vendor_id' => $booking->vendor_id,
+            'init_resp' => json_encode($order),
+            'mode' => 'Razorpay',
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        Transaction::insert($tdata);
+        $razorpay_key = env('RAZORPAY_KEY');
+        $goi = $order['id'];
+        $res = compact('razorpay_key', 'order', 'payment_value', 'booking', 'goi');
+        return view('admin.bookings.razorpay_payment', $res);
+    }
+    public function paymentCallbackRazorpay(Request $request)
+    {
+        date_default_timezone_set('Asia/kolkata');
+        $input = $request->all();
+        $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
+        try {
+            $attributes = [
+                'razorpay_order_id' => $input['razorpay_order_id'],
+                'razorpay_payment_id' => $input['razorpay_payment_id'],
+                'razorpay_signature' => $input['razorpay_signature']
+            ];
+            $gateway_id = $input['razorpay_order_id'];
+            $api->utility->verifyPaymentSignature($attributes);
+            $orderData = $api->order->fetch($gateway_id);
+            $transctionfound = Transaction::where('gateway_order_id', $input['razorpay_order_id'])->first();
+            if ($transctionfound) {
+                if ($orderData['status'] == "paid") {
+                    Transaction::where('id', $transctionfound['id'])->update([
+                        'status' => 'Success',
+                        'gateway_payment_id' => $input['razorpay_payment_id'],
+                    ]);
+                    $bid = $transctionfound->booking_id;
+                    Booking::where('id', $bid)->update(['booking_status' => '1']);
+                    $booking = Booking::where('id', $bid)->with('studio')
+                        ->with('transactions')->withSum('transactions', 'amount')
+                        ->with('rents')->withSum('extra_added', 'amount')->with('gst')
+                        ->with('service:id,name')
+                        ->first();
+                    $extra_added = $booking['extra_added_sum_amount'] ?? 0;
+                    $extra_charge_per_hour = 200;
+                    $extra_hours = 0;
+                    $start_time = strtotime($booking['booking_start_date']);
+                    $end_time = strtotime($booking['booking_end_date']);
+                    $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
+                    $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+                    if ($start_time >= $night_start) {
+                        $morning_end += 86400;
+                    }
+                    while ($start_time < $end_time) {
+                        if ($start_time >= $night_start || $start_time < $morning_end) {
+                            $extra_hours++;
+                        }
+                        $start_time = strtotime('+1 hour', $start_time);
+                    }
+                    $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
+                    $rents = $booking->rents;
+                    $rentcharge = 0;
+                    foreach ($rents as $r) {
+                        $rentcharge += $r->pivot->charge * $r->pivot->uses_hours;
+                    }
+                    $paid = $booking->transactions_sum_amount;
+                    $totalPaable = $booking->duration * $booking->studio_charge + $rentcharge + $extra_charge + $extra_added;
+                    $withgst =  $totalPaable * 1.18;
+                    $netPending = $withgst - $paid - floatval($booking->promo_discount_calculated);
+                    $amount = $netPending;
+                    if (ceil($amount) <= 1) {
+                        Booking::where('id', $bid)->update(['payment_status' => '1', 'booking_status' => '1']);
+                    }
+                    $ndata = [
+                        'user_id' => $booking->user->id,
+                        'booking_id' => $bid,
+                        'studio_id' => $booking->studio_id,
+                        'vendor_id' => $booking->vendor_id,
+                        'title' => 'Payment Received',
+                        'message' => 'Transaction of amount ₹' . $amount,
+                        "is_read" => "0",
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'type' => 'Payment'
+                    ];
+                    RbNotification::insert($ndata);
+                    $user = $booking->user;
+                    $appmessage  = "Your booking has been reserved with Booking ID {$bid}";
+                    if ($user && $user->fcm_token) {
+                        $this->send_notification($user->fcm_token, 'Booking Reserved', $appmessage, $user->id);
+                    }
+                }
+            }
+            return response()->json(['message' => 'Payment successful and verified.']);
+        } catch (\Razorpay\Api\Errors\SignatureVerificationError $e) {
+            return response()->json(['error' => 'Signature verification failed.'], 400);
+        }
     }
 }
