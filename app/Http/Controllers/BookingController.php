@@ -689,7 +689,7 @@ class BookingController extends Controller
         $withgst = $totalPaable * 1.18;
         $booking['total_to_pay'] = $withgst;
         $booking['paid'] = $paid;
-        $booking['net_payable'] = $withgst  - $paid - floatval($booking->promo_discount_calculated);
+        $booking['net_payable'] = $withgst  - ($paid + $booking->promo_discount_calculated);
         $booking['calculation'] = ['gst' => 18, 'discount' => ['partial' => '0', 'full' => '0', 'type' => 'percent']];
         $data = [
             'data' => $booking,
