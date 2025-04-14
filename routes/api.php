@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\StudioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('contact_us/delete/{id}', [ApiController::class, 'delete_query']);
     Route::get('bookings', [ApiController::class, 'bookings']);
     Route::get('bookings/{id}', [BookingController::class, 'show']);
+    Route::get('create-order/{id}', [StudioController::class, 'pay_now_razorpay']);
     Route::get('policies', [ApiController::class, 'policies']);
     Route::post('book-studio', [BookingController::class, 'store']);
     Route::post('find_start_slot', [AjaxController::class, 'find_start_slot'])->name('find_start_slot');

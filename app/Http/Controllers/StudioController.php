@@ -615,6 +615,7 @@ class StudioController extends Controller
     }
     public function pay_now_razorpay(Request $request, $id)
     {
+        $mode = $_GET['mode'] ?? null;
         $booking = Booking::where('id', $id)->with('studio')
             ->with('transactions')->withSum('transactions', 'amount')
             ->with('rents')->withSum('extra_added', 'amount')->with('gst')
@@ -673,7 +674,7 @@ class StudioController extends Controller
             'amount' =>  ceil($payment_value) * 100,
             'currency' => 'INR',
         ]);
-
+        $orderData = $order->toArray();
         // return response()->json($order);
         $tdata = [
             'transaction_date' => date('Y-m-d'),
@@ -692,7 +693,10 @@ class StudioController extends Controller
         Transaction::insert($tdata);
         $razorpay_key = env('RAZORPAY_KEY');
         $goi = $order['id'];
-        $res = compact('razorpay_key', 'order', 'payment_value', 'booking', 'goi', 'custom_order_id');
+        $res = compact('razorpay_key', 'orderData', 'payment_value', 'booking', 'goi', 'custom_order_id');
+        if ($mode) {
+            return response()->json(['success' => '1', 'data' => $res, 'message' => 'Payment gateway request generated']);
+        }
         return view('admin.bookings.razorpay_payment', $res);
     }
     public function paymentCallbackRazorpay(Request $request)
