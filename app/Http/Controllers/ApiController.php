@@ -142,13 +142,13 @@ class ApiController extends Controller
         //  \Artisan::call('route:clear');
         $booking_status = $_GET['booking_status'] ?? null;
         $uid = auth('sanctum')->user()->id;
-        $items = Booking::orderBy('bookings.booking_start_date', 'ASC')->where('user_id', $uid);
+        $items = Booking::where('user_id', $uid);
         if ($booking_status == "0") {
-            $items->where('booking_status', "0");
+            $items->where('booking_status', "0")->orderBy('bookings.booking_start_date', 'DESC');
         }
         if ($booking_status) {
             $items->where('booking_status', $booking_status);
-            $items->where('booking_start_date', '>=', date('Y-m-d H:i:s'));
+            $items->where('booking_start_date', '>=', date('Y-m-d H:i:s'))->orderBy('bookings.booking_start_date', 'DESC');
         }
         $items->with('user:id,name,email,mobile')->withSum('transactions', 'amount')->with('studio:id,name,address,longitude,latitude');
         $items->with('rents')->withSum('extra_added', 'amount')->with('vendor')->with('service');
