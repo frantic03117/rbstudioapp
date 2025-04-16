@@ -144,14 +144,14 @@ class ApiController extends Controller
         $uid = auth('sanctum')->user()->id;
         $items = Booking::where('user_id', $uid);
         if ($booking_status == "0") {
-            $items->where('booking_status', "0")->orderBy('bookings.booking_start_date', 'DESC');
+            $items->where('booking_status', "0");
         }
         if ($booking_status) {
             $items->where('booking_status', $booking_status);
-            $items->where('booking_start_date', '>=', date('Y-m-d H:i:s'))->orderBy('bookings.booking_start_date', 'DESC');
+            $items->where('booking_start_date', '>=', date('Y-m-d H:i:s'));
         }
         $items->with('user:id,name,email,mobile')->withSum('transactions', 'amount')->with('studio:id,name,address,longitude,latitude');
-        $items->with('rents')->withSum('extra_added', 'amount')->with('vendor')->with('service');
+        $items->with('rents')->withSum('extra_added', 'amount')->with('vendor')->with('service')->orderBy('bookings.booking_start_date', 'DESC');
         $bookings = $items->paginate(10);
         $extra_charge_per_hour = 200;
         $bookings->getCollection()->transform(
