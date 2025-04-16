@@ -402,8 +402,10 @@ class ApiController extends Controller
             ];
             return response()->json($data);
         }
-        $item =  Booking::where('id', $bid)->where('approved_at', '!=', null)->with('rents')->withSum('transactions', 'amount')->with('studio')->with('service')->first();
-        if (!$item) {
+        $booking = Booking::where('id', $bid)->with('studio')->with('transactions')->withSum('transactions', 'amount')->withSum('extra_added', 'amount')->with('rents')->with('gst')
+            ->with('service:id,name')
+            ->first();
+        if (!$booking) {
             $data = [
                 'data' => [],
                 'success' => 0,
@@ -412,7 +414,7 @@ class ApiController extends Controller
             ];
             return response()->json($data);
         }
-        if ($item->promo_id) {
+        if ($booking->promo_id) {
             $data = [
                 'data' => [],
                 'success' => 0,
@@ -421,7 +423,7 @@ class ApiController extends Controller
             ];
             return response()->json($data);
         }
-        $paid = $item->transactions_sum_amount;
+        $paid = $booking->transactions_sum_amount;
         if ($paid > 0) {
             $data = [
                 'data' => [],
@@ -431,15 +433,35 @@ class ApiController extends Controller
             ];
             return response()->json($data);
         }
-
-        $rents =  $item->rents;
-        $arr = [];
-        foreach ($rents as $r) {
-            array_push($arr, $r->pivot->charge * $r->pivot->uses_hours);
+        $extra_charge_per_hour = 200;
+        $extra_hours = 0;
+        $start_time = strtotime($booking['booking_start_date']);
+        $end_time = strtotime($booking['booking_end_date']);
+        $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
+        $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+        if ($start_time >= $night_start) {
+            $morning_end += 86400;
         }
+        while ($start_time < $end_time) {
+            if ($start_time >= $night_start || $start_time < $morning_end) {
+                $extra_hours++;
+            }
+            $start_time = strtotime('+1 hour', $start_time);
+        }
+        $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
+        $rents = $booking->rents;
+        $rent_charge = 0;
+        foreach ($rents as $r) {
+            $rent_charge += $r->pivot->charge * $r->pivot->uses_hours;
+        }
+        $paid = $booking->transactions_sum_amount;
+        $rents =  $booking->rents;
 
-        $rentcharge = array_sum($arr);
-        $amount =  ($item->duration * $item->studio_charge + $rentcharge) * 1.18 - $item->transactions_sum_amount;
+        $totalPaable = $booking->duration * $booking->studio_charge + $rent_charge + $extra_charge + $booking['extra_added_sum_amount'];
+        $withgst = $totalPaable * 1.18;
+        $amount = $withgst  - $paid;
+
+
         $promo_discount = $isValid->discount;
         $type = $isValid->discount_type;
         if ($type == "Fixed") {
