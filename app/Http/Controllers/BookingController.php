@@ -73,7 +73,7 @@ class BookingController extends Controller
             $items->where('id', $booking_id);
         } else {
             if ($type == "upcoming") {
-                $items->whereDate('booking_start_date', '>', $now)->orderBy('booking_start_date', 'ASC');
+                $items->whereDate('booking_start_date', '>=', $now)->orderBy('booking_start_date', 'ASC');
             }
             if ($type == "today") {
                 $items->whereDate('booking_start_date', '=', date('Y-m-d'))->orderBy('booking_start_date', 'ASC');

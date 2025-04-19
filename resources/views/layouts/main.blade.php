@@ -336,11 +336,9 @@
                                     <li><a href="{{ route('bookingsview', 'today') }}?approved_at=pending"
                                             data-key="t-g-maps">Approval Pending
                                             Booking</a></li>
-                                    <li><a href="{{ route('bookingsview', 'today') }}?booking_status=1"
-                                            data-key="t-g-maps">Today
-                                            Booking</a></li>
+
                                     <li><a href="{{ route('bookingsview', 'upcoming') }}?booking_status=1"
-                                            data-key="t-g-maps">Upcoming
+                                            data-key="t-g-maps">Current
                                             Booking</a></li>
                                     <li><a
                                             href="{{ route('bookingsview', 'past') }}?booking_status=1&approved_at=approved">Past

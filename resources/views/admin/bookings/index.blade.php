@@ -12,18 +12,22 @@
             <div class="row">
                 <div class="col-md-4">
                     <ul class="d-flex gap-1 align-items-center list-unstyled">
-                        <li><a @class([
-                            'btn btn-sm',
-                            'btn-primary' => $type == 'today' ? true : false,
-                        ])
+                        <li>
+                            <a @class([
+                                'btn btn-sm d-none',
+                                'btn-primary ' => $type == 'today' ? true : false,
+                            ])
                                 href="{{ route('bookingsview', 'today') }}?booking_status=1&approved_at=approved">Today
-                                Booking</a></li>
-                        <li><a @class([
-                            'btn btn-sm',
-                            'btn-primary' => $type == 'upcoming' ? true : false,
-                        ])
-                                href="{{ route('bookingsview', 'upcoming') }}?booking_status=1&approved_at=approved">Upcoming
-                                Booking</a></li>
+                                Booking</a>
+                        </li>
+                        <li>
+                            <a @class([
+                                'btn btn-sm',
+                                'btn-primary' => $type == 'upcoming' ? true : false,
+                            ])
+                                href="{{ route('bookingsview', 'upcoming') }}?booking_status=1&approved_at=approved">Current
+                                Booking</a>
+                        </li>
                         <li><a @class([
                             'btn btn-sm',
                             'btn-primary' => $type == 'past' ? true : false,
@@ -368,7 +372,6 @@
                                                                     data-bs-target="#staticBackdrop">Add Payment</button>
 
                                                             </div>
-
                                                             <!--<a target="_blank" href="https://api.whatsapp.com/send/?phone={{ $b->user?->mobile }}&text&type=phone_number&app_absent=0" class="btn btn-sm mt-2 btn-outline-success">Whatsapp</a>-->
 
                                                         </li>
