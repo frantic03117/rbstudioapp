@@ -84,7 +84,6 @@ class BookingController extends Controller
             if ($vid > 0) {
                 $items->where('vendor_id', $vid);
             }
-
             if ($keyword) {
                 $items->whereIn('user_id', function ($query) use ($keyword) {
                     $query->from('users')
