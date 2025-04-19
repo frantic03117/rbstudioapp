@@ -78,7 +78,6 @@ class BookingController extends Controller
             if ($type == "today") {
                 $items->whereDate('booking_start_date', '=', date('Y-m-d'))->orderBy('booking_start_date', 'ASC');
             }
-
             if ($type == "past") {
                 $items->whereDate('booking_start_date', '<', $now)->orderBy('booking_start_date', 'ASC');
             }
