@@ -126,20 +126,16 @@ class BookingController extends Controller
             if ($approved_at == "pending") {
                 $items->where('approved_at', null);
             }
-            if ($booking_status) {
+            if (in_array($booking_status, ['0', '1', '2'])) {
                 $items->where('booking_status', $booking_status);
             }
-            if ($booking_status == "0") {
-                $items->where('booking_status', "0");
-            }
-
             if ($approved_at == "approved") {
-                if ($booking_status) {
-                    $items->where('booking_status', $booking_status);
-                }
-                if ($booking_status == "0") {
-                    $items->where('booking_status', "0");
-                }
+                // if ($booking_status) {
+                //     $items->where('booking_status', $booking_status);
+                // }
+                // if ($booking_status == "0") {
+                //     $items->where('booking_status', "0");
+                // }
 
                 $items->where('approved_at', '!=', null);
             }
