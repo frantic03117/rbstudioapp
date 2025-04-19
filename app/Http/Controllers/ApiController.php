@@ -140,6 +140,10 @@ class ApiController extends Controller
     public function bookings()
     {
         //  \Artisan::call('route:clear');
+
+
+
+
         $booking_status = $_GET['booking_status'] ?? null;
         $uid = auth('sanctum')->user()->id;
         $items = Booking::where('user_id', $uid);
@@ -148,10 +152,18 @@ class ApiController extends Controller
         }
         if ($booking_status) {
             $items->where('booking_status', $booking_status);
-            $items->where('booking_start_date', '>=', date('Y-m-d H:i:s'));
         }
+
         $items->with('user:id,name,email,mobile')->withSum('transactions', 'amount')->with('studio:id,name,address,longitude,latitude');
-        $items->with('rents')->withSum('extra_added', 'amount')->with('vendor')->with('service')->orderBy('bookings.booking_start_date', 'DESC');
+        $items->with('rents')->withSum('extra_added', 'amount')->with('vendor')->with('service');
+        if (in_array($booking_status, ['0', '1', '2'])) {
+            $items->where('booking_start_date', '>=', date('Y-m-d H:i:s'));
+            $items->orderBy('bookings.booking_start_date', 'ASC');
+        } else {
+            $items->where('booking_start_date', '<', date('Y-m-d H:i:s'));
+            $items->orderBy('bookings.booking_start_date', 'DESC');
+        }
+
         $bookings = $items->paginate(10);
         $extra_charge_per_hour = 200;
         $bookings->getCollection()->transform(
