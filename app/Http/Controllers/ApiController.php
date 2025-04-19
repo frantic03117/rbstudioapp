@@ -139,10 +139,6 @@ class ApiController extends Controller
     }
     public function bookings()
     {
-        //  \Artisan::call('route:clear');
-
-
-
 
         $booking_status = $_GET['booking_status'] ?? null;
         $uid = auth('sanctum')->user()->id;
@@ -348,6 +344,7 @@ class ApiController extends Controller
                 })
                     ->orWhereDate('created_at', '=', $keyword);
             });
+            $items->orWhere('id', $keyword);
         }
 
         // Paginate the results
