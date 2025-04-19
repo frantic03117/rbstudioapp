@@ -66,6 +66,7 @@ class BookingController extends Controller
         $booking_tenure = $_GET['tenure'] ?? null;
         $keyword = $_GET['keyword'] ?? null;
         $vid = Auth::user()->vendor_id;
+        $payment_filter = $_GET['payment_filter'] ?? null;
         $now = date('Y-m-d H:i:s');
         $title = "List of Booking";
         $items = Booking::where('id', '>', '0');
@@ -113,16 +114,12 @@ class BookingController extends Controller
             if ($created_by && $created_by != '1') {
                 $items->where('created_by', '!=', '1');
             }
-
             if ($duration) {
                 $items->where('duration', $duration);
             }
-
             if ($payment_status) {
                 $items->where('payment_status', $payment_status);
             }
-
-
             if ($approved_at == "pending") {
                 $items->where('approved_at', null);
             }
@@ -199,6 +196,24 @@ class BookingController extends Controller
                 return $b;
             }
         );
+        if ($payment_filter) {
+            $bookings->setCollection(
+                $bookings->getCollection()->filter(function ($b) use ($payment_filter) {
+                    $paid = round($b['transactions_sum_amount'] ?? 0, 2);
+                    $total = round($b['total_amount'] ?? 0, 2);
+
+                    if ($payment_filter === 'paid') {
+                        return $paid >= $total;
+                    } elseif ($payment_filter === 'partial') {
+                        return $paid > 0 && $paid < $total;
+                    } elseif ($payment_filter === 'unpaid') {
+                        return $paid <= 0;
+                    }
+                    return true;
+                })->values()
+            );
+        }
+
 
 
         $stds = Studio::where('id', '>', '0');
@@ -216,7 +231,7 @@ class BookingController extends Controller
         //     $svs->where('id', $service_id);
         // }
         $services = $svs->get();
-        $res = compact('title', 'type', 'bookings', 'keyword', 'vendors', 'vendor_id', 'studio_id', 'service_id', 'approved_at', 'booking_status', 'payment_status', 'duration', 'created_by', 'bdf', 'services', 'bdt', 'studios');
+        $res = compact('title', 'type', 'bookings', 'keyword', 'vendors', 'vendor_id', 'studio_id', 'service_id', 'approved_at', 'booking_status', 'payment_status', 'duration', 'created_by', 'bdf', 'services', 'bdt', 'studios', 'payment_filter');
         //return response()->json($bookings);
         // die;
 

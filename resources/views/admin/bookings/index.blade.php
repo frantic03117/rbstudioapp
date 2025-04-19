@@ -38,7 +38,7 @@
 
                     <ul class="d-flex gap-1 align-items-center list-unstyled">
                         <li>
-                            <strong> Status : </strong>
+                            <strong> Booking Status : </strong>
                         </li>
                         @foreach ([0, 1, 2] as $s)
                             <li>
@@ -52,7 +52,7 @@
                     </ul>
                     <ul class="d-flex gap-1 align-items-center list-unstyled">
                         <li>
-                            <strong> Approval :</strong>
+                            <strong> Service Approval :</strong>
                         </li>
                         @foreach (['pending', 'approved'] as $a)
                             <li>
@@ -66,6 +66,23 @@
                             </li>
                         @endforeach
                     </ul>
+                    <ul class="d-flex gap-1 align-items-center list-unstyled">
+                        <li>
+                            <strong> Payment :</strong>
+                        </li>
+                        @foreach (['paid', 'partial', 'unpaid'] as $a)
+                            <li>
+                                <a @class([
+                                    'btn btn-sm text-capitalize',
+                                    'btn-warning' => $payment_filter == $a,
+                                ])
+                                    href="{{ url()->current() }}?{{ http_build_query(array_merge(request()->query(), ['payment_filter' => $a])) }}">
+                                    {{ $a }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+
 
                 </div>
                 <div class="col-md-8">
@@ -390,7 +407,8 @@
                                                             'method' => 'DELETE',
                                                             'onsubmit' => 'return confirmCancel()',
                                                         ]) !!}
-                                                        <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                                                        <button type="submit"
+                                                            class="btn btn-danger btn-sm">Cancel</button>
                                                         {!! Form::close() !!}
 
                                                         <script>
