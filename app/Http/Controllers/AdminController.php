@@ -91,7 +91,7 @@ class AdminController extends Controller
         if (Auth::user()->role != "Super") {
             $aproval->where('vendor_id', Auth::user()->vendor_id);
         }
-        $aproval->whereYear('booking_start_date', date('Y'))->where('booking_status', '=', '1');
+        $aproval->whereYear('booking_start_date', date('Y'));
         $approval = $aproval->where('approved_at', null)->count();
         $vends = Vendor::orderBy('name');
         if (Auth::user()->role != "Super") {
