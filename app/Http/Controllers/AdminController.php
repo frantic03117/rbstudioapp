@@ -87,11 +87,11 @@ class AdminController extends Controller
             $tal_booking_month->where('vendor_id', Auth::user()->vendor_id);
         }
         $total_booking_month = $tal_booking_month->where('booking_status', '=', '1')->sum('duration');
-        $aproval = Booking::whereMonth('booking_start_date', date('m'));
+        $aproval = Booking::where('booking_start_date', '>=', date('Y-m-d H:i:s'));
         if (Auth::user()->role != "Super") {
             $aproval->where('vendor_id', Auth::user()->vendor_id);
         }
-        $aproval->whereYear('booking_start_date', date('Y'))->where('booking_status', '0');
+        $aproval->where('booking_status', '0');
         $approval = $aproval->where('approved_at', null)->count();
         $vends = Vendor::orderBy('name');
         if (Auth::user()->role != "Super") {
