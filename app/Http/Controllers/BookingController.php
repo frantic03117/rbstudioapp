@@ -49,7 +49,7 @@ class BookingController extends Controller
         })->get();
         return $ritems;
     }
-    public function custom_view($type = null)
+    public function custom_view(Request $request, $type = null)
     {
         date_default_timezone_set('Asia/kolkata');
         $vendor_id = $_GET['vendor_id'] ?? null;
@@ -232,7 +232,11 @@ class BookingController extends Controller
         // }
         $services = $svs->get();
         $res = compact('title', 'type', 'bookings', 'keyword', 'vendors', 'vendor_id', 'studio_id', 'service_id', 'approved_at', 'booking_status', 'payment_status', 'duration', 'created_by', 'bdf', 'services', 'bdt', 'studios', 'payment_filter');
-        //return response()->json($bookings);
+
+        if ($request->expectsJson()) {
+            return response()->json($bookings);
+        }
+
         // die;
 
         if (isset($_GET['export']) && $_GET['export'] == "excel") {
