@@ -484,10 +484,11 @@ class BookingController extends Controller
         $e_d = Carbon::parse($b_e_date)->minute(0)->second(0)->format('Y-m-d H:i:s');
         $start_date = Carbon::parse($s_d);
         $end_date = Carbon::parse($e_d);
+        $creatorRole = auth('sanctum')->user() ? auth('sanctum')->user()->role : auth()->user()->role;
 
         // Calculate the duration in hours
         $duration = $end_date->diffInHours($start_date);
-        if ($request->mode && $duration < 2) {
+        if ($creatorRole == "User" && $duration < 2) {
             $res = [
                 "success" => '0',
                 'errors' => [],
@@ -549,7 +550,6 @@ class BookingController extends Controller
             $bsdate = $b_s_date;
             $bedate = $b_e_date;
             $serviceStudio = DB::table('service_studios')->where('service_id', $service_id)->where('studio_id', $studio_id)->first();
-            $creatorRole = auth('sanctum')->user() ? auth('sanctum')->user()->role : auth()->user()->role;
 
             $bdata = [
                 'user_id' => $user_id,
