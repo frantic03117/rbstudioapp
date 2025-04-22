@@ -17,6 +17,7 @@ use App\Models\Transaction;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
@@ -36,11 +37,37 @@ class AdminController extends Controller
             'password' => 'required|min:6',
         ]);
 
+
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             return redirect()->route('dashboard')->with('success', 'Welcome to Dashboard');
         } else {
             return redirect()->back()->with('error', 'Invalid credentials');
         }
+    }
+    public function api_login(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'email' => 'required|exists:users,email',
+            'password' => 'required|min:6'
+        ]);
+        if ($validation->fails()) {
+            return response()->json(['success' => 0,  'message' => $validation->errors()->first(), 'errors' => $validation->errors()]);
+        }
+        $user = User::where('email', $request->email)->where('role', '!=', 'User')->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'success' => 0,
+                'message' => 'Invalid email or password.'
+            ]);
+        }
+        $token = $user->createToken('api-token')->plainTextToken;
+        return response()->json([
+            'success' => 1,
+            'message' => 'Login successful.',
+            'token' => $token,
+            'user' => $user
+        ]);
     }
     public function logout(Request $request)
     {
@@ -48,7 +75,8 @@ class AdminController extends Controller
         Auth::logout();
         return  redirect()->route('login');
     }
-    public function dashboard()
+
+    public function dashboard(Request $request)
     {
         date_default_timezone_set('Asia/kolkata');
         $title = "Welcome to Dashboard";
@@ -122,8 +150,9 @@ class AdminController extends Controller
             ->whereMonth('transaction_date', now()->month)->sum('amount');
         $totalamount += $payment_received;
         $res = compact('title', 'today_booking', 'defaultView', 'total_booking_month', 'approval', "vendors", "vid", "sid",  "studios", "services", "service_id", 'totalamount');
-
-
+        if ($request->expectsJson()) {
+            return response()->json($res);
+        }
         return view('admin.dashboard', $res);
     }
     public function events()
