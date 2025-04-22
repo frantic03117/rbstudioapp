@@ -44,6 +44,14 @@ class AdminController extends Controller
             return redirect()->back()->with('error', 'Invalid credentials');
         }
     }
+    public function admin_profile(Request $request)
+    {
+        $id = auth('sanctum')->user()->id;
+        $user = User::where('id', $id)->first();
+        $permissions = $user->getAllPermissions()->pluck('name');
+        $data = ['user' => $user, 'permissions' => $permissions];
+        return response()->json(['data' => $data, 'success' => 1]);
+    }
     public function api_login(Request $request)
     {
         $validation = Validator::make($request->all(), [

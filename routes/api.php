@@ -67,6 +67,7 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::get('bookings/{slug}', [BookingController::class, 'custom_view']);
     Route::get('bookings/show/{id}', [BookingController::class, 'show']);
     Route::get('/transactions', [TransactionController::class, 'index']);
+    Route::get('/', [AdminController::class, 'admin_profile']);
 });
 
 Route::post('get_slots', [AjaxController::class, 'get_slots']);
