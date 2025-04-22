@@ -17,7 +17,7 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $title = "List of transactions";
         $items = Transaction::where('amount', '>', '0');
@@ -26,6 +26,9 @@ class TransactionController extends Controller
         }
         $transactions = $items->with('user')->with('booking')->orderBy('id', 'DESC')->paginate(40);
         $res = compact('title', 'transactions');
+        if ($request->expectsJson()) {
+            return response()->json(['data' => $res, 'success' => 1]);
+        }
         return view('admin.reports.transactions', $res);
     }
 

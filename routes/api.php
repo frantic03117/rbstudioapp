@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\StudioController;
+use App\Http\Controllers\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +64,9 @@ Route::post('admin', [AdminController::class, 'api_login']);
 Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard']);
     Route::post('/book-studio', [BookingController::class, 'store']);
+    Route::get('bookings/{slug}', [BookingController::class, 'custom_view']);
+    Route::get('bookings/show/{id}', [BookingController::class, 'show']);
+    Route::get('/transactions', [TransactionController::class, 'index']);
 });
 
 Route::post('get_slots', [AjaxController::class, 'get_slots']);
