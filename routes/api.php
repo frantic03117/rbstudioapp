@@ -62,6 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('admin', [AdminController::class, 'api_login']);
 Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard']);
+    Route::post('/book-studio', [BookingController::class, 'store']);
 });
 
 Route::post('get_slots', [AjaxController::class, 'get_slots']);

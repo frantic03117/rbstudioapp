@@ -262,7 +262,7 @@ class AjaxController extends Controller
         $bsdate = Carbon::parse($sdate . ' ' . $start_time)->minute(0)->second(0)->format('Y-m-d H:i:s');
 
         $arr = [];
-        $hours = $request->mode ? 24 : 720;
+        $hours = $request->mode || $request->expectsJson() ? 24 : 720;
         for ($i = 1; $i <= $hours; $i++) {
             // $bedate = date('Y-m-d H:0:0', strtotime($bsdate)+$i*3600);
             $bedate = Carbon::parse($bsdate)->addHours($i)->minute(0)->second(0)->format('Y-m-d H:i:s');

@@ -69,18 +69,18 @@ class ApiController extends Controller
     }
     public function studios(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'service_id' => 'required',
-        ]);
-        if ($validator->fails()) {
-            $data = [
-                'data' => [],
-                'success' => 0,
-                'errors' => $validator->errors(),
-                'message' => 'List of Services'
-            ];
-            return response()->json($data);
-        }
+        // $validator = Validator::make($request->all(), [
+        //     'service_id' => 'required',
+        // ]);
+        // if ($validator->fails()) {
+        //     $data = [
+        //         'data' => [],
+        //         'success' => 0,
+        //         'errors' => $validator->errors(),
+        //         'message' => 'List of Services'
+        //     ];
+        //     return response()->json($data);
+        // }
         $sid = $request->service_id;
 
         $studios = Studio::with('country:id,country')->with('state:id,state')->with('district:id,city')->with('images')->with('vendor')
@@ -99,7 +99,7 @@ class ApiController extends Controller
         $data = [
             'data' => $items,
             'success' => 1,
-            'errors' => $validator->errors(),
+            // 'errors' => $validator->errors(),
             'message' => 'List of Studios'
         ];
         return response()->json($data);

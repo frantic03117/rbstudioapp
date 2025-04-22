@@ -549,6 +549,8 @@ class BookingController extends Controller
             $bsdate = $b_s_date;
             $bedate = $b_e_date;
             $serviceStudio = DB::table('service_studios')->where('service_id', $service_id)->where('studio_id', $studio_id)->first();
+            $creatorRole = auth('sanctum')->user() ? auth('sanctum')->user()->role : auth()->user()->role;
+
             $bdata = [
                 'user_id' => $user_id,
                 'studio_id' => $studio_id,
@@ -560,12 +562,13 @@ class BookingController extends Controller
                 "end_at" => date('H:0:0', strtotime($bedate)),
                 "duration" => $d,
                 "service_id" => $service_id,
-                "booking_status" => $request->mode ? "0" : "1",
+                "booking_status" =>  $creatorRole == "User" ? "0" : "1",
                 "studio_charge" => $serviceStudio->charge,
                 'created_by' => auth('sanctum')->user()->id ?? auth()->user()->id,
                 "created_at" =>  date('Y-m-d H:i:s')
             ];
-            if ($request->mode) {
+
+            if ($creatorRole == "User") {
                 $bdata['approved_at'] = $serviceStudio->is_permissable == "0" ? date('Y-m-d H:i:s') : null;
             } else {
                 $bdata['approved_at'] = date('Y-m-d H:i:s');
@@ -632,7 +635,7 @@ class BookingController extends Controller
             if ($user && $user->fcm_token) {
                 $this->send_notification($user->fcm_token, $serviceStudio->is_permissable ? 'Booking Pending' : 'Payment Pending', $appmessage, $user->id);
             }
-            if ($request->mode) {
+            if ($request->mode || $request->expectsJson()) {
                 $res = [
                     "success" => '1',
                     'errors' => [],
