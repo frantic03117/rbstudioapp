@@ -39,17 +39,24 @@ class StudioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $title = "Create New Studio";
         $stds = Studio::with("vendor");
         if (Auth::user()->role != "Super") {
             $stds->where('vendor_id', Auth::user()->vendor_id);
         }
+        $vendor_id = $_GET['vendor_id'] ?? null;
+        if ($vendor_id) {
+            $stds->where('vendor_id', $vendor_id);
+        }
         $studio = $stds->with('country')->with('state')->with('district')->with('images')
             ->with('products')
             ->with('charges')
             ->get();
+        if ($request->expectsJson()) {
+            return response()->json(['data' => $studio, 'success' => '1', 'message' => $title]);
+        }
         // return response()->json($studio);
         // die;
         return view("admin.studios.list", compact("title", "studio"));

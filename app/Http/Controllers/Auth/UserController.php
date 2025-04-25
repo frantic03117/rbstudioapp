@@ -179,7 +179,7 @@ class UserController extends Controller
         $res = compact('item', 'title');
         return view('admin.reports.profile', $res);
     }
-    public function users()
+    public function users(Request $request)
     {
         $title = "List of users";
         $key = $_GET['keyword'] ?? null;
@@ -190,6 +190,9 @@ class UserController extends Controller
         }
         $items = $itms->orderBy('id', 'DESC')->paginate(20);
         $res = compact('title', 'items', 'key');
+        if ($request->expectsJson()) {
+            return response()->json(['data' => $items, 'success' => 1, 'message' => $title]);
+        }
         return view('admin.reports.users', $res);
     }
     public function edit_user($id)

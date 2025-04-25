@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StudioController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\VendorController;
@@ -70,6 +71,9 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::get('/transactions', [TransactionController::class, 'index']);
     Route::get('/', [AdminController::class, 'admin_profile']);
     Route::get('/vendors', [VendorController::class, 'index']);
+    Route::get('/studios', [StudioController::class, 'index']);
+    Route::get('/users', [UserController::class, 'users']);
+    Route::get('/services', [ServiceController::class, 'index']);
 });
 
 Route::post('get_slots', [AjaxController::class, 'get_slots']);

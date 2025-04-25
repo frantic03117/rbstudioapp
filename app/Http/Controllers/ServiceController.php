@@ -20,10 +20,20 @@ class ServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(): \Illuminate\View\View
+    public function index(Request $request)
     {
         $title = "List of Services";
-        $services = Service::all();
+        $squery = Service::query();
+        $studio_id = $_GET['studio_id'] ?? null;
+        if ($studio_id) {
+            $squery->whereIn('id', function ($query) use ($studio_id) {
+                $query->from('service_studios')->where('studio_id', $studio_id)->select('service_id');
+            });
+        }
+        $service = $squery->get();
+        if ($request->expectsJson()) {
+            return response()->json(['data' => $service, 'message' => $title, 'success' => 1]);
+        }
         //return response()->json($services);
         //dd(auth()->user()->getRoleNames());
         return view("admin.services.index", compact("title", "services"));
@@ -64,9 +74,8 @@ class ServiceController extends Controller
             'description' => $request->description,
             'created_at' => date('Y-m-d H:i:s')
         ];
-        if (Service::insert($data)) {
-            return redirect()->route('services.create')->with('success', 'Created Successfully');
-        }
+        Service::insert($data);
+        return redirect()->route('services.create')->with('success', 'Created Successfully');
     }
 
     /**
@@ -99,7 +108,7 @@ class ServiceController extends Controller
      * @param  \App\Models\Studio\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Service $service) : RedirectResponse
+    public function update(Request $request, Service $service): RedirectResponse
     {
 
         $request->validate(
@@ -122,6 +131,7 @@ class ServiceController extends Controller
         if ($service->update($data)) {
             return redirect()->back()->with('success', 'Created Successfully');
         }
+        return redirect()->back()->with('success', 'Created Successfully');
     }
 
     /**
