@@ -20,13 +20,19 @@ class RentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request) 
+    public function index(Request $request)
     {
-       
+
         $title = "List of Rental Resources";
-        $rents = Rent::all();
-       
-         if ($request->is('api/*') || $request->expectsJson()) {
+        $qrents = Rent::query();
+        $studio_id = $_GET['studio_id'] ?? null;
+        if ($studio_id) {
+            $qrents->whereIn('id', function ($q) use ($studio_id) {
+                $q->from('charges')->where('studio_id', $studio_id)->select('item_id');
+            });
+        }
+        $rents = $qrents->get();
+        if ($request->is('api/*') || $request->expectsJson()) {
             return response()->json([
                 'title' => $title,
                 'data' => $rents,
@@ -53,7 +59,7 @@ class RentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) : RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         $request->validate(
             [
@@ -74,6 +80,7 @@ class RentController extends Controller
         if (Rent::insert($data)) {
             return redirect()->route('rents.create')->with('success', 'Created Successfully');
         }
+        return redirect()->route('rents.create')->with('success', 'Created Successfully');
     }
 
     /**
@@ -93,7 +100,7 @@ class RentController extends Controller
      * @param  \App\Models\Rent  $rent
      * @return \Illuminate\Http\Response
      */
-    public function edit(Rent $rent) : \Illuminate\View\View
+    public function edit(Rent $rent): \Illuminate\View\View
     {
         $title = "Edit Resource";
         return view("admin.rents.edit", compact("title", "rent"));
@@ -106,7 +113,7 @@ class RentController extends Controller
      * @param  \App\Models\Rent  $rent
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Rent $rent) : RedirectResponse
+    public function update(Request $request, Rent $rent): RedirectResponse
     {
         $request->validate(
             [
@@ -128,6 +135,7 @@ class RentController extends Controller
         if ($rent->update($data)) {
             return redirect()->back()->with('success', 'Created Successfully');
         }
+        return redirect()->back()->with('success', 'Created Successfully');
     }
 
     /**
@@ -136,7 +144,7 @@ class RentController extends Controller
      * @param  \App\Models\Rent  $rent
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Rent $rent) : RedirectResponse
+    public function destroy(Rent $rent): RedirectResponse
     {
         $rent->delete();
         return redirect()->route('services.index')->with('success', 'Deleted Successfully');
