@@ -115,8 +115,6 @@ class UserController extends Controller
      */
     public function edit(User $user, $id): \Illuminate\View\View
     {
-
-
         date_default_timezone_set('Asia/Kolkata');
         $employee = User::find($id);
         $roles = Role::where('vendor_id', $employee->vendor_id)->get(['id', 'name']);
