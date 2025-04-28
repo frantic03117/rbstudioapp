@@ -234,7 +234,7 @@ class BookingController extends Controller
         $res = compact('title', 'type', 'bookings', 'keyword', 'vendors', 'vendor_id', 'studio_id', 'service_id', 'approved_at', 'booking_status', 'payment_status', 'duration', 'created_by', 'bdf', 'services', 'bdt', 'studios', 'payment_filter');
 
         if ($request->expectsJson()) {
-            return response()->json($bookings);
+            return response()->json(['data' => $bookings, 'success' => 1, 'message' => $title]);
         }
 
         // die;
