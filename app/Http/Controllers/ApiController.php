@@ -199,7 +199,7 @@ class ApiController extends Controller
         $item = DB::table('policies')->where('url', $url)->first();
         $data = [
             'data' => $item,
-            'success' => $item ? true : false,
+            'success' => $item ? 1 : 0,
             'message' => 'Policy Fetched'
         ];
         return response()->json($data);
@@ -209,7 +209,7 @@ class ApiController extends Controller
         $item = DB::table('policies')->select(['url', 'policy'])->get();
         $data = [
             'data' => $item,
-            'success' => true,
+            'success' => 1,
             'message' => 'List of policies'
         ];
         return response()->json($data);
@@ -255,7 +255,7 @@ class ApiController extends Controller
         if (DB::table('queries')->insert($data)) {
             $data = [
                 'data' => [],
-                'success' => true,
+                'success' => 1,
                 'message' => 'New Query Generated Successfully'
             ];
             return response()->json($data);
@@ -280,7 +280,7 @@ class ApiController extends Controller
         $items = DB::table('queries')->where('user_id', $uid)->get();
         $data = [
             'data' => $items,
-            'success' => $items ? true : false,
+            'success' => $items ? 1 : 0,
             'message' => 'List of Queries'
         ];
         return response()->json($data);
@@ -291,7 +291,7 @@ class ApiController extends Controller
         $items = DB::table('queries')->where('user_id', $uid)->where(['id' => $id])->delete();
         $data = [
             'data' => $items,
-            'success' => $items ? true : false,
+            'success' => $items ? 1 : 0,
             'message' => 'Query deleted successfully'
         ];
         return response()->json($data);
@@ -349,7 +349,7 @@ class ApiController extends Controller
 
         // Paginate the results
         $bookings = $items->paginate(10);
-        return response()->json(['data' => $bookings, 'success' => '1', 'message' => 'filter bookings']);
+        return response()->json(['data' => $bookings, 'success' => 1, 'message' => 'filter bookings']);
     }
     public function add_promo_code(Request $request)
     {
@@ -513,7 +513,7 @@ class ApiController extends Controller
     {
         $uid = auth('sanctum')->user()->id;
         $items = DB::table('booking_gsts')->where('user_id', $uid)->orderBy('id', 'DESC')->get();
-        return response()->json(['success' => true, "data" => $items]);
+        return response()->json(['success' => 1, "data" => $items]);
     }
     public function update_profile(Request $request)
     {
@@ -575,6 +575,6 @@ class ApiController extends Controller
             RbNotification::where('user_id', $uid)->where('id', $nid)->update(['shown_to_user' => '0']);
         }
 
-        return response()->json(['success' => true, "data" => []]);
+        return response()->json(['success' => 1, "data" => []]);
     }
 }

@@ -231,7 +231,7 @@ class AjaxController extends Controller
 
         // Return the response with success and data
         return response()->json([
-            'success' => true,
+            'success' => 1,
             'data' => $modifiedObjects,
             $currentTime
         ]);
@@ -285,7 +285,7 @@ class AjaxController extends Controller
             }
         }
         $res = [
-            'success' => true,
+            'success' => 1,
             'data' => $arr
         ];
         return response()->json($res);
@@ -314,7 +314,7 @@ class AjaxController extends Controller
         $user = User::where('mobile', 'LIKE', "%{$mobile}%")->first();
         $data = [
             'data' => $user,
-            'success' => $user ? true : false
+            'success' => $user ? 1 : 0
         ];
         return response()->json($data, 200);
     }
@@ -346,7 +346,7 @@ class AjaxController extends Controller
         $studio = StudioImage::where('id', $id)->first();
         $data = [
             'data' => $studio->studio_id,
-            'success' => true
+            'success' => 1
         ];
         StudioImage::where('id', $id)->delete();
         return response()->json($data);
@@ -365,7 +365,7 @@ class AjaxController extends Controller
             'studio_id' => $sid
         ];
         StudioImage::insert($idata);
-        return response()->json(['data' => $sid, 'success' => true]);
+        return response()->json(['data' => $sid, 'success' => 1]);
     }
     public function set_permissiable(Request $request)
     {

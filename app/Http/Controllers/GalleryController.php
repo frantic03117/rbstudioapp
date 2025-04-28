@@ -25,7 +25,7 @@ class GalleryController extends Controller
             return response()->json([
                 'message' => $title,
                 'data' => $items,
-                'success' => true,
+                'success' => 1,
             ]);
         }
         return view('admin.gallery.index', $res);
@@ -82,7 +82,7 @@ class GalleryController extends Controller
             return response()->json([
                 'message' => 'Gallery image saved successfully.',
                 'data' => $gallery,
-                'success' => true,
+                'success' => 1,
             ]);
         }
 

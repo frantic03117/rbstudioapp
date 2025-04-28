@@ -134,14 +134,14 @@ class HomeController extends Controller
             // Return a success response
             return response()->json([
                 'data' => $query,
-                'success' => true,
+                'success' => 1,
                 'message' => 'Query resolved successfully'
             ]);
         } catch (\Exception $e) {
             // Handle any errors
             return response()->json([
                 'data' => [],
-                'success' => false,
+                'success' => 0,
                 'message' => 'An error occurred while resolving the query'
             ]);
         }

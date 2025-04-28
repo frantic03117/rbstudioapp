@@ -673,7 +673,7 @@ class BookingController extends Controller
      */
     public function show(Booking $booking, $id)
     {
-        $booking = Booking::where('id', $id)->with('studio')->with('transactions')->withSum('transactions', 'amount')->withSum('extra_added', 'amount')->with('rents')->with('gst')
+        $booking = Booking::where('id', $id)->with('user')->with('studio')->with('transactions')->withSum('transactions', 'amount')->withSum('extra_added', 'amount')->with('rents')->with('gst')
             ->with('service:id,name')
             ->first();
         $extra_charge_per_hour = 200;
@@ -709,7 +709,7 @@ class BookingController extends Controller
         $booking['calculation'] = ['gst' => 18, 'discount' => ['partial' => '0', 'full' => '0', 'type' => 'percent']];
         $data = [
             'data' => $booking,
-            'success' => 0,
+            'success' => 1,
             'errors' => [],
             'message' => 'Current booking'
         ];
