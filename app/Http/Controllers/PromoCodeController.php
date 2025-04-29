@@ -69,6 +69,9 @@ class PromoCodeController extends Controller
         if ($request->studio_id != "all") {
             $data = $request->except('_token');
             $data['created_by'] = Auth::user()->role != "Super" ? Auth::user()->vendor_id : "0";
+            if (auth('sanctum')->user()) {
+                $data['created_by'] = auth('sanctum')->user()->role != "Super" ? auth('sanctum')->user()->vendor_id : "0";
+            }
             PromoCode::insert($data);
             return redirect()->back()->with('success', 'Promo Code created successfully');
         }
@@ -78,6 +81,9 @@ class PromoCodeController extends Controller
                 $data = $request->except('_token');
                 $data['studio_id'] = $st->id;
                 $data['created_by'] = Auth::user()->role != "Super" ? Auth::user()->vendor_id : "0";
+                if (auth('sanctum')->user()) {
+                    $data['created_by'] = auth('sanctum')->user()->role != "Super" ? auth('sanctum')->user()->vendor_id : "0";
+                }
                 PromoCode::insert($data);
             }
             return redirect()->back()->with('success', 'Promo Code created successfully');
