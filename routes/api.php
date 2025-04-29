@@ -78,6 +78,7 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::get('/promo-codes', [PromoCodeController::class, 'index']);
     Route::post('/promo-codes/delete/{id}', [PromoCodeController::class, 'destroy']);
     Route::get('events', [AdminController::class, 'events']);
+    Route::get('notifications', [AdminController::class, 'all_notification']);
 });
 
 Route::post('get_slots', [AjaxController::class, 'get_slots']);

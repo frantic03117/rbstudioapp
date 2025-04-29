@@ -218,7 +218,7 @@ class AdminController extends Controller
         }
         return $arr;
     }
-    public function all_notification()
+    public function all_notification(Request $request)
     {
         $itms = RbNotification::whereIn('type', ['Booking', 'Payment'])->with('user:id,name,email,mobile')->with('booking')->with('studio:id,name,address');
         if (Auth::user()->role != "Super") {
@@ -229,7 +229,11 @@ class AdminController extends Controller
         $itms->orderBy('created_at', 'desc');
         $items = $itms->paginate(50);
         $title = "Rb Notifications";
-        $data = compact('items', 'title',);
+        $data = compact('items', 'title');
+        if ($request->expectsJson()) {
+            return response()->json(['data' => $items, 'success' => 1, 'message' => $title]);
+        }
+
         // return response()->json($data);
         return view('admin.notifications', $data);
     }
