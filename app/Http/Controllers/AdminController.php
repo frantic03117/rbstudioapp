@@ -212,6 +212,7 @@ class AdminController extends Controller
             return response()->json([
                 'data' => $arr,
                 'success' => 1,
+                "booking_date" => $booking_date,
                 'message' => 'List of events'
             ]);
         }
