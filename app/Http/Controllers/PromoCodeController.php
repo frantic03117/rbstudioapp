@@ -124,9 +124,13 @@ class PromoCodeController extends Controller
      * @param  \App\Models\PromoCode  $promoCode
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PromoCode $promoCode, $id)
+    public function destroy(Request $request, $id)
     {
         PromoCode::where('id', $id)->update(['deleted_at' => date('Y-m-d H:i:s')]);
-        return redirect()->back()->with('success', 'Promo Code deleted successfully');
+        if ($request->expectsJson()) {
+            return response()->json(['data' => null, 'success' => 1, 'message' => 'Deleted successfully']);
+        } else {
+            return redirect()->back()->with('success', 'Promo Code deleted successfully');
+        }
     }
 }

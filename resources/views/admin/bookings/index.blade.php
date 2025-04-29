@@ -661,7 +661,7 @@
         }
         const setbookingid = (id) => {
             $("#booking_id").val(id);
-        }
+        };
     </script>
     <script>
         const sendWhatsapp = (type, date = null, stime = null, etime = null, name = null, amount = null, duration, link =
