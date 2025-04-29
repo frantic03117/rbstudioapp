@@ -76,6 +76,7 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::get('/users', [UserController::class, 'users']);
     Route::get('/services', [ServiceController::class, 'index']);
     Route::get('/promo-codes', [PromoCodeController::class, 'index']);
+    Route::post('/promo-codes/delete/{id}', [PromoCodeController::class, 'destroy']);
 });
 
 Route::post('get_slots', [AjaxController::class, 'get_slots']);
