@@ -97,17 +97,13 @@ class AjaxController extends Controller
             'duration' => 'required'
         ]);
         $now =  Carbon::now();
-
         $sid = $request->studio_id;
         $sdate = $request->sdate;
         $duration = $request->duration;
         $slots = Slot::whereNotIn('id', function ($q) use ($sdate, $sid) {
             $q->from('blocked_slots')->where('bdate', $sdate)->select('slot_id')->where('studio_id', $sid);
         })->where('start_at', '<=', '22:00:00')->where('start_at', '>=', '08:00:00')->get();
-
-
         $arr = [];
-
         foreach ($slots as $i => $s) {
             $st = $s->start_at;
             $sdt = date('Y-m-d H:i:s', strtotime($sdate . ' ' . $st));

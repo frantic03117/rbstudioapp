@@ -163,7 +163,7 @@ class AdminController extends Controller
         }
         return view('admin.dashboard', $res);
     }
-    public function events()
+    public function events(Request $request)
     {
         $vid = $_GET['vendor_id'] ?? null;
         $sid = $_GET['studio_id'] ?? null;
@@ -203,6 +203,13 @@ class AdminController extends Controller
 
             ];
             array_push($arr, $urr);
+        }
+        if ($request->expectsJson()) {
+            return response()->json([
+                'data' => $arr,
+                'success' => 1,
+                'message' => 'List of events'
+            ]);
         }
         return $arr;
     }
