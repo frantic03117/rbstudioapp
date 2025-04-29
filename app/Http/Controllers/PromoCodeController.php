@@ -73,7 +73,11 @@ class PromoCodeController extends Controller
                 $data['created_by'] = auth('sanctum')->user()->role != "Super" ? auth('sanctum')->user()->vendor_id : "0";
             }
             PromoCode::insert($data);
-            return redirect()->back()->with('success', 'Promo Code created successfully');
+            if ($request->expectsJson()) {
+                return response()->json(['success' => 1, "message" => 'Promo code created successfully']);
+            } else {
+                return redirect()->back()->with('success', 'Promo Code created successfully');
+            }
         }
         if ($request->studio_id == "all") {
             $studios = Studio::select('id')->get();
@@ -86,7 +90,11 @@ class PromoCodeController extends Controller
                 }
                 PromoCode::insert($data);
             }
-            return redirect()->back()->with('success', 'Promo Code created successfully');
+            if ($request->expectsJson()) {
+                return response()->json(['success' => 1, "message" => 'Promo code created successfully']);
+            } else {
+                return redirect()->back()->with('success', 'Promo Code created successfully');
+            }
         }
     }
 
