@@ -35,7 +35,7 @@
         <div class="row">
             <div class="col-xl-3 col-md-6">
                 <!-- card -->
-                <a href="{{ route('booking.index') }}" class="card card-h-100">
+                <a href="{{ route('bookingsview') }}" class="card card-h-100">
                     <!-- card body -->
                     <div class="card-body">
                         <div class="row align-items-center">
@@ -60,7 +60,7 @@
 
             <div class="col-xl-3 col-md-6">
 
-                <a href="{{ route('booking.index') }}" class="card card-h-100">
+                <a href="{{ route('bookingsview') }}" class="card card-h-100">
 
                     <div class="card-body">
                         <div class="row align-items-center">
@@ -85,7 +85,7 @@
 
             <div class="col-xl-3 col-md-6">
                 <!-- card -->
-                <a href="{{ route('booking.index') }}" class="card card-h-100">
+                <a href="{{ route('bookingsview') }}" class="card card-h-100">
                     <!-- card body -->
                     <div class="card-body">
                         <div class="row align-items-center">
@@ -107,7 +107,7 @@
 
             <div class="col-xl-3 col-md-6">
                 <!-- card -->
-                <a href="{{ route('booking.index') }}" class="card card-h-100">
+                <a href="{{ route('bookingsview') }}" class="card card-h-100">
                     <!-- card body -->
                     <div class="card-body">
                         <div class="row align-items-center">
