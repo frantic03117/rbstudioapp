@@ -214,6 +214,9 @@ class UserController extends Controller
             $data['gender'] = $request->gender;
         }
         User::where('id', $id)->update($data);
+        if ($request->expectsJson()) {
+            return response()->json(['data' => null, 'success' => 1, "message" => 'Updated successfully']);
+        }
         return redirect()->back()->with('success', 'user updated successfully');
     }
     public function select_profile_image(Request $request)
