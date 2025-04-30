@@ -30,10 +30,11 @@ class ServiceController extends Controller
                 $query->from('service_studios')->where('studio_id', $studio_id)->select('service_id');
             });
         }
-        $service = $squery->get();
+        $services = $squery->get();
         if ($request->expectsJson()) {
-            return response()->json(['data' => $service, 'message' => $title, 'success' => 1]);
+            return response()->json(['data' => $services, 'message' => $title, 'success' => 1]);
         }
+
         //return response()->json($services);
         //dd(auth()->user()->getRoleNames());
         return view("admin.services.index", compact("title", "services"));
