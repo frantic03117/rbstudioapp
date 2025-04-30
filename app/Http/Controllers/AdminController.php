@@ -170,6 +170,8 @@ class AdminController extends Controller
         $service_id = $_GET['service_id'] ?? null;
         $arr = [];
         $booking_date = $_GET['booking_date'] ?? null;
+        $booking_date_from = $_GET['booking_date_from'] ?? null;
+        $booking_date_to = $_GET['booking_date_to'] ?? null;
 
         $studios = Studio::where('vendor_id', $vid)->get();
         $services = Service::whereIn('id', function ($q) use ($sid) {
@@ -190,6 +192,12 @@ class AdminController extends Controller
         }
         if ($booking_date) {
             $books->whereDate('booking_start_date', $booking_date);
+        }
+        if ($booking_date_from) {
+            $books->whereDate('booking_start_date', '>=', $booking_date_from);
+        }
+        if ($booking_date_to) {
+            $books->whereDate('booking_start_date', '<=', $booking_date_to);
         }
         $items = $books->with('studio:id,name,color')->with('vendor')->get();
         //   return response()->json($items);
