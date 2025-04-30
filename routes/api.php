@@ -83,6 +83,7 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::get('events', [AdminController::class, 'events']);
     Route::get('notifications', [AdminController::class, 'all_notification']);
     Route::post('gallery', [GalleryController::class, 'store']);
+    Route::get('gallery', [GalleryController::class, 'index']);
 });
 
 Route::post('get_slots', [AjaxController::class, 'get_slots']);
