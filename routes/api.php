@@ -74,6 +74,7 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::get('/vendors', [VendorController::class, 'index']);
     Route::get('/studios', [StudioController::class, 'index']);
     Route::get('/users', [UserController::class, 'users']);
+    Route::post('/users', [UserController::class, 'store_user']);
     Route::post('/users/update/{id}', [UserController::class, 'update_edit_user']);
     Route::get('/services', [ServiceController::class, 'index']);
     Route::get('/promo-codes', [PromoCodeController::class, 'index']);

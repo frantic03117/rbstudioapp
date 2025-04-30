@@ -91,6 +91,9 @@ class UserController extends Controller
         $input['otp_verified'] = "1";
         $input['is_verified'] = "1";
         $user = User::create($input);
+        if ($request->expectsJson()) {
+            return response()->json(['data' => $user, 'success' => 1, "message" => 'User created']);
+        }
         return redirect()->back()
             ->with('success', 'User created successfully');
     }
