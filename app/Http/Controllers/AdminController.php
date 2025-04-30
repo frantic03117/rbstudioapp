@@ -208,7 +208,7 @@ class AdminController extends Controller
 
         foreach ($items as $item) {
             $urr = [
-                "title" => $item->user->name . ' | ' . $item->studio->name . ' | ' . $item->service?->name,
+                "title" => $item->id . '|' . $item->user->name . ' | ' . $item->studio->name . ' | ' . $item->service?->name,
                 "start" => $item->booking_start_date,
                 "end" => $item->booking_end_date,
                 "id" => $item->id,
