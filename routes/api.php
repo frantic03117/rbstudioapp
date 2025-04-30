@@ -84,6 +84,8 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::get('notifications', [AdminController::class, 'all_notification']);
     Route::post('gallery', [GalleryController::class, 'store']);
     Route::get('gallery', [GalleryController::class, 'index']);
+    Route::get('queries', [HomeController::class, 'queries']);
+    Route::post('resolve_queries', [HomeController::class, 'resolve_queries']);
 });
 
 Route::post('get_slots', [AjaxController::class, 'get_slots']);

@@ -103,12 +103,15 @@ class HomeController extends Controller
         DB::table('banners')->where('id', $id)->delete();
         return redirect()->back();
     }
-    public function queries()
+    public function queries(Request $request)
     {
         $title = "List of Queries";
         $items = Query::orderBy('id', 'DESC')->with('user')->whereHas('user')->get();
 
         $res = compact('title', 'items');
+        if ($request->expectsJson()) {
+            return response()->json(['data' => $items, 'success' => 1, 'message' => $title]);
+        }
         return view('admin.query.index', $res);
     }
     public function resolve_queries(Request $request)
