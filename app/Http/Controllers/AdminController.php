@@ -165,6 +165,7 @@ class AdminController extends Controller
     }
     public function events(Request $request)
     {
+        date_default_timezone_set('Asia/kolkata');
         $vid = $_GET['vendor_id'] ?? null;
         $sid = $_GET['studio_id'] ?? null;
         $service_id = $_GET['service_id'] ?? null;
@@ -177,7 +178,9 @@ class AdminController extends Controller
         $services = Service::whereIn('id', function ($q) use ($sid) {
             $q->from('service_studios')->where('studio_id', $sid)->select('service_id');
         })->get();
-        $books = Booking::where('booking_status', '1')->with('user:id,name')->where('approved_at', '!=', null)->with('rents')->withSum('transactions', 'amount')->with('service');
+        $books = Booking::where('booking_status', '1')->whereDate('booking_start_date', '>=', date('Y-m-d'))
+            ->with('user:id,name')->where('approved_at', '!=', null)
+            ->with('rents')->withSum('transactions', 'amount')->with('service');
         if ($vid) {
             $books->where('vendor_id', $vid);
         }
