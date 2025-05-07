@@ -984,7 +984,7 @@ class BookingController extends Controller
      * @param  \App\Models\Booking  $booking
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Booking $booking)
+    public function destroy(Request $request, Booking $booking)
     {
         $bid = $booking->id;
         $booking =  Booking::where('id', $booking->id)->first();
@@ -1006,6 +1006,10 @@ class BookingController extends Controller
         RbNotification::insert($udata);
         Booking::where('id', $booking->id)->update(['booking_status' => '2']);
         BlockedSlot::where('booking_id', $booking->id)->delete();
+        if ($request->expectsJson()) {
+            return response()->json(['success' => 1, "message" => 'Booking cancelled successfully']);
+        }
+
         return redirect()->back()->with('success', 'Booking Cancelled');
     }
     public function cron_destroy_booking()
