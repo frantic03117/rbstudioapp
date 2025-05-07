@@ -870,7 +870,7 @@ class BookingController extends Controller
                 'errors' => $validator->errors(),
                 'message' => 'List of Services'
             ];
-            if ($request->mode) {
+            if ($request->mode || $request->expectsJson()) {
                 return response()->json($data);
             } else {
                 return redirect()->back()->with('error', 'internal error occured')->withErrors($validator)->withInput();
@@ -965,7 +965,7 @@ class BookingController extends Controller
 
             $this->send_notification($user->fcm_token, 'Booking Rescheduled', $msg, $user->id);
         }
-        if ($request->mode) {
+        if ($request->mode || $request->expectsJson()) {
             $res = [
                 "success" => '1',
                 'errors' => [],
