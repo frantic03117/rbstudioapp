@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ExtraBookingAmount;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ExtraBookingAmountController extends Controller
 {
@@ -35,13 +36,27 @@ class ExtraBookingAmountController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'amount' => 'required|numeric',
-            'booking_id' => 'required|exists:bookings,id'
+            'booking_id' => 'required|exists:bookings,id',
         ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => 0,
+                'message' => $validator->errors()->first(),
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
         $data = $request->except('_token');
-        ExtraBookingAmount::insert($data);
-        return redirect()->back()->with('success', 'Extra booking amount added');
+        if (ExtraBookingAmount::insert($data)) {
+            $resp = ['success' => 1, 'message' => 'Extra booking amount added'];
+
+            return $request->expectsJson()
+                ? response()->json($resp)
+                : redirect()->back()->with('success', $resp['message']);
+        }
+        #return redirect()->back()->with('success', 'Extra booking amount added');
     }
 
     /**

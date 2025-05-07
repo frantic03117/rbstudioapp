@@ -984,10 +984,13 @@ class BookingController extends Controller
      * @param  \App\Models\Booking  $booking
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, Booking $booking)
+    public function destroy(Request $request, Booking $booking, $id)
     {
-        $bid = $booking->id;
-        $booking =  Booking::where('id', $booking->id)->first();
+        $bid = $booking->id ?? $id;
+        $booking =  Booking::where('id', $bid)->first();
+        if (!$booking) {
+            return response()->json(['success' => 0, "message" => 'Booking not found'], 400);
+        }
         $user = User::where('id', $booking->user_id)->first();
         $msg = "Booking Canceled Your booking with ID {$bid} has been canceled. Contact us for assistance if required. ";
         // $msg = "Hello {$user->name}, on {$booking->booking_start_date} has been cancelled. Hope to see you again at the studio. Thanks R AND B STUDIOS";
@@ -1091,14 +1094,22 @@ class BookingController extends Controller
     }
     public function booking_item_add(Request $request)
     {
-        $request->validate([
-            'item_id' => 'required',
-            'uses_hours' => 'required',
-            'booking_id' => 'required',
-            'studio_id' => 'required'
+        $validated = $request->validate([
+            'item_id' => 'required|exists:items,id',
+            'uses_hours' => 'required|numeric|min:0.1',
+            'booking_id' => 'required|exists:bookings,id',
+            'studio_id' => 'required|exists:studios,id',
         ]);
-        $charge = Charge::where('studio_id', $request->studio_id)->where('item_id', $request->item_id)->first();
 
+
+        // $charge = Charge::where('studio_id', $request->studio_id)->where('item_id', $request->item_id)->first();
+        $charge = Charge::where('studio_id', $validated['studio_id'])
+            ->where('item_id', $validated['item_id'])
+            ->first();
+
+        if (!$charge) {
+            return response()->json(['success' => 0, 'message' => 'Charge not found for the given item and studio'], 400);
+        }
         $data = [
             'item_id' => $request->item_id,
             'booking_id' => $request->booking_id,
@@ -1107,6 +1118,10 @@ class BookingController extends Controller
             'created_at' => date('Y-m-d H:i:s')
         ];
         if (BookingItem::insert($data)) {
+            $resp = ['success' => 1, 'message' => 'Booking item added successfully'];
+            if ($request->expectsJson()) {
+                return response()->json($resp);
+            }
             return redirect()->back();
         }
     }
@@ -1119,6 +1134,9 @@ class BookingController extends Controller
     {
         date_default_timezone_set('Asia/kolkata');
         $booking = Booking::where('id', $id)->first();
+        if (!$booking) {
+            return response()->json(['success' => 0, "message" => "Booking not found"], 400);
+        }
         $user = User::where('id', $booking->user_id)->first();
 
         $msg = "Your booking with ID {$id} has been approved. You can now proceed with the payment to confirm your reservation within 2 Hours. Otherwise, it will be automatically canceled.";

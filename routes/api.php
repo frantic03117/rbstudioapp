@@ -16,6 +16,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StudioController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\ExtraBookingAmountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +88,8 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::get('queries', [HomeController::class, 'queries']);
     Route::post('resolve_queries', [HomeController::class, 'resolve_queries']);
     Route::post('bookings/cancel/{id}', [BookingController::class, 'destroy']);
+    Route::post('booking_item-add', [BookingController::class, 'booking_item_add']);
+    Route::post('extra-amount/store', [ExtraBookingAmountController::class, 'store']);
 });
 
 Route::post('get_slots', [AjaxController::class, 'get_slots']);
