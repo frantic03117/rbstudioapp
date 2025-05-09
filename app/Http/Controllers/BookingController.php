@@ -851,8 +851,9 @@ class BookingController extends Controller
      * @param  \App\Models\Booking  $booking
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Booking $booking)
+    public function update(Request $request, Booking $booking, $id)
     {
+
         date_default_timezone_set('Asia/kolkata');
         $validator = Validator::make($request->all(), [
             'mobile' => 'required|min:10|max:10',
@@ -863,6 +864,7 @@ class BookingController extends Controller
             "service_id" => "required|exists:services,id"
 
         ]);
+        $booking = Booking::where('id', $id)->first();
         if ($validator->fails()) {
             $data = [
                 'data' => [],
