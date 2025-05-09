@@ -1095,14 +1095,11 @@ class BookingController extends Controller
     public function booking_item_add(Request $request)
     {
         $validated = $request->validate([
-            'item_id' => 'required|exists:items,id',
+            'item_id' => 'required|exists:rents,id',
             'uses_hours' => 'required|numeric|min:0.1',
             'booking_id' => 'required|exists:bookings,id',
             'studio_id' => 'required|exists:studios,id',
         ]);
-
-
-        // $charge = Charge::where('studio_id', $request->studio_id)->where('item_id', $request->item_id)->first();
         $charge = Charge::where('studio_id', $validated['studio_id'])
             ->where('item_id', $validated['item_id'])
             ->first();
