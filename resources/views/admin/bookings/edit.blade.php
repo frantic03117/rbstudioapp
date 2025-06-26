@@ -328,6 +328,7 @@
             let output = "";
 
             $.post(`{{ route('find_end_slot') }}`, {
+                booking_id: "{{ $booking->id }}",
                 sdate: sdate,
                 studio_id: sid,
                 slot_id: slot_id
