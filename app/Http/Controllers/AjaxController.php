@@ -251,6 +251,7 @@ class AjaxController extends Controller
         }
         $slot_id = $request->slot_id;
         $sid = $request->studio_id;
+        $booking_id = $request->booking_id ?? 0;
         $slot = Slot::where('id', $slot_id)->first();
         $sdate = Carbon::parse($request->sdate)->format('Y-m-d');
         $start_time = $slot->start_at;
@@ -262,11 +263,17 @@ class AjaxController extends Controller
         for ($i = 1; $i <= $hours; $i++) {
             // $bedate = date('Y-m-d H:0:0', strtotime($bsdate)+$i*3600);
             $bedate = Carbon::parse($bsdate)->addHours($i)->minute(0)->second(0)->format('Y-m-d H:i:s');
-            $innerBook = Booking::where('booking_start_date', $bsdate)->where('booking_end_date', $bedate)->where('studio_id', $sid)->where('booking_status',  '0')->count();
-            $outerBook = Booking::where('booking_start_date', '>', $bsdate)->where('booking_start_date', '<', $bedate)->where('studio_id', $sid)->where('booking_status',  '0')->count();
+            $inndata =  [
+                'booking_start_date' => $bsdate,
+                'booking_end_date' => $bedate,
+                'studio_id' => $sid,
+                'booking_status' => '0'
+            ];
+            $innerBook = Booking::where($inndata)->where('booking_id', '!=', $booking_id)->count();
+            $outerBook = Booking::where('booking_start_date', '>', $bsdate)->where('booking_start_date', '<', $bedate)->where('studio_id', $sid)->where('booking_status',  '0')->where('booking_id', '!=', $booking_id)->count();
             #$lcrosBook = Booking::where('booking_end_date', '>', $bsdate)->where('studio_id', $sid)->count();
             #$ucrosBook = Booking::where('booking_start_date', '>', $bedate)->where('studio_id', $sid)->count();
-            $overlappingBookings = Booking::where('studio_id', $sid)
+            $overlappingBookings = Booking::where('studio_id', $sid)->where('booking_id', '!=', $booking_id)
                 ->whereIn('booking_status', ['1', '0'])
                 ->where(function ($query) use ($bsdate, $bedate) {
                     $query->where(function ($q) use ($bsdate, $bedate) {
