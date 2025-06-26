@@ -269,11 +269,11 @@ class AjaxController extends Controller
                 'studio_id' => $sid,
                 'booking_status' => '0'
             ];
-            $innerBook = Booking::where($inndata)->count();
-            $outerBook = Booking::where('booking_start_date', '>', $bsdate)->where('booking_start_date', '<', $bedate)->where('studio_id', $sid)->where('booking_status',  '0')->count();
+            $innerBook = Booking::where($inndata)->where('id', '!=', $booking_id)->count();
+            $outerBook = Booking::where('booking_start_date', '>', $bsdate)->where('booking_start_date', '<', $bedate)->where('studio_id', $sid)->where('booking_status',  '0')->where('id', '!=', $booking_id)->count();
             #$lcrosBook = Booking::where('booking_end_date', '>', $bsdate)->where('studio_id', $sid)->count();
             #$ucrosBook = Booking::where('booking_start_date', '>', $bedate)->where('studio_id', $sid)->count();
-            $overlappingBookings = Booking::where('studio_id', $sid)
+            $overlappingBookings = Booking::where('studio_id', $sid)->where('id', '!=', $booking_id)
                 ->whereIn('booking_status', ['1', '0'])
                 ->where(function ($query) use ($bsdate, $bedate) {
                     $query->where(function ($q) use ($bsdate, $bedate) {
