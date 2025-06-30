@@ -57,11 +57,18 @@ class TransactionController extends Controller
         ]);
         $bid = $request->booking_id;
         $booking = Booking::where('id', $bid)->first();
+        if (!$booking) {
+            if ($request->wantsJson()) {
+                return response()->json(['success' => '0', 'message' => 'Booking not found']);
+            } else {
+                return redirect()->back()->with('success', 'Transaction not found');
+            }
+        }
         $data = [
             'transaction_id' => $request->transaction_id,
             'mode' => $request->mode,
             'booking_id' => $bid,
-            'user_id' => $booking->user_id,
+            'user_id' => $booking?->user_id,
             'vendor_id' => $booking->vendor_id,
             'studio_id' => $booking->studio_id,
             'amount' => $request->amount,
