@@ -72,6 +72,7 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::get('bookings/show/{id}', [BookingController::class, 'show']);
     Route::post('bookings/update/{id}', [BookingController::class, 'update']);
     Route::get('/transactions', [TransactionController::class, 'index']);
+    Route::post('/transactions', [TransactionController::class, 'store']);
     Route::get('/', [AdminController::class, 'admin_profile']);
     Route::get('/vendors', [VendorController::class, 'index']);
     Route::get('/studios', [StudioController::class, 'index']);

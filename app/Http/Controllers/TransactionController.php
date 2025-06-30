@@ -102,7 +102,11 @@ class TransactionController extends Controller
             if ($item->user && $item->user->fcm_token) {
                 $this->send_notification($item->user->fcm_token, 'Payment Received', $notmessage, $booking->user_id, 'Payment');
             }
-            return redirect()->back()->with('success', 'Transaction Created Successfully');
+            if ($request->wantsJson()) {
+                return response()->json(['success' => '1', 'message' => 'Transaction Created Successfully']);
+            } else {
+                return redirect()->back()->with('success', 'Transaction Created Successfully');
+            }
         }
     }
     public function success_page($id)
