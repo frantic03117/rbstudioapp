@@ -10,11 +10,9 @@ use App\Models\Vendor;
 use App\Models\User;
 use App\Models\Studio\Service;
 use App\Models\Studio\Studio;
-use Illuminate\Support\Facades\DB;
-use App\Mail\CustomMail;
+
 use App\Models\Setting;
 use App\Models\Transaction;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
@@ -152,11 +150,13 @@ class AdminController extends Controller
             $earned = $item->transactions_sum_amount;
             array_push($amountgenerated, $earned);
         }
-
         $totalamount = array_sum($amountgenerated);
         $payment_received = Transaction::where(['status' => 'Success', 'type' => 'Credit'])->whereYear('transaction_date', now()->year)
             ->whereMonth('transaction_date', now()->month)->sum('amount');
         $totalamount += $payment_received;
+        $nonpaymentBookingCount =  Booking::where('booking_start_date', '>=',  $firstdate)
+            ->where('booking_start_date', '<=', $enddate)
+            ->where('booking_status', '=', '1')->where('payment_status', '=', '0')->count();
         $res = compact('title', 'today_booking', 'defaultView', 'total_booking_month', 'approval', "vendors", "vid", "sid",  "studios", "services", "service_id", 'totalamount');
         if ($request->expectsJson()) {
             return response()->json($res);
@@ -212,10 +212,12 @@ class AdminController extends Controller
                 "start" => $item->booking_start_date,
                 "end" => $item->booking_end_date,
                 "id" => $item->id,
-
+                "booking_id" => $item->id,
+                "user" => $item->user->name,
+                "studio" => $item->studio->name,
+                "service" => $item->service?->name,
                 'classNames' => [implode('_', explode(' ', $item->studio->name))],
                 "backgroundColor" => $item->studio->color,
-
             ];
             array_push($arr, $urr);
         }
