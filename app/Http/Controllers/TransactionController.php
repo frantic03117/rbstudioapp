@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\RbTrait;
 use Illuminate\Support\Facades\DB;
@@ -20,17 +21,53 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         $title = "List of transactions";
-        $items = Transaction::where('amount', '>', '0');
-        if (Auth::user()->role != "Super") {
+        $items = Transaction::where('amount', '>', 0);
+
+        // Role-based filtering
+        if (Auth::user()->role !== "Super") {
             $items->where('vendor_id', Auth::user()->vendor_id);
         }
-        $transactions = $items->with('user')->with('booking')->orderBy('id', 'DESC')->paginate(40);
+        // Optional filters
+        $user = $request->input('user');
+        $from_date = $request->input('from_date');
+        $to_date = $request->input('to_date');
+        $booking_id = $request->input('booking_id');
+        if ($user) {
+            $items->whereHas('user', function ($q) use ($user) {
+                $q->where(function ($q2) use ($user) {
+                    $q2->where('name', 'LIKE', "%{$user}%")
+                        ->orWhere('email', 'LIKE', "%{$user}%")
+                        ->orWhere('mobile', 'LIKE', "%{$user}%");
+                });
+            });
+        }
+
+        if ($booking_id) {
+            $items->where('booking_id', $booking_id);
+        }
+
+        if ($from_date) {
+            $items->whereDate('transaction_date', '>=', $from_date);
+        }
+
+        if ($to_date) {
+            $items->whereDate('transaction_date', '<=', $to_date);
+        }
+
+        // Eager load relationships
+        $transactions = $items->with(['user', 'booking'])
+            ->orderBy('id', 'DESC')
+            ->paginate(40);
+
         $res = compact('title', 'transactions');
+
         if ($request->expectsJson()) {
             return response()->json(['data' => $res, 'success' => 1]);
         }
+
         return view('admin.reports.transactions', $res);
     }
+
 
     /**
      * Show the form for creating a new resource.

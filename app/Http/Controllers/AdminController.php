@@ -157,7 +157,7 @@ class AdminController extends Controller
         $nonpaymentBookingCount =  Booking::where('booking_start_date', '>=',  $firstdate)
             ->where('booking_start_date', '<=', $enddate)
             ->where('booking_status', '=', '1')->where('payment_status', '=', '0')->count();
-        $res = compact('title', 'today_booking', 'defaultView', 'total_booking_month', 'approval', "vendors", "vid", "sid",  "studios", "services", "service_id", 'totalamount');
+        $res = compact('title', 'today_booking', 'defaultView', 'total_booking_month', 'approval', "vendors", "vid", "sid",  "studios", "services", "service_id", 'totalamount', 'nonpaymentBookingCount');
         if ($request->expectsJson()) {
             return response()->json($res);
         }
@@ -173,7 +173,6 @@ class AdminController extends Controller
         $booking_date = $_GET['booking_date'] ?? null;
         $booking_date_from = $_GET['booking_date_from'] ?? null;
         $booking_date_to = $_GET['booking_date_to'] ?? null;
-
         $studios = Studio::where('vendor_id', $vid)->get();
         $services = Service::whereIn('id', function ($q) use ($sid) {
             $q->from('service_studios')->where('studio_id', $sid)->select('service_id');
