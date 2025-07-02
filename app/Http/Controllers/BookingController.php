@@ -1129,13 +1129,16 @@ class BookingController extends Controller
         BookingItem::where('id', $id)->delete();
         return redirect()->back();
     }
-    public function approve_booking($id)
+    public function approve_booking(Request $request, $id)
     {
-        date_default_timezone_set('Asia/kolkata');
+        date_default_timezone_set('Asia/Kolkata');
+
         $booking = Booking::where('id', $id)->first();
         if (!$booking) {
-            return response()->json(['success' => 0, "message" => "Booking not found"], 400);
+            $response = ['success' => 0, "message" => "Booking not found"];
+            return $request->wantsJson() ? response()->json($response, 400) : redirect()->back()->with('error', 'Booking not found');
         }
+
         $user = User::where('id', $booking->user_id)->first();
 
         $msg = "Your booking with ID {$id} has been approved. You can now proceed with the payment to confirm your reservation within 2 Hours. Otherwise, it will be automatically canceled.";
@@ -1148,13 +1151,17 @@ class BookingController extends Controller
             'title' => 'Booking Approved',
             'message' => $msg
         ];
+
         RbNotification::insert($udata);
         Booking::where('id', $id)->update(['approved_at' => date('Y-m-d H:i:s')]);
         BlockedSlot::where('booking_id', $id)->delete();
+
         if ($user && $user->fcm_token) {
             $this->send_notification($user->fcm_token, $msg, $booking->user_id);
         }
 
-        return redirect()->back()->with('success', 'Approved Successfully');
+        $response = ['success' => 1, "message" => "Approved Successfully"];
+
+        return $request->wantsJson() ? response()->json($response) : redirect()->back()->with('success', 'Approved Successfully');
     }
 }
