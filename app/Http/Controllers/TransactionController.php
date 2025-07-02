@@ -59,8 +59,7 @@ class TransactionController extends Controller
             $items->where(function ($query) use ($vendor) {
                 $query->where('vendor_id', 'LIKE', "%{$vendor}%")
                     ->orWhereHas('vendor', function ($q) use ($vendor) {
-                        $q->where('name', 'LIKE', "%{$vendor}%")
-                            ->orWhere('email', 'LIKE', "%{$vendor}%");
+                        $q->where('name', 'LIKE', "%{$vendor}%");
                     });
             });
         }
@@ -68,8 +67,7 @@ class TransactionController extends Controller
             $items->where(function ($query) use ($studio) {
                 $query->where('studio_id', 'LIKE', "%{$studio}%")
                     ->orWhereHas('vendor', function ($q) use ($studio) {
-                        $q->where('name', 'LIKE', "%{$studio}%")
-                            ->orWhere('email', 'LIKE', "%{$studio}%");
+                        $q->where('name', 'LIKE', "%{$studio}%");
                     });
             });
         }
