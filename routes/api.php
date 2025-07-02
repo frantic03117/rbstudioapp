@@ -77,6 +77,7 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::get('/vendors', [VendorController::class, 'index']);
     Route::get('/studios', [StudioController::class, 'index']);
     Route::get('approve_booking/{id}', [BookingController::class, 'approve_booking']);
+    Route::get('bookings/make-confirm/{id}', [BookingController::class, 'confirm_booking']);
     Route::get('/users', [UserController::class, 'users']);
     Route::post('/users', [UserController::class, 'store_user']);
     Route::post('/users/update/{id}', [UserController::class, 'update_edit_user']);
