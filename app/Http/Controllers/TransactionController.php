@@ -32,6 +32,8 @@ class TransactionController extends Controller
         $from_date = $request->input('from_date');
         $to_date = $request->input('to_date');
         $booking_id = $request->input('booking_id');
+        $studio = $request->input('studio');
+        $vendor = $request->input('vendor');
         if ($user) {
             $items->whereHas('user', function ($q) use ($user) {
                 $q->where(function ($q2) use ($user) {
@@ -52,6 +54,24 @@ class TransactionController extends Controller
 
         if ($to_date) {
             $items->whereDate('transaction_date', '<=', $to_date);
+        }
+        if ($vendor) {
+            $items->where(function ($query) use ($vendor) {
+                $query->where('vendor_id', 'LIKE', "%{$vendor}%")
+                    ->orWhereHas('vendor', function ($q) use ($vendor) {
+                        $q->where('name', 'LIKE', "%{$vendor}%")
+                            ->orWhere('email', 'LIKE', "%{$vendor}%");
+                    });
+            });
+        }
+        if ($studio) {
+            $items->where(function ($query) use ($studio) {
+                $query->where('studio_id', 'LIKE', "%{$studio}%")
+                    ->orWhereHas('vendor', function ($q) use ($studio) {
+                        $q->where('name', 'LIKE', "%{$studio}%")
+                            ->orWhere('email', 'LIKE', "%{$studio}%");
+                    });
+            });
         }
 
         // Eager load relationships
