@@ -8,7 +8,7 @@
                     <div class="text-end">
 
                         <a href="{{ route('download_bill', $booking->id) }}" class="btn btn-gradient">Download</a>
-                        <a href="{{ route('booking.index') }}" class="btn btn-gradient">Back</a>
+                        <a href="{{ route('bookingsview', 'upcoming') }}?booking_status=1" class="btn btn-gradient">Back</a>
                     </div>
                 </div>
                 <div class="col-md-12">

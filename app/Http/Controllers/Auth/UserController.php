@@ -83,7 +83,7 @@ class UserController extends Controller
         date_default_timezone_set('Asia/Kolkata');
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'nullable|email|unique:users,email',
             'mobile' => 'required|min:10|max:10|unique:users,mobile'
         ]);
         $input = $request->except('_token');
@@ -185,7 +185,7 @@ class UserController extends Controller
         $title = "List of users";
         $key = $_GET['keyword'] ?? null;
 
-        $itms = User::where('role', 'User')->where('otp_verified', '1')->where('email', '!=', null)->where('mobile', '!=', null);
+        $itms = User::where('role', 'User')->where('otp_verified', '1')->where('mobile', '!=', null);
         if ($key) {
             $itms->where('name', 'LIKE', "%{$key}%")->orWhere('email', 'LIKE', "%{$key}%")->orWhere('mobile', 'LIKE', "%{$key}%");
         }

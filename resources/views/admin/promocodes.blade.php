@@ -19,38 +19,40 @@
         <div class="row">
             <div class="col-md-12 mb-4">
                 <div class="w-100">
-                    <form action="{{route('promo.store')}}" method="POST" class="w-100" enctype="multipart/form-data">
+                    <form action="{{ route('promo.store') }}" method="POST" class="w-100" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
-                            
+
                             <div class="col-md-2">
                                 <label for="">Enter Code</label>
-                                <input type="text" name="promo_code" value="{{old('promo_code')}}"  class="form-control" required />
+                                <input type="text" name="promo_code" value="{{ old('promo_code') }}" class="form-control"
+                                    required />
                             </div>
                             <div class="col-md-2">
                                 <label for="">Select Studio</label>
-                                <select class="form-control" name="studio_id" required >
+                                <select class="form-control" name="studio_id" required>
                                     <option value="all">---All---</option>
-                                    @foreach($studios as $st)
-                                        <option value="{{$st->id}}">{{$st->name}}</option>
+                                    @foreach ($studios as $st)
+                                        <option value="{{ $st->id }}">{{ $st->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-2">
                                 <label for="">Enter User Id</label>
-                                <input type="text" name="user_id" value="{{old('user_id')}}"  class="form-control" />
+                                <input type="text" name="user_id" value="{{ old('user_id') }}" class="form-control" />
                             </div>
                             <div class="col-md-2">
                                 <label for="">Per User Use</label>
-                                <input type="number" min="1" value="1" name="user_count" value="{{old('user_count')}}" required  class="form-control" />
+                                <input type="number" min="1" value="1" name="user_count"
+                                    value="{{ old('user_count') }}" required class="form-control" />
                             </div>
                             <div class="col-md-2">
                                 <label for="">Start From</label>
-                                <input type="date" name="start_at" min="{{date('Y-m-d')}}" class="form-control"  required/>
+                                <input type="date" name="start_at" min="{{ date('Y-m-d') }}" class="form-control" />
                             </div>
                             <div class="col-md-2">
                                 <label for="">End to</label>
-                                <input type="date" name="end_at" min="{{date('Y-m-d')}}" class="form-control"  required/>
+                                <input type="date" name="end_at" min="{{ date('Y-m-d') }}" class="form-control" />
                             </div>
                             <div class="col-md-2">
                                 <label for="">Discount</label>
@@ -89,35 +91,35 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($codes as $i => $b)
+                            @foreach ($codes as $i => $b)
                                 <tr>
-                                    <td>{{$i + 1}}</td>
+                                    <td>{{ $i + 1 }}</td>
                                     <td>
-                                      {{$b->promo_code}}
+                                        {{ $b->promo_code }}
                                     </td>
                                     <td>
-                                        {{$b->studio?->name}}
-                                    </td>
-                                     <td>
-                                        {{$b->user?->name}}
+                                        {{ $b->studio?->name }}
                                     </td>
                                     <td>
-                                        {{$b->user_count}}
+                                        {{ $b->user?->name }}
                                     </td>
                                     <td>
-                                         {{$b->start_at}}
+                                        {{ $b->user_count }}
                                     </td>
                                     <td>
-                                         {{$b->end_at}}
+                                        {{ $b->start_at }}
                                     </td>
                                     <td>
-                                        {{$b->discount}}
+                                        {{ $b->end_at }}
                                     </td>
                                     <td>
-                                        {{$b->discount_type}}
+                                        {{ $b->discount }}
                                     </td>
                                     <td>
-                                        <form action="{{route('promo.destroy', $b->id)}}" method="POST">
+                                        {{ $b->discount_type }}
+                                    </td>
+                                    <td>
+                                        <form action="{{ route('promo.destroy', $b->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-sm btn-danger">Delete</button>
@@ -132,5 +134,4 @@
         </div>
 
     </div>
-
 @endsection

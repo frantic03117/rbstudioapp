@@ -62,12 +62,17 @@ class PromoCodeController extends Controller
     {
         $request->validate([
             'promo_code' => 'required',
-            'start_at' => 'required',
-            'end_at' => 'required',
+            // 'start_at' => 'required',
+            // 'end_at' => 'required',
             'studio_id' => 'required'
         ]);
+        $data = $request->except('_token');
+        $startAt = $request->start_at ?? "1900-01-01";
+        $endAt = $request->end ?? "3000-01-01";
+        $data['start_at'] = $startAt;
+        $data['end_at'] =  $endAt;
         if ($request->studio_id != "all") {
-            $data = $request->except('_token');
+
             $data['created_by'] = Auth::user()->role != "Super" ? Auth::user()->vendor_id : "0";
             if (auth('sanctum')->user()) {
                 $data['created_by'] = auth('sanctum')->user()->role != "Super" ? auth('sanctum')->user()->vendor_id : "0";
@@ -82,7 +87,7 @@ class PromoCodeController extends Controller
         if ($request->studio_id == "all") {
             $studios = Studio::select('id')->get();
             foreach ($studios as $st) {
-                $data = $request->except('_token');
+
                 $data['studio_id'] = $st->id;
                 $data['created_by'] = Auth::user()->role != "Super" ? Auth::user()->vendor_id : "0";
                 if (auth('sanctum')->user()) {

@@ -448,6 +448,10 @@
                                                         class="btn btn-sm btn-info">
                                                         <i class="far fa-copy"></i> Copy
                                                     </button>
+                                                    <a class="btn btn-sm btn-soft-success"
+                                                        href="{{ route('rebook', ['id' => $b['id']]) }}">
+                                                        Book Again
+                                                    </a>
                                                     @include('admin.bookings.booking_items', [
                                                         'bid' => $b->id,
                                                         'sid' => $b->studio->id,

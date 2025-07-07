@@ -35,7 +35,6 @@
                                 <label for="">Select Vendor</label>
                                 <select name="vendor_id" onchange="getStudiosList(event)" id="vendor_id"
                                     class="form-select">
-                                    <option value="" selected>---Select---</option>
                                     @foreach ($vendors as $v)
                                         <option value="{{ $v->id }}">{{ $v->name }}</option>
                                     @endforeach
@@ -45,7 +44,9 @@
                                 <label for="">Select Studio</label>
                                 <select name="studio_id" onchange="activeSelectDate(event)" id="studio_id"
                                     class="form-select">
-                                    <option value="">---Select---</option>3
+                                    @foreach ($studios as $sd)
+                                        <option value="{{ $sd->id }}">{{ $sd->name }}</option>
+                                    @endforeach
                                 </select>
 
                             </div>
@@ -53,6 +54,9 @@
                                 <label for="">Select Service</label>
                                 <select class="form-select" onchange="getrents(event)" name="service_id" id="service_id">
                                     <option value="">---Select---</option>
+                                    @foreach ($services as $si)
+                                        <option value="{{ $si->id }}">{{ $si->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-md-3">
@@ -68,7 +72,7 @@
 
                             <div class="col-md-3">
                                 <label for="">Booking Start Date</label>
-                                <input type="date" disabled onchange="getEndDate(event)" min="{{ date('Y-m-d') }}"
+                                <input type="date" onchange="getEndDate(event)" min="{{ date('Y-m-d') }}"
                                     name="booking_start_date" id="booking_start_date" class="form-control">
                             </div>
 
@@ -97,8 +101,9 @@
 
                             <div class="col-md-4">
                                 <label for="">Enter Mobile</label>
-                                <input type="text" name="mobile" oninput="getuserData(event)" minlength="10"
-                                    maxlength="10" id="mobile" class="form-control" required>
+                                <input type="text" name="mobile" value="{{ $booking->user->mobile }}"
+                                    oninput="getuserData(event)" minlength="10" maxlength="10" id="mobile"
+                                    class="form-control" required>
                             </div>
                             <div class="col-md-4 userdata" style="display: none">
                                 <label for="">Enter Name</label>
@@ -113,16 +118,19 @@
                             <div class="col-md-12 mb-2">
                                 <div class="w-100 bg-gradient pt-2 ps-2">
                                     <input type="checkbox" id="gst_applicable" onclick="gst_applicable_is(event)" /> <label
-                                        for="gst_applicable">GST Applicable</label>
+                                        for="gst_applicable">GST
+                                        Applicable</label>
                                 </div>
                             </div>
                             <div class="col-md-3 gst_box" style="display:none;">
                                 <label for="">Enter Address</label>
-                                <input type="text" name="address" class="form-control" />
+                                <input type="text" name="address" value="{{ $booking->gst->address }}"
+                                    class="form-control" />
                             </div>
                             <div class="col-md-3 gst_box" style="display:none;">
                                 <label for="">Enter GST</label>
-                                <input type="text" name="gst" class="form-control" />
+                                <input type="text" name="gst" value="{{ $booking->gst->gst }}"
+                                    class="form-control" />
                             </div>
 
                             <div class="col-md-2 gst_box" style="display:none;">
@@ -130,20 +138,25 @@
                                 <select name="state_id" onchange="getCity(event)" class="form-select">
                                     <option value="">---Select---</option>
                                     @foreach ($states as $st)
-                                        <option value="{{ $st->id }}">{{ $st->state }}</option>
+                                        <option @selected($st->id == $booking->gst->state_id) value="{{ $st->id }}">
+                                            {{ $st->state }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-2 gst_box" style="display:none;">
-                                <label for="">Select District</label>
+                                <label for="">Select City</label>
                                 <select name="city_id" id="city_id" class="form-select">
                                     <option value="">---Select---</option>
-
+                                    @foreach ($cities as $ct)
+                                        <option @selected($ct->id == $booking->gst->city_id) value="{{ $ct->id }}">
+                                            {{ $ct->city }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-md-2 gst_box" style="display:none;">
                                 <label for="">Enter Pincode</label>
-                                <input type="text" name="pincode" class="form-control" />
+                                <input type="text" value="{{ $booking?->gst?->pincode }}" name="pincode"
+                                    class="form-control" />
                             </div>
 
                             <div class="col-md-12">
@@ -158,14 +171,15 @@
     </section>
     <script>
         const gst_applicable_is = (e) => {
-            if (e.target.checked == true) {
+            if ("{{ $booking->gst }}" != null) {
                 $(".gst_box").css('display', 'block');
+                $("#gst_applicable").prop('checked', true);
             } else {
                 $(".gst_box").css('display', 'none');
             }
         }
+        gst_applicable_is();
         const getStudiosList = (e) => {
-            $("#booking_start_date").val('')
             let vid = e.target.value;
             $.post("{{ route('ajax_studios') }}", {
                 vendor_id: vid
@@ -174,7 +188,7 @@
             })
         };
         const getuserData = (e) => {
-            const val = e.target.value;
+            const val = "{{ $booking->user->mobile }}";
             if (val.length > 9) {
                 $.post("{{ route('ajax_user') }}", {
                     mobile: val
@@ -352,6 +366,7 @@
             }, function(res) {
                 $("#rents").html(res);
             });
-        }
+        };
+        getuserData();
     </script>
 @endsection

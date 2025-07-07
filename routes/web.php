@@ -65,6 +65,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('extra-amount', ExtraBookingAmountController::class);
     Route::get('bookings/{slug}', [BookingController::class, 'custom_view'])->name('bookingsview');
     Route::get('bookings/make-confirm/{id}', [BookingController::class, 'confirm_booking'])->name('confirm_booking');
+    Route::get('bookings/re-book/{id}', [BookingController::class, 'rebook'])->name('rebook');
     Route::get('query', [HomeController::class, 'queries'])->name('queries');
 
 

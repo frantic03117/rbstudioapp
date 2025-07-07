@@ -1164,4 +1164,22 @@ class BookingController extends Controller
 
         return $request->wantsJson() ? response()->json($response) : redirect()->back()->with('success', 'Approved Successfully');
     }
+    public function rebook($id)
+    {
+        $booking =  Booking::where('id', $id)
+            ->with('user')->with('studio')->with('service')
+            ->with('gst')->with('vendor')->with('rents')->first();
+        // return response()->json($booking);
+        // die;
+        $title = "Duplicate Booking";
+        $vendors = Vendor::where('id', $booking->vendor->id)->get();
+
+        $states = State::where('country_id', 19)->get();
+        $cities = City::where('state_id', $booking->gst->state_id)->get();
+        $studios = Studio::where('id', $booking->studio->id)->get();
+        $services = Service::where('id', $booking->service->id)->get();
+        $res = compact('booking', 'title', 'vendors', 'states', 'studios', 'services', 'cities');
+
+        return view('admin.bookings.copy-booking', $res);
+    }
 }
