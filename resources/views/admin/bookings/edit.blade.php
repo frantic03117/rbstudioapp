@@ -331,7 +331,8 @@
                 booking_id: "{{ $booking->id }}",
                 sdate: sdate,
                 studio_id: sid,
-                slot_id: slot_id
+                slot_id: slot_id,
+                isEdit: true
             }, function(res) {
                 const istamps = res.data;
                 const arr = istamps.filter(tsmp => tsmp.split(' ')[0] == val);
