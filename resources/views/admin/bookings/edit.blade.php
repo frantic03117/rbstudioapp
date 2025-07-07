@@ -25,7 +25,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="w-100 text-end mb-3">
-                        <a href="{{ route('booking.index') }}" class="btn btn-gradient">Back</a>
+                        <a href="{{ route('bookingsview', 'upcoming') }}?booking_status=1" class="btn btn-gradient">Back</a>
                     </div>
                     <div class="w-100">
                         {!! Form::open(['route' => ['booking.update', $booking->id], 'method' => 'PUT', 'files' => 'true']) !!}
