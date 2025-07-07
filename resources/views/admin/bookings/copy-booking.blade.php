@@ -125,7 +125,7 @@
                             </div>
                             <div class="col-md-3 gst_box" style="display:none;">
                                 <label for="">Enter Address</label>
-                                <input type="text" name="address" value="{{ $booking?->gst->address }}"
+                                <input type="text" name="address" value="{{ $booking?->gst?->address }}"
                                     class="form-control" />
                             </div>
                             <div class="col-md-3 gst_box" style="display:none;">
