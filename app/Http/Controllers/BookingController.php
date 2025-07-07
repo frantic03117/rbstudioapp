@@ -95,6 +95,7 @@ class BookingController extends Controller
                                 ->orWhere('mobile', 'like', "%{$keyword}%");
                         });
                 });
+                $items->orWhere('id', 'LIKE', "%{$keyword}%");
             }
             if ($studio_id) {
                 $items->where('studio_id', $studio_id);
