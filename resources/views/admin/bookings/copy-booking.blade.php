@@ -115,6 +115,7 @@
                             </div>
 
 
+
                             <div class="col-md-12 mb-2">
                                 <div class="w-100 bg-gradient pt-2 ps-2">
                                     <input type="checkbox" id="gst_applicable" onclick="gst_applicable_is(event)" /> <label
@@ -124,12 +125,12 @@
                             </div>
                             <div class="col-md-3 gst_box" style="display:none;">
                                 <label for="">Enter Address</label>
-                                <input type="text" name="address" value="{{ $booking->gst->address }}"
+                                <input type="text" name="address" value="{{ $booking?->gst->address }}"
                                     class="form-control" />
                             </div>
                             <div class="col-md-3 gst_box" style="display:none;">
                                 <label for="">Enter GST</label>
-                                <input type="text" name="gst" value="{{ $booking->gst->gst }}"
+                                <input type="text" name="gst" value="{{ $booking?->gst?->gst }}"
                                     class="form-control" />
                             </div>
 
@@ -138,7 +139,7 @@
                                 <select name="state_id" onchange="getCity(event)" class="form-select">
                                     <option value="">---Select---</option>
                                     @foreach ($states as $st)
-                                        <option @selected($st->id == $booking->gst->state_id) value="{{ $st->id }}">
+                                        <option @selected($st->id == $booking?->gst?->state_id) value="{{ $st->id }}">
                                             {{ $st->state }}</option>
                                     @endforeach
                                 </select>
@@ -148,7 +149,7 @@
                                 <select name="city_id" id="city_id" class="form-select">
                                     <option value="">---Select---</option>
                                     @foreach ($cities as $ct)
-                                        <option @selected($ct->id == $booking->gst->city_id) value="{{ $ct->id }}">
+                                        <option @selected($ct->id == $booking?->gst?->city_id) value="{{ $ct->id }}">
                                             {{ $ct->city }}</option>
                                     @endforeach
                                 </select>
