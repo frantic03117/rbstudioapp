@@ -97,6 +97,24 @@ class BookingController extends Controller
                 });
                 $items->orWhere('id', 'LIKE', "%{$keyword}%");
             }
+            if ($keyword) {
+                $items->whereIn('studio_id', function ($query) use ($keyword) {
+                    $query->from('studios')
+                        ->select('id')
+                        ->where(function ($q) use ($keyword) {
+                            $q->where('name', 'like', "%{$keyword}%");
+                        });
+                });
+            }
+            if ($keyword) {
+                $items->whereIn('service_id', function ($query) use ($keyword) {
+                    $query->from('services')
+                        ->select('id')
+                        ->where(function ($q) use ($keyword) {
+                            $q->where('name', 'like', "%{$keyword}%");
+                        });
+                });
+            }
             if ($studio_id) {
                 $items->where('studio_id', $studio_id);
             }
