@@ -85,36 +85,38 @@ class BookingController extends Controller
             if ($vid > 0) {
                 $items->where('vendor_id', $vid);
             }
+
             if ($keyword) {
-                $items->whereIn('user_id', function ($query) use ($keyword) {
-                    $query->from('users')
-                        ->select('id')
-                        ->where(function ($q) use ($keyword) {
-                            $q->where('name', 'like', "%{$keyword}%")
-                                ->orWhere('email', 'like', "%{$keyword}%")
-                                ->orWhere('mobile', 'like', "%{$keyword}%");
-                        });
-                });
-                $items->orWhere('id', 'LIKE', "%{$keyword}%");
-            }
-            if ($keyword) {
-                $items->whereIn('studio_id', function ($query) use ($keyword) {
-                    $query->from('studios')
-                        ->select('id')
-                        ->where(function ($q) use ($keyword) {
-                            $q->where('name', 'like', "%{$keyword}%");
-                        });
-                });
-            }
-            if ($keyword) {
-                $items->whereIn('service_id', function ($query) use ($keyword) {
-                    $query->from('services')
-                        ->select('id')
-                        ->where(function ($q) use ($keyword) {
-                            $q->where('name', 'like', "%{$keyword}%");
-                        });
+                $items->where(function ($query) use ($keyword) {
+                    // Match related user
+                    $query->whereIn('user_id', function ($sub) use ($keyword) {
+                        $sub->from('users')
+                            ->select('id')
+                            ->where(function ($q) use ($keyword) {
+                                $q->where('name', 'like', "%{$keyword}%")
+                                    ->orWhere('email', 'like', "%{$keyword}%")
+                                    ->orWhere('mobile', 'like', "%{$keyword}%");
+                            });
+                    })
+
+                        ->orWhere('id', 'LIKE', "%{$keyword}%");
+
+                    // OR match by studio name
+                    $findstudios = Studio::where('name', 'like', "%{$keyword}%")->pluck('id');
+                    if ($findstudios->count()) {
+                        $query->orWhereIn('studio_id', $findstudios);
+                    }
+
+                    // OR match by service name
+                    $findServices = Service::where('name', 'like', "%{$keyword}%")->pluck('id');
+                    if ($findServices->count()) {
+                        $query->orWhereIn('service_id', $findServices);
+                    }
                 });
             }
+
+
+
             if ($studio_id) {
                 $items->where('studio_id', $studio_id);
             }
