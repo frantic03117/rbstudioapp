@@ -30,11 +30,10 @@
                                     <th class="bg-gradient text-white">Studio</th>
 
                                     <th class="bg-gradient text-white">Images</th>
-                                  
-                                      <th class="bg-gradient text-white">Charges</th>
+
+                                    <th class="bg-gradient text-white">Charges</th>
                                     <th class="bg-gradient text-white">Rental Resources</th>
-                                  
-                                    
+                                    <th class="bg-gradient text-white">Partial Payment</th>
                                     <th class="bg-gradient text-white">Action</th>
                                 </tr>
                             </thead>
@@ -48,7 +47,7 @@
                                                 {{ $s->name }}
                                             </p>
                                             {{ $s->address . ' ' . $s?->country?->country . ' ' . $s?->state?->state . ' ' . $s?->pincode }}
-                                             <ul class="list-unstyled">
+                                            <ul class="list-unstyled">
                                                 <li>
                                                     <b>Owner Name : </b> {{ $s->vendor?->name }}
                                                 </li>
@@ -86,23 +85,27 @@
                                         </td>
                                         <td>
                                             <ul class="list-unstyled" style="min-width:150px;">
-                                                @foreach($s->charges as $c)
-                                                <li>
-                                                    <div class="d-flex justify-content-between">
-                                                        <span>
-                                                            {{$c->name}}
-                                                        </span>
-                                                        <span>
-                                                            {{$c->charge->charge}}
-                                                        </span>
-                                                        <span>
-                                                            <div class="form-check form-switch form-switch-md mb-3" dir="ltr">
-                                                                <input type="checkbox" onclick="setIsPermissable({{$c->charge->id}})" class="form-check-input"  @checked($c->charge->is_permissable)>
-                                                            </div>
-                                                        </span>
-                                                    </div>
-                                                </li>
-                                                 @endforeach
+                                                @foreach ($s->charges as $c)
+                                                    <li>
+                                                        <div class="d-flex justify-content-between">
+                                                            <span>
+                                                                {{ $c->name }}
+                                                            </span>
+                                                            <span>
+                                                                {{ $c->charge->charge }}
+                                                            </span>
+                                                            <span>
+                                                                <div class="form-check form-switch form-switch-md mb-3"
+                                                                    dir="ltr">
+                                                                    <input type="checkbox"
+                                                                        onclick="setIsPermissable({{ $c->charge->id }})"
+                                                                        class="form-check-input"
+                                                                        @checked($c->charge->is_permissable)>
+                                                                </div>
+                                                            </span>
+                                                        </div>
+                                                    </li>
+                                                @endforeach
                                             </ul>
                                         </td>
                                         <td style="width: 200px;">
@@ -132,7 +135,18 @@
                                                 });
                                             </script>
                                         </td>
-                                        
+                                        <td>
+                                            <form id="is_pp_allowed_{{ $s->id }}" method="POST"
+                                                action="{{ route('handlePartialPayment', $s->id) }}">
+                                                @csrf
+                                                <div class="form-check form-switch form-switch-md mb-3" dir="ltr">
+                                                    <input type="checkbox" class="form-check-input" name="is_pp_allowed"
+                                                        onchange="document.getElementById('is_pp_allowed_{{ $s->id }}').submit();"
+                                                        @checked($s->is_pp_allowed == '1')>
+                                                </div>
+                                            </form>
+                                        </td>
+
                                         <td>
                                             <div class="d-flex gap-1">
                                                 <a href="{{ route('add_resource', $s->id) }}"
@@ -156,7 +170,9 @@
     </section>
     <script>
         const setIsPermissable = (id) => {
-            $.post("{{route('set_permissiable')}}", {id : id}, function(res){
+            $.post("{{ route('set_permissiable') }}", {
+                id: id
+            }, function(res) {
                 console.log(res);
             })
         }

@@ -26,6 +26,11 @@
                                 <input type="date" class="form-control" name="dob" value="{{ $user->dob }}" />
                             </div>
                             <div class="col-md-2">
+                                <label for="">Enter Brand Artist</label>
+                                <input type="date" class="form-control" name="brand_artisan"
+                                    value="{{ $user->brand_artisan }}" />
+                            </div>
+                            <div class="col-md-2">
                                 <label for="">Gender</label>
                                 <select name="gender" id="gender" class="form-control">
                                     <option value="">Select</option>

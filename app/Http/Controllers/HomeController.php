@@ -132,6 +132,7 @@ class HomeController extends Controller
 
             // Update the is_resolved field to 1
             $query->is_resolved = '1';
+            $query->description = $request->description ?? "resolved";
             $query->save();
 
             // Return a success response

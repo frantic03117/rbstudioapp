@@ -67,6 +67,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('bookings/make-confirm/{id}', [BookingController::class, 'confirm_booking'])->name('confirm_booking');
     Route::get('bookings/re-book/{id}', [BookingController::class, 'rebook'])->name('rebook');
     Route::get('query', [HomeController::class, 'queries'])->name('queries');
+    Route::post('studio/handle-pp/{id}', [StudioController::class, 'handlePartialPayment'])->name('handlePartialPayment');
 
 
     Route::get('calendar', [HomeController::class, 'index'])->name('calendar');

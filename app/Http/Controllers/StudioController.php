@@ -583,6 +583,23 @@ class StudioController extends Controller
         die;
         return view('admin.bookings.success', $res);
     }
+    public function handlePartialPayment(Request $request, $id)
+    {
+        $studio = Studio::where('id', $id)->first();
+        if (!$studio) {
+            $message = ['message' => 'Invalid id', 'success' => '0'];
+            return $request->expectsJson()
+                ? response()->json($message, 404)
+                : redirect()->back()->with('error', $message['error']);
+        }
+        $is_pp_allowed = $studio->is_pp_allowed;
+        $npp = $is_pp_allowed == "0" ? "1" : "0";
+        Studio::where('id', $id)->update(['is_pp_allowed' => $npp]);
+        $message = ['success' => '1', "message" => 'updated successfully'];
+        return $request->expectsJson()
+            ? response()->json($message)
+            : redirect()->back()->with('Success', $message['success']);
+    }
 
 
     public function checkOrderStatus($order_id)

@@ -43,6 +43,11 @@
                                         class="form-control form-control-sm">
                                 </div>
                                 <div class="col-md-3">
+                                    <label for="">Enter Brand Artist</label>
+                                    <input type="text" value="{{ old('brand_artisan') }}" name="brand_artisan"
+                                        id="name" class="form-control form-control-sm">
+                                </div>
+                                <div class="col-md-3">
                                     <label for="" class="d-block mb-2">Action</label>
                                     <button class="btn btn-sm btn-primary">Create New</button>
                                 </div>
