@@ -681,8 +681,10 @@ class StudioController extends Controller
         $withgst =  $totalPaable * 1.18;
         $netPending = $withgst - $paid - floatval($booking->promo_discount_calculated);
         $isPartial = $request->isPartial;
+        $checkIsPPAllowdd = Studio::where('id', $booking->studio->id)->first();
+        $isPPAllowed = $checkIsPPAllowdd->is_pp_allowed;
         if ($isPartial) {
-            $payment_value =  $netPending * $booking->partial_percent * 0.01;
+            $payment_value = $isPPAllowed == "1" ?   $netPending * $booking->partial_percent * 0.01 : $netPending;
         } else {
             $payment_value = $netPending;
         }
