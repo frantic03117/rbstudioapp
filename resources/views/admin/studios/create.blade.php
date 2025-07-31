@@ -32,6 +32,10 @@
                                 <label for="">Studio Mobile</label>
                                 {!! Form::text('mobile', old('mobile'), ['class' => 'form-control']) !!}
                             </div>
+                            <div class="col-md-3">
+                                <label for="">Seat Count</label>
+                                {!! Form::text('seat_count', old('seat_count'), ['class' => 'form-control']) !!}
+                            </div>
                             <div class="col-md-5">
                                 <label for="">Select Services</label>
                                 <div class="d-flex flex-wrap gap-2  flex-wrap">

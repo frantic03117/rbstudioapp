@@ -33,6 +33,10 @@
                                 <label for="">Studio Mobile</label>
                                 {!! Form::text('mobile', $studio->mobile, ['class' => 'form-control']) !!}
                             </div>
+                            <div class="col-md-3">
+                                <label for="">Seat Count</label>
+                                {!! Form::text('seat_count', $studio->seat_count, ['class' => 'form-control']) !!}
+                            </div>
 
                             <div class="col-md-6">
                                 <div class="w-100 d-flex justify-content-between mb-2">
