@@ -112,6 +112,7 @@ class StudioController extends Controller
         $data = [
             'vendor_id' => $request->vendor_id,
             'name' => $request->name,
+            'seat_count' => $request->seat_count ?? 0,
             'address' => $request->address,
             'state_id' => $request->state_id,
             'country_id' => $request->country_id,
@@ -252,6 +253,9 @@ class StudioController extends Controller
             'latitude' => $request->latitude,
             'updated_At' => date('Y-m-d H:i:s')
         ];
+        if ($request->seat_count) {
+            $data['seat_count'] = $request->seat_count;
+        }
         if ($request->mobile) {
             $data['mobile'] = $request->mobile;
         }
