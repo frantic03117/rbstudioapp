@@ -882,7 +882,7 @@ class BookingController extends Controller
      * @param  \App\Models\Booking  $booking
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Booking $booking, $id)
+    public function update(Request $request, $id)
     {
 
         date_default_timezone_set('Asia/kolkata');
