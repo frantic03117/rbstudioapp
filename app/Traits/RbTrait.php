@@ -30,7 +30,8 @@ trait RbTrait
 
     public function send_otp($mobile, $otp)
     {
-        $msg = "Hello, {$otp} is your OTP for R and B Studios Booking Login. Please do not share this OTP. See you at the studios !! Regards, R and B Studios RBSTDS";
+        // $msg = "Hello, {$otp} is your OTP for R and B Studios Booking Login. Please do not share this OTP. See you at the studios !! Regards, R and B Studios RBSTDS";
+        $msg = "Hello, {$otp} is your OTP for R & B App Login. Please do not share this OTP. Regards, R & B Studios";
         $clientId = env('MESG_CLIENT_ID');
         $apiKey = env('MESG_API_KEY');
 
