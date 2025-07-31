@@ -57,6 +57,9 @@
                                                 <li>
                                                     <b>Email : </b> {{ $s->vendor?->email }}
                                                 </li>
+                                                <li>
+                                                    <b>Seat Count : </b> {{ $s?->seat_count }}
+                                                </li>
                                             </ul>
                                             <div class="google_map">
                                                 {!! $s->google_map !!}
