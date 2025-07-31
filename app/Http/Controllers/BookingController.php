@@ -660,6 +660,10 @@ class BookingController extends Controller
             if ($user && $user->fcm_token) {
                 $this->send_notification($user->fcm_token, $serviceStudio->is_permissable ? 'Booking Pending' : 'Payment Pending', $appmessage, $user->id);
             }
+            $super = User::where('role', 'Super')->first();
+            if ($super && $super?->fcm_token) {
+                $this->send_notification($super?->fcm_token, $serviceStudio->is_permissable ? 'Booking Pending for approval' : 'New Booking Received', $appmessage, $super->id);
+            }
             if ($request->mode || $request->expectsJson()) {
                 $res = [
                     "success" => '1',
