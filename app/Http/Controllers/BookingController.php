@@ -981,7 +981,7 @@ class BookingController extends Controller
             ];
             DB::table('booking_gsts')->insert($gdata);
         }
-        $msg  = "Your booking has been modified. Check your updated booking for details. Please make any necessary payments, if required, for the same. ";
+        $msg  = "Your booking has been successfully rescheduled. Check the updated details in the Bookings Tab.";
         // $msg  = "Booking Received New booking request has been submitted. Check the Bookings Tab to review.";
         $ndata = [
             'user_id' => $user_id,
