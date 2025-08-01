@@ -1031,10 +1031,10 @@ class BookingController extends Controller
             return response()->json(['success' => 0, "message" => 'Booking not found'], 400);
         }
         $user = User::where('id', $booking->user_id)->first();
-        $msg = "Booking Canceled Your booking with ID {$bid} has been canceled. Contact us for assistance if required. ";
+        $msg = "Your booking ID {$bid} has been cancelled. View details in the Bookings tab or contact us for assistance.";
         // $msg = "Hello {$user->name}, on {$booking->booking_start_date} has been cancelled. Hope to see you again at the studio. Thanks R AND B STUDIOS";
         if ($user->fcm_token) {
-            $this->send_notification($user->fcm_token, 'Booking Cancelled', $msg, $user->id, 'Booking Canceled');
+            $this->send_notification($user->fcm_token, 'Booking Cancelled', $msg, $user->id, 'Booking Cancelled');
         }
         $super = User::where('role', 'Super')->first();
         if ($super && $super?->fcm_token) {
