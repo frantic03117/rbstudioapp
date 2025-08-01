@@ -640,7 +640,7 @@ class BookingController extends Controller
                 ];
                 BlockedSlot::insert($ndata);
             }
-            $message =   $serviceStudio->is_permissable ? "Your booking is pending for approval. Contact us for assistance if required. " : "Please complete the payment within 2 hours to secure your booking. Otherwise, it will be automatically cancelled.";
+            $message =   $serviceStudio->is_permissable ? "Your booking request is pending for approval. You can track it under the Bookings Tab or contact us for assistance. " : "Please complete the payment within 2 hours to secure your booking. Otherwise, it will be automatically cancelled.";
             $appmessage =  $message;
 
             $n_tdata = [
@@ -649,7 +649,7 @@ class BookingController extends Controller
                 'studio_id' => $studio_id,
                 'vendor_id' => $vendor_id,
                 'type' => 'Booking',
-                'title' =>  $serviceStudio->is_permissable ? 'Booking Pending' : 'Booking received',
+                'title' =>  $serviceStudio->is_permissable ? 'Booking In Progress' : 'Booking Received',
                 "message" => $message,
                 "created_at" => date('Y-m-d H:i:s')
             ];
@@ -658,7 +658,7 @@ class BookingController extends Controller
                 if ($serviceStudio->is_permissable) {
                     $appmessage =  "A new booking request is waiting for your approval. Review it now in the Bookings Tab.";
                 }
-                $this->send_notification($user->fcm_token, $serviceStudio->is_permissable ? 'Approval Pending' : 'Booking Received', $appmessage, $user->id);
+                $this->send_notification($user->fcm_token, $serviceStudio->is_permissable ? 'Booking In Progress' : 'Booking Received', $appmessage, $user->id);
             }
             $super = User::where('role', 'Super')->first();
             if ($super && $super?->fcm_token) {
