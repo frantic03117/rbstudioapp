@@ -274,6 +274,17 @@ class ApiController extends Controller
         Booking::where($fdata)->where('created_at', '<=',  $timelimit)->update(['booking_status' => '2']);
         return true;
     }
+    public function payment_notification()
+    {
+        $fdata =  [
+            'booking_status' => '0',
+            'payment_status' => '0'
+        ];
+        $gettimelimit = Setting::where('id', '2')->first();
+        $minutes =  $gettimelimit ?  floatval($gettimelimit->col_val) > 0 ?  floatval($gettimelimit->col_val) :  30 : 30;
+        $timelimit = Carbon::now()->subMinutes($minutes)->format('Y-m-d H:i:s');
+        Booking::where($fdata)->where('created_at', '>=',  $timelimit)->with('user')->get();
+    }
     public function queries()
     {
         $uid = auth('sanctum')->user()->id;

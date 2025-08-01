@@ -429,7 +429,7 @@ class BookingController extends Controller
         Booking::where('id', $id)->update(['booking_status' => '1', 'approved_at' => date('Y-m-d H:i:s')]);
         $booking =  Booking::where('id', $id)->first();
         $user = User::where('id', $booking->user_id)->first();
-        $msg = "Your booking has been reserved with Booking ID $id";
+        $msg = "Your booking has been reserved with Booking ID {$id}. You can view the details anytime in the Bookings Tab";
         $udata = [
             'user_id' => $user->id,
             'booking_id' => $booking->id,
@@ -510,7 +510,6 @@ class BookingController extends Controller
         $start_date = Carbon::parse($s_d);
         $end_date = Carbon::parse($e_d);
         $creatorRole = auth('sanctum')->user() ? auth('sanctum')->user()->role : auth()->user()->role;
-
         // Calculate the duration in hours
         $duration = $end_date->diffInHours($start_date);
         if ($creatorRole == "User" && $duration < 2) {
@@ -546,8 +545,6 @@ class BookingController extends Controller
             ->count();
         $bsum = $innerBook +  $outerBook + $overlappingBookings;
         $d = Carbon::parse($b_s_date)->diffInHours(Carbon::parse($b_e_date));
-
-
         if ($overlappingBookings > 0) {
             $res = [
                 "success" => '0',
@@ -575,7 +572,6 @@ class BookingController extends Controller
             $bsdate = $b_s_date;
             $bedate = $b_e_date;
             $serviceStudio = DB::table('service_studios')->where('service_id', $service_id)->where('studio_id', $studio_id)->first();
-
             $bdata = [
                 'user_id' => $user_id,
                 'studio_id' => $studio_id,
@@ -644,21 +640,25 @@ class BookingController extends Controller
                 ];
                 BlockedSlot::insert($ndata);
             }
-            $message =   $serviceStudio->is_permissable ? "Your booking is pending for approval. Contact us for assistance if required. " : "Please complete the payment within 2 hours to secure your booking. Otherwise, it will be automatically canceled.";
+            $message =   $serviceStudio->is_permissable ? "Your booking is pending for approval. Contact us for assistance if required. " : "Please complete the payment within 2 hours to secure your booking. Otherwise, it will be automatically cancelled.";
             $appmessage =  $message;
+
             $n_tdata = [
                 'user_id' => $user_id,
                 'booking_id' => $bid,
                 'studio_id' => $studio_id,
                 'vendor_id' => $vendor_id,
                 'type' => 'Booking',
-                'title' =>  $serviceStudio->is_permissable ? 'Booking Pending' : 'Payment Pending',
+                'title' =>  $serviceStudio->is_permissable ? 'Booking Pending' : 'Booking received',
                 "message" => $message,
                 "created_at" => date('Y-m-d H:i:s')
             ];
             RbNotification::insert($n_tdata);
             if ($user && $user->fcm_token) {
-                $this->send_notification($user->fcm_token, $serviceStudio->is_permissable ? 'Booking Pending' : 'Payment Pending', $appmessage, $user->id);
+                if ($serviceStudio->is_permissable) {
+                    $appmessage =  "A new booking request is waiting for your approval. Review it now in the Bookings Tab.";
+                }
+                $this->send_notification($user->fcm_token, $serviceStudio->is_permissable ? 'Approval Pending' : 'Booking Received', $appmessage, $user->id);
             }
             $super = User::where('role', 'Super')->first();
             if ($super && $super?->fcm_token) {
@@ -982,6 +982,7 @@ class BookingController extends Controller
             DB::table('booking_gsts')->insert($gdata);
         }
         $msg  = "Your booking has been modified. Check your updated booking for details. Please make any necessary payments, if required, for the same. ";
+        // $msg  = "Booking Received New booking request has been submitted. Check the Bookings Tab to review.";
         $ndata = [
             'user_id' => $user_id,
             'booking_id' => $bid,
@@ -997,6 +998,11 @@ class BookingController extends Controller
         if ($user && $user->fcm_token) {
 
             $this->send_notification($user->fcm_token, 'Booking Rescheduled', $msg, $user->id);
+        }
+        $super = User::where('role', 'Super')->first();
+        if ($super && $super?->fcm_token) {
+            $appmessage = "A booking has been rescheduled. View the updated details in the Bookings Tab.";
+            $this->send_notification($super?->fcm_token, "Booking Rescheduled", $appmessage, $super->id);
         }
         if ($request->mode || $request->expectsJson()) {
             $res = [
@@ -1029,6 +1035,11 @@ class BookingController extends Controller
         // $msg = "Hello {$user->name}, on {$booking->booking_start_date} has been cancelled. Hope to see you again at the studio. Thanks R AND B STUDIOS";
         if ($user->fcm_token) {
             $this->send_notification($user->fcm_token, 'Booking Cancelled', $msg, $user->id, 'Booking Canceled');
+        }
+        $super = User::where('role', 'Super')->first();
+        if ($super && $super?->fcm_token) {
+            $appmessage = "A booking ID {$bid} has been cancelled. View details in the Bookings tab and notify the client";
+            $this->send_notification($super?->fcm_token, "Booking Cancelled", $appmessage, $super->id);
         }
         $udata = [
             'user_id' => $user->id,
@@ -1172,7 +1183,9 @@ class BookingController extends Controller
 
         $user = User::where('id', $booking->user_id)->first();
 
-        $msg = "Your booking with ID {$id} has been approved. You can now proceed with the payment to confirm your reservation within 2 Hours. Otherwise, it will be automatically canceled.";
+        // $msg = "Your booking with ID {$id} has been approved. You can now proceed with the payment to confirm your reservation within 2 Hours. Otherwise, it will be automatically canceled.";
+        $msg  = "Booking Approved Your booking ID {$id} has been approved. Please complete the payment to confirm. Unpaid bookings will be automatically cancelled.";
+
         $udata = [
             'user_id' => $user->id,
             'booking_id' => $booking->id,
