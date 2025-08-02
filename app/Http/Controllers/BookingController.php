@@ -158,7 +158,7 @@ class BookingController extends Controller
                 $items->where('approved_at', '!=', null);
             }
         }
-        $items->with('vendor')->with('service:id,name,icon,approval_required')->with('user:id,name,email,mobile')->with('studio:id,name,address,opens_at,ends_at');
+        $items->with('vendor')->with('service:id,name,icon,approval_required')->with('user:id,name,email,mobile')->with('studio:id,name,mobile,address,opens_at,ends_at');
         $items->with('rents')->with('extra_added')->withSum('extra_added', 'amount')->with('transactions')->withSum('transactions', 'amount');
         $items->with('creater:id,name,email');
         if ($booking_tenure == "past") {
@@ -234,9 +234,6 @@ class BookingController extends Controller
                 })->values()
             );
         }
-
-
-
         $stds = Studio::where('id', '>', '0');
         if ($vid > 0) {
             $stds->where('vendor_id', $vid);
@@ -248,9 +245,6 @@ class BookingController extends Controller
         }
         $vendors = $vends->orderBy('id', 'DESC')->get();
         $svs = Service::where('id', '>', '0');
-        // if($service_id){
-        //     $svs->where('id', $service_id);
-        // }
         $services = $svs->get();
         $res = compact('title', 'type', 'bookings', 'keyword', 'vendors', 'vendor_id', 'studio_id', 'service_id', 'approved_at', 'booking_status', 'payment_status', 'duration', 'created_by', 'bdf', 'services', 'bdt', 'studios', 'payment_filter');
 
@@ -263,7 +257,7 @@ class BookingController extends Controller
         if (isset($_GET['export']) && $_GET['export'] == "excel") {
             return Excel::download(new BookingExport($type), 'bookings.xlsx');
         }
-        return response()->json($res);
+        // return response()->json($res);
         return view('admin.bookings.index', $res);
     }
     public function index()
