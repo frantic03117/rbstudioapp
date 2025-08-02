@@ -263,6 +263,7 @@ class BookingController extends Controller
         if (isset($_GET['export']) && $_GET['export'] == "excel") {
             return Excel::download(new BookingExport($type), 'bookings.xlsx');
         }
+        return response()->json($res);
         return view('admin.bookings.index', $res);
     }
     public function index()
