@@ -695,7 +695,7 @@ class StudioController extends Controller
 
             $payment_value = $netPending;
         }
-        die;
+
         $mid = env('CCA_MID');
         $working_key = env('CCA_KEY');
         $access_code = env('CCA_AC');
