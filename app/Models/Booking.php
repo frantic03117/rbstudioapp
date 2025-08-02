@@ -43,6 +43,7 @@ class Booking extends Model
     {
         return $this->belongsTo(Vendor::class)
             ->join("users", "users.vendor_id", "=", "vendors.id")
+            ->where("users.role", "Admin")
             ->select('vendors.*', 'users.email', 'users.mobile');
     }
     public function studio()
