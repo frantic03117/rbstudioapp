@@ -346,7 +346,7 @@ class BookingController extends Controller
         if ($approved_at == "approved") {
             $items->where('approved_at', '!=', null);
         }
-        $items->with('vendor')->with('user:id,name,email,mobile')->with('studio:id,name,address');
+        $items->with('vendor')->with('user:id,name,email,mobile')->with('studio:id,name,mobile,address');
         $items->with('rents')->withSum('extra_added', 'amount')->with('transactions')->withSum('transactions', 'amount');
         $items->with('creater:id,name,email');
         if ($booking_tenure == "past") {

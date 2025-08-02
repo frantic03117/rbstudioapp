@@ -232,7 +232,7 @@ class AdminController extends Controller
     }
     public function all_notification(Request $request)
     {
-        $itms = RbNotification::whereIn('type', ['Booking', 'Payment'])->with('user:id,name,email,mobile')->with('booking')->with('studio:id,name,address');
+        $itms = RbNotification::whereIn('type', ['Booking', 'Payment'])->with('user:id,name,email,mobile')->with('booking')->with('studio:id,name,mobile,address');
         if (Auth::user()->role != "Super") {
             $itms->where('vendor_id', Auth::user()->vendor_id);
         }

@@ -25,7 +25,7 @@ class BookingExport implements FromCollection, WithHeadings, ShouldAutoSize
         $items->when($this->type == 'upcoming', fn($q) => $q->whereDate('booking_start_date', '>', $now))
             ->when($this->type == 'today', fn($q) => $q->whereDate('booking_start_date', $now->toDateString()))
             ->when($this->type == 'past', fn($q) => $q->whereDate('booking_start_date', '<', $now));
-        $items->with('vendor')->with('service:id,name,icon,approval_required')->with('user:id,name,email,mobile')->with('studio:id,name,address');
+        $items->with('vendor')->with('service:id,name,icon,approval_required')->with('user:id,name,email,mobile')->with('studio:id,name,mobile,address');
         $items->with('rents')->with('transactions')->withSum('transactions', 'amount');
         $items->with('creater:id,name,email');
         $bookings = $items->get();

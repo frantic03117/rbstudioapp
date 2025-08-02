@@ -150,7 +150,7 @@ class ApiController extends Controller
             $items->where('booking_status', $booking_status);
         }
 
-        $items->with('user:id,name,email,mobile')->withSum('transactions', 'amount')->with('studio:id,name,address,longitude,latitude');
+        $items->with('user:id,name,email,mobile')->withSum('transactions', 'amount')->with('studio:id,name,mobile,address,longitude,latitude');
         $items->with('rents')->withSum('extra_added', 'amount')->with('vendor')->with('service');
         if (in_array($booking_status, ['0', '1', '2'])) {
             $items->where('booking_start_date', '>=', date('Y-m-d H:i:s'));
