@@ -201,7 +201,7 @@ class AdminController extends Controller
         if ($booking_date_to) {
             $books->whereDate('booking_start_date', '<=', $booking_date_to);
         }
-        $items = $books->with('studio:id,name,color')->with('vendor')->orderBy('booking_start_date', 'ASC')->get();
+        $items = $books->with('studio:id,name,mobile,color')->with('vendor')->orderBy('booking_start_date', 'ASC')->get();
         //   return response()->json($items);
         //   die;
 

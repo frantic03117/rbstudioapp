@@ -343,7 +343,7 @@ class ApiController extends Controller
         // Include relationships and sum of transactions
         $items->with('user:id,name,email,mobile')
             ->withSum('transactions', 'amount')
-            ->with('studio:id,name,address')
+            ->with('studio:id,name,mobile,address')
             ->with('rents');
 
         // Apply keyword search across multiple fields
