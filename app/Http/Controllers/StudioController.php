@@ -684,8 +684,8 @@ class StudioController extends Controller
         $totalPaable = $booking->duration * $booking->studio_charge + $rentcharge + $extra_charge + $extra_added;
         $withgst =  $totalPaable * 1.18;
         $netPending = $withgst - $paid - floatval($booking->promo_discount_calculated);
-        echo   $isPartial = $request->isPartial;
-        die;
+        $isPartial = $request->isPartial;
+
         $checkIsPPAllowdd = Studio::where('id', $booking->studio->id)->first();
         $isPPAllowed = $checkIsPPAllowdd->is_pp_allowed;
         if ($isPartial == true || $isPartial == "true") {
@@ -693,8 +693,8 @@ class StudioController extends Controller
         } else {
             $payment_value = $netPending;
         }
-        // echo $payment_value;
-        // die;
+        echo $payment_value;
+        die;
         $mid = env('CCA_MID');
         $working_key = env('CCA_KEY');
         $access_code = env('CCA_AC');
