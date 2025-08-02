@@ -688,11 +688,11 @@ class StudioController extends Controller
 
         $checkIsPPAllowdd = Studio::where('id', $booking->studio->id)->first();
         $isPPAllowed = $checkIsPPAllowdd->is_pp_allowed;
-        if ($isPartial == true || $isPartial == "true") {
-            echo 1;
+        if ($isPartial == true && $isPartial == "true") {
+
             $payment_value = $isPPAllowed == "1" ?   $netPending * $booking->partial_percent * 0.01 : $netPending;
         } else {
-            echo 2;
+
             $payment_value = $netPending;
         }
         die;
