@@ -63,6 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('update_profile', [ApiController::class, 'update_profile']);
     Route::post('update_profile_image', [UserController::class, 'select_profile_image']);
     Route::post('clear-notification', [ApiController::class, 'clear_notification']);
+    Route::post('/mark-read', [AdminController::class, 'mark_read'])->name('mark-read');
 });
 Route::post('admin', [AdminController::class, 'api_login']);
 Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('admin')->group(function () {

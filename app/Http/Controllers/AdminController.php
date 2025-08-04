@@ -258,7 +258,11 @@ class AdminController extends Controller
     {
         $ids = explode(',', $request->ids);
         RbNotification::whereIn('id', $ids)->update(['is_read' => '1']);
-        return redirect()->back()->with('success', 'Deleted successfuly');
+        if ($request->expectsJson()) {
+            return response()->json(['data' => [], 'success' => 1, 'message' => 'Marked read']);
+        } else {
+            return redirect()->back()->with('success', 'Deleted successfuly');
+        }
     }
     public function setting() {}
     public function users()
