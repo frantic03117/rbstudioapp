@@ -264,7 +264,6 @@ class AdminController extends Controller
             return redirect()->back()->with('success', 'Deleted successfuly');
         }
     }
-    public function setting() {}
     public function users()
     {
         $title = "List of users";

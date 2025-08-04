@@ -588,4 +588,22 @@ class ApiController extends Controller
 
         return response()->json(['success' => 1, "data" => []]);
     }
+    public function is_all_notification_read(Request $request)
+    {
+        $uid = auth('sanctum')->user()->id;
+        $role = auth('sanctum')->user()->role;
+        $isUserShown = $role == "User" ? "1" : "0";
+        $rbns = RbNotification::whereIn('shown_to_user', $isUserShown)->where('is_read', '0');
+        if ($role == "User") {
+            $rbns->where('user_id', $uid);
+        }
+        $count =  $rbns->count();
+        $data = [
+            'is_all_read' =>  $count > 0 ? false : true,
+            'pending_to_read' => $count,
+            'role' => $role,
+            'uid' => $uid
+        ];
+        return response()->json(['success' => 1, "data" => $data]);
+    }
 }
