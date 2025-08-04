@@ -149,6 +149,25 @@ class TransactionController extends Controller
                 'type' => 'Payment'
             ];
             DB::table('notifications')->insert($ndata);
+            $ndata = [
+                'user_id' => $item->user->id,
+                'booking_id' => $bid,
+                'studio_id' => $item->studio_id,
+                'vendor_id' => $item->vendor_id,
+                'title' => 'Payment Received',
+                'message' => $notmessage,
+                'shown_to_user' => '0',
+                "is_read" => "0",
+                'created_at' => date('Y-m-d H:i:s'),
+                'type' => 'Payment'
+            ];
+            DB::table('notifications')->insert($ndata);
+
+
+            $super = User::where('role', 'Super')->first();
+            if ($super && $super?->fcm_token) {;
+                $this->send_notification($super?->fcm_token, 'Payment Received', $notmessage, $super->id);
+            }
             $rents =  $item->rents;
             $arr = [];
             foreach ($rents as $r) {

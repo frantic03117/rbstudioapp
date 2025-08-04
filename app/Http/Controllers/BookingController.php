@@ -649,6 +649,7 @@ class BookingController extends Controller
                 "created_at" => date('Y-m-d H:i:s')
             ];
             RbNotification::insert($n_tdata);
+
             if ($user && $user->fcm_token) {
                 if ($serviceStudio->is_permissable) {
                     $appmessage =  "A new booking request is waiting for your approval. Review it now in the Bookings Tab.";
@@ -657,6 +658,18 @@ class BookingController extends Controller
             }
             $super = User::where('role', 'Super')->first();
             if ($super && $super?->fcm_token) {
+                $n_tdata = [
+                    'user_id' => $user_id,
+                    'booking_id' => $bid,
+                    'studio_id' => $studio_id,
+                    'vendor_id' => $vendor_id,
+                    'shown_to_user' => '0',
+                    'type' => 'Booking',
+                    'title' =>  $serviceStudio->is_permissable ? 'Booking In Progress' : 'Booking Received',
+                    "message" => $appmessage,
+                    "created_at" => date('Y-m-d H:i:s')
+                ];
+                RbNotification::insert($n_tdata);
                 $this->send_notification($super?->fcm_token, $serviceStudio->is_permissable ? 'Booking Pending for approval' : 'New Booking Received', $appmessage, $super->id);
             }
             if ($request->mode || $request->expectsJson()) {
@@ -997,6 +1010,19 @@ class BookingController extends Controller
         $super = User::where('role', 'Super')->first();
         if ($super && $super?->fcm_token) {
             $appmessage = "A booking has been rescheduled. View the updated details in the Bookings Tab.";
+            $n_tdata = [
+                'user_id' => $user_id,
+                'booking_id' => $bid,
+                'studio_id' => $studio_id,
+                'vendor_id' => $vendor_id,
+                'shown_to_user' => '0',
+                'type' => 'Booking',
+                'title' => 'Booking Rescheduled',
+                "message" => $appmessage,
+                "created_at" => date('Y-m-d H:i:s')
+            ];
+            RbNotification::insert($n_tdata);
+
             $this->send_notification($super?->fcm_token, "Booking Rescheduled", $appmessage, $super->id);
         }
         if ($request->mode || $request->expectsJson()) {
@@ -1034,6 +1060,18 @@ class BookingController extends Controller
         $super = User::where('role', 'Super')->first();
         if ($super && $super?->fcm_token) {
             $appmessage = "A booking ID {$bid} has been cancelled. View details in the Bookings tab and notify the client";
+            $n_tdata = [
+                'user_id' => $user->id,
+                'booking_id' => $booking->id,
+                'studio_id' => $booking->studio_id,
+                'vendor_id' => $booking->vendor_id,
+                'shown_to_user' => '0',
+                'type' => 'Booking',
+                'title' => 'Booking Cancelled',
+                "message" => $appmessage,
+                "created_at" => date('Y-m-d H:i:s')
+            ];
+            RbNotification::insert($n_tdata);
             $this->send_notification($super?->fcm_token, "Booking Cancelled", $appmessage, $super->id);
         }
         $udata = [
@@ -1046,6 +1084,7 @@ class BookingController extends Controller
             'message' => $msg
         ];
         RbNotification::insert($udata);
+
         Booking::where('id', $booking->id)->update(['booking_status' => '2']);
         BlockedSlot::where('booking_id', $booking->id)->delete();
         if ($request->expectsJson()) {

@@ -236,6 +236,26 @@ class AdminController extends Controller
         if (Auth::user()->role != "Super") {
             $itms->where('vendor_id', Auth::user()->vendor_id);
         }
+        if ($request->expectsJson()) {
+            $uid = auth('sanctum')->user()->id;
+            $role = auth('sanctum')->user()->role;
+            $isUserShown = $role == "User" ? "1" : "0";
+            $itms->where('shown_to_user', $isUserShown);
+            if ($role == "User") {
+                $itms->where('user_id', auth('sanctum')->user()->id);
+            }
+            if ($role == "Admin") {
+                $itms->where('vendor_id', auth('sanctum')->user()->id);
+            }
+            if ($role == "Employee" && auth('sanctum')->user()->vendor_id != "0") {
+                $itms->where('vendor_id', auth('sanctum')->user()->vendor_id);
+            }
+            if ($role == "Employee" && auth('sanctum')->user()->vendor_id == "0") {
+                $itms->where('shown_to_user', "0");
+            }
+        }
+
+
 
         $itms->orderBy('is_read', 'asc');
         $itms->orderBy('created_at', 'desc');
