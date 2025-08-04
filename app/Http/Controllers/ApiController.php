@@ -593,7 +593,7 @@ class ApiController extends Controller
         $uid = auth('sanctum')->user()->id;
         $role = auth('sanctum')->user()->role;
         $isUserShown = $role == "User" ? "1" : "0";
-        $rbns = RbNotification::whereIn('shown_to_user', $isUserShown)->where('is_read', '0');
+        $rbns = RbNotification::where('shown_to_user', $isUserShown)->where('is_read', '0');
         if ($role == "User") {
             $rbns->where('user_id', $uid);
         }
