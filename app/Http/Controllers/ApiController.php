@@ -606,4 +606,16 @@ class ApiController extends Controller
         ];
         return response()->json(['success' => 1, "data" => $data]);
     }
+    public function mark_all_read()
+    {
+        $uid = auth('sanctum')->user()->id;
+        $role = auth('sanctum')->user()->role;
+        $isUserShown = $role == "User" ? "1" : "0";
+        $rbns = RbNotification::where('shown_to_user', $isUserShown)->where('is_read', '0');
+        if ($role == "User") {
+            $rbns->where('user_id', $uid);
+        }
+        $data =  $rbns->update(['is_read' => '1']);
+        return response()->json(['success' => 1, "data" => $data, 'message' => 'all read successfully']);
+    }
 }

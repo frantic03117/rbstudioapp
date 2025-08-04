@@ -65,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('clear-notification', [ApiController::class, 'clear_notification']);
     Route::post('/mark-read', [AdminController::class, 'mark_read'])->name('mark-read');
     Route::get('/is-all-read', [ApiController::class, 'is_all_notification_read'])->name('is_all_notification_read');
+    Route::post('/mark-all-read', [ApiController::class, 'mark_all_read']);
 });
 Route::post('admin', [AdminController::class, 'api_login']);
 Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('admin')->group(function () {
