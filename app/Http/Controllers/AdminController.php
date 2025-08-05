@@ -177,7 +177,7 @@ class AdminController extends Controller
         $services = Service::whereIn('id', function ($q) use ($sid) {
             $q->from('service_studios')->where('studio_id', $sid)->select('service_id');
         })->get();
-        $books = Booking::where('booking_status', '1')->whereDate('booking_start_date', '>=', date('Y-m-d'))
+        $books = Booking::where('booking_status', '1')
             ->with('user:id,name')->where('approved_at', '!=', null)
             ->with('rents')->withSum('transactions', 'amount')->with('service');
         if ($vid) {
