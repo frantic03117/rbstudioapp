@@ -206,10 +206,8 @@ class UserController extends Controller
     public function update_edit_user(Request $request, $id)
     {
         $request->validate(['name' => 'required', 'email' => 'required|email']);
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email
-        ];
+        $data = $request->except(['_token', '_method']);
+
         if ($request->dob) {
             $data['dob'] = $request->dob;
         }
