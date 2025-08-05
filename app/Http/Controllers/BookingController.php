@@ -635,7 +635,7 @@ class BookingController extends Controller
                 ];
                 BlockedSlot::insert($ndata);
             }
-            $message =   $serviceStudio->is_permissable ? "Your booking request is pending for approval. You can track it under the Bookings Tab or contact us for assistance. " : "Please complete the payment within 2 hours to secure your booking. Otherwise, it will be automatically cancelled.";
+            $message =   $serviceStudio->is_permissable ? "Your booking request is pending for approval. You can track it under the Bookings Tab or contact us for assistance. " : "We have received your request. You can view the details in the Bookings Tab.";
             $appmessage =  $message;
 
             $n_tdata = [
