@@ -1096,7 +1096,7 @@ class BookingController extends Controller
             $this->send_notification($super?->fcm_token, "Booking Cancelled", $appmessage, $super->id);
         }
         $udata = [
-            'user_id' => $user->id,
+            'user_id' => $user?->id ?? 0,
             'booking_id' => $booking->id,
             'studio_id' => $booking->studio_id,
             'vendor_id' => $booking->vendor_id,
