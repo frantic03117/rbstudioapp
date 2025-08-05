@@ -600,10 +600,7 @@ class ApiController extends Controller
         ]);
 
         // Prepare data for update
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-        ];
+        $data = $request->all();
 
         if ($request->filled('dob')) {
             $data['dob'] = $request->dob;
