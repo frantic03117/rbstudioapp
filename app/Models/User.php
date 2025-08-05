@@ -33,6 +33,7 @@ class User extends Authenticatable
         'otp_verified',
         'vendor_id',
         'remember_token',
+        'brand_artisan',
         'fcm_token'
     ];
 
