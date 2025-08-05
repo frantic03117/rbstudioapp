@@ -10,6 +10,7 @@ use App\Models\Faq;
 use App\Models\Studio\Studio;
 use App\Models\Location\City;
 use App\Models\Location\Country;
+use App\Traits\RbTrait;
 use App\Models\Location\State;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Validator;
@@ -20,6 +21,7 @@ use Carbon\Carbon;
 
 class ApiController extends Controller
 {
+    use RbTrait;
     public function update_fcm(Request $request)
     {
 
