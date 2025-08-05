@@ -276,15 +276,74 @@ class ApiController extends Controller
     }
     public function payment_notification()
     {
-        $fdata =  [
+        $fdata = [
             'booking_status' => '0',
             'payment_status' => '0'
         ];
-        $gettimelimit = Setting::where('id', '2')->first();
-        $minutes =  $gettimelimit ?  floatval($gettimelimit->col_val) > 0 ?  floatval($gettimelimit->col_val) :  30 : 30;
+
+        $gettimelimit = Setting::where('id', 2)->first();
+        $minutes = $gettimelimit && floatval($gettimelimit->col_val) > 0
+            ? floatval($gettimelimit->col_val)
+            : 30;
+
         $timelimit = Carbon::now()->subMinutes($minutes)->format('Y-m-d H:i:s');
-        Booking::where($fdata)->where('created_at', '>=',  $timelimit)->with('user')->get();
+
+        $items = Booking::where($fdata)
+            ->where('created_at', '>=', $timelimit)
+            ->whereHas('user', function ($query) {
+                $query->whereNotNull('fcm_token')
+                    ->where('fcm_token', '!=', '');
+            })
+            ->with('user')
+            ->get();
+        $super = User::where('role', 'Super')->first();
+
+        foreach ($items as $booking) {
+            $user = $booking->user;
+
+            if (!empty($user?->fcm_token)) {
+                $appMessage = " Please complete your payment to secure your booking. Incase of non-payment the booking will be automatically cancelled.";
+
+                $notificationData = [
+                    'user_id'        => $user->id,
+                    'booking_id'     => $booking->id,
+                    'studio_id'      => $booking->studio_id,
+                    'vendor_id'      => $booking->vendor_id,
+                    'shown_to_user'  => '1',
+                    'type'           => 'Booking',
+                    'title'          => 'Payment Pending',
+                    'message'        => $appMessage,
+                    'created_at'     => now(),
+                ];
+                RbNotification::insert($notificationData);
+
+                $this->send_notification(
+                    $user->fcm_token,
+                    'Payment Pending',
+                    $appMessage,
+                    $user->id
+                );
+            }
+            if ($super && $super?->fcm_token) {;
+                $appmessage = "A confirmed booking is awaiting for client payment. Notify client to avoid Auto-cancellation.";
+                $n_tdata = [
+                    'user_id'        => $user->id,
+                    'booking_id'     => $booking->id,
+                    'studio_id'      => $booking->studio_id,
+                    'vendor_id'      => $booking->vendor_id,
+                    'shown_to_user' => '0',
+                    'type' => 'Booking',
+                    'title' => 'Payment Pending',
+                    "message" => $appmessage,
+                    "created_at" => date('Y-m-d H:i:s')
+                ];
+                RbNotification::insert($n_tdata);
+                $this->send_notification($super?->fcm_token,  'Payment Pending', $appmessage, $super->id);
+            }
+        }
     }
+
+
     public function queries()
     {
         $uid = auth('sanctum')->user()->id;
