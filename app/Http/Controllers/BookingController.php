@@ -651,9 +651,7 @@ class BookingController extends Controller
             RbNotification::insert($n_tdata);
 
             if ($user && $user->fcm_token) {
-                if ($serviceStudio->is_permissable) {
-                    $appmessage =  "A new booking request is waiting for your approval. Review it now in the Bookings Tab.";
-                }
+
                 $this->send_notification($user->fcm_token, $serviceStudio->is_permissable ? 'Booking In Progress' : 'Booking Received', $appmessage, $user->id);
             }
             $super = User::where('role', 'Super')->first();
@@ -670,6 +668,9 @@ class BookingController extends Controller
                     "created_at" => date('Y-m-d H:i:s')
                 ];
                 RbNotification::insert($n_tdata);
+                if ($serviceStudio->is_permissable) {
+                    $appmessage =  "A new booking request is waiting for your approval. Review it now in the Bookings Tab.";
+                }
                 $this->send_notification($super?->fcm_token, $serviceStudio->is_permissable ? 'Booking Pending for approval' : 'New Booking Received', $appmessage, $super->id);
             }
             if ($request->mode || $request->expectsJson()) {
@@ -1054,7 +1055,7 @@ class BookingController extends Controller
         $user = User::where('id', $booking->user_id)->first();
         $msg = "Your booking ID {$bid} has been cancelled. View details in the Bookings tab or contact us for assistance.";
         // $msg = "Hello {$user->name}, on {$booking->booking_start_date} has been cancelled. Hope to see you again at the studio. Thanks R AND B STUDIOS";
-        if ($user->fcm_token) {
+        if ($user && $user?->fcm_token) {
             $this->send_notification($user->fcm_token, 'Booking Cancelled', $msg, $user->id, 'Booking Cancelled');
         }
         $super = User::where('role', 'Super')->first();
