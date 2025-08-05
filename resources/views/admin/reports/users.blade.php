@@ -65,6 +65,7 @@
                                     <td>Name</td>
                                     <td>Email</td>
                                     <td>Mobile</td>
+                                    <th>Brand Artist</th>
                                     <td>CreatedAt</td>
                                     <td>Action</td>
                                 </tr>
@@ -87,6 +88,9 @@
                                         </td>
                                         <td>
                                             {{ $item->mobile }}
+                                        </td>
+                                        <td>
+                                            {{ $item->brand_artisan }}
                                         </td>
                                         <td>
                                             {{ $item->created_at }}
