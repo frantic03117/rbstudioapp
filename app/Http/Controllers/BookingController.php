@@ -1044,7 +1044,7 @@ class BookingController extends Controller
      * @param  \App\Models\Booking  $booking
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, Booking $booking, $id)
+    public function destroy(Request $request, $id)
     {
         $bid = $booking->id ?? $id;
         $booking =  Booking::where('id', $bid)->first();
