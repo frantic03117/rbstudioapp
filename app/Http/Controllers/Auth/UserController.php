@@ -216,7 +216,7 @@ class UserController extends Controller
         }
         User::where('id', $id)->update($data);
         if ($request->expectsJson()) {
-            return response()->json(['data' => null, 'success' => 1, "message" => 'Updated successfully']);
+            return response()->json(['data' =>  $data, 'success' => 1, "message" => 'Updated successfully']);
         }
         return redirect()->back()->with('success', 'user updated successfully');
     }
