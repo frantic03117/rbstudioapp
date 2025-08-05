@@ -438,6 +438,23 @@ class BookingController extends Controller
         if ($user->fcm_token) {
             $this->send_notification($user->fcm_token, 'Booking Reserved', $msg, $user->id);
         }
+        $super = User::where('role', 'Super')->first();
+        if ($super && $super?->fcm_token) {
+            $appmessage = "You’ve accepted this booking without any payment.";
+            $n_tdata = [
+                'user_id' => $user->id,
+                'booking_id' => $booking->id,
+                'studio_id' => $booking->studio_id,
+                'vendor_id' => $booking->vendor_id,
+                'shown_to_user' => '0',
+                'type' => 'Booking',
+                'title' => 'Booking Accepted',
+                "message" => $appmessage,
+                "created_at" => date('Y-m-d H:i:s')
+            ];
+            RbNotification::insert($n_tdata);
+            $this->send_notification($super?->fcm_token, "Booking Accepted", $appmessage, $super->id);
+        }
         return redirect()->back()->with('success', 'Booking Reserved successfully');
     }
 
@@ -635,7 +652,7 @@ class BookingController extends Controller
                 ];
                 BlockedSlot::insert($ndata);
             }
-            $message =   $serviceStudio->is_permissable ? "Your booking request is pending for approval. You can track it under the Bookings Tab or contact us for assistance. " : "We have received your request. You can view the details in the Bookings Tab.";
+            $message =   $serviceStudio->is_permissable ? "Your booking request is pending for approval. You can track it under the Bookings Tab or contact us for assistance." : "We have received your request. You can view the details in the Bookings Tab.";
             $appmessage =  $message;
 
             $n_tdata = [
@@ -656,6 +673,11 @@ class BookingController extends Controller
             }
             $super = User::where('role', 'Super')->first();
             if ($super && $super?->fcm_token) {
+                if ($serviceStudio->is_permissable) {
+                    $appmessage =  "A new booking request is waiting for your approval. Review it now in the Bookings Tab.";
+                } else {
+                    $appmessage =  "New booking request has been submitted. Check the Bookings Tab to review.";
+                }
                 $n_tdata = [
                     'user_id' => $user_id,
                     'booking_id' => $bid,
@@ -668,9 +690,7 @@ class BookingController extends Controller
                     "created_at" => date('Y-m-d H:i:s')
                 ];
                 RbNotification::insert($n_tdata);
-                if ($serviceStudio->is_permissable) {
-                    $appmessage =  "A new booking request is waiting for your approval. Review it now in the Bookings Tab.";
-                }
+
                 $this->send_notification($super?->fcm_token, $serviceStudio->is_permissable ? 'Booking Pending for approval' : 'New Booking Received', $appmessage, $super->id);
             }
             if ($request->mode || $request->expectsJson()) {
@@ -1219,7 +1239,7 @@ class BookingController extends Controller
         $user = User::where('id', $booking->user_id)->first();
 
         // $msg = "Your booking with ID {$id} has been approved. You can now proceed with the payment to confirm your reservation within 2 Hours. Otherwise, it will be automatically canceled.";
-        $msg  = "Booking Approved Your booking ID {$id} has been approved. Please complete the payment to confirm. Unpaid bookings will be automatically cancelled.";
+        $msg  = "Your booking has been approved. Please complete the payment to confirm. Unpaid bookings will be automatically cancelled.";
 
         $udata = [
             'user_id' => $user->id,
@@ -1232,6 +1252,25 @@ class BookingController extends Controller
         ];
 
         RbNotification::insert($udata);
+
+        $super = User::where('role', 'Super')->first();
+        if ($super && $super?->fcm_token) {
+            $appmessage = "You’ve approved a booking. Awaiting for client payment.";
+            $n_tdata = [
+                'user_id' => $user->id,
+                'booking_id' => $booking->id,
+                'studio_id' => $booking->studio_id,
+                'vendor_id' => $booking->vendor_id,
+                'shown_to_user' => '0',
+                'type' => 'Booking',
+                'title' => 'Booking Approved',
+                "message" => $appmessage,
+                "created_at" => date('Y-m-d H:i:s')
+            ];
+            RbNotification::insert($n_tdata);
+            $this->send_notification($super?->fcm_token, "Booking Approved", $appmessage, $super->id);
+        }
+
         Booking::where('id', $id)->update(['approved_at' => date('Y-m-d H:i:s')]);
         BlockedSlot::where('booking_id', $id)->delete();
 

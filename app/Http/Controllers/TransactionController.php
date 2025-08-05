@@ -135,7 +135,8 @@ class TransactionController extends Controller
         ];
         $amount = $request->amount;
         if (Transaction::insert($data)) {
-            $notmessage = "We’ve received your payment of (₹{$amount})/- Your booking is confirmed. See you at the studios. ";
+            // $notmessage = "We’ve received your payment of (₹{$amount})/- Your booking is confirmed. See you at the studios. ";
+            $notmessage = "Thanks! Thanks! Payment of ₹{$amount}/- has been received. You can view the receipt in the bookings tab.";
             $item =  Booking::where('id', $bid)->with('rents')->withSum('transactions', 'amount')->with('studio')->with('vendor')->with('service')->with('user')->first();
             $ndata = [
                 'user_id' => $item->user->id,
@@ -162,8 +163,6 @@ class TransactionController extends Controller
                 'type' => 'Payment'
             ];
             DB::table('notifications')->insert($ndata);
-
-
             $super = User::where('role', 'Super')->first();
             if ($super && $super?->fcm_token) {;
                 $this->send_notification($super?->fcm_token, 'Payment Received', $notmessage, $super->id);
@@ -179,8 +178,7 @@ class TransactionController extends Controller
             if (ceil($remainamount) <= 1) {
                 Booking::where('id', $bid)->update(['payment_status' => '1', 'booking_status' => '1']);
             }
-
-            if ($item->user && $item->user->fcm_token) {
+            if ($item->user && $item->user?->fcm_token) {
                 $this->send_notification($item->user->fcm_token, 'Payment Received', $notmessage, $booking->user_id, 'Payment');
             }
             if ($request->wantsJson()) {
