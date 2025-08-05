@@ -1082,7 +1082,7 @@ class BookingController extends Controller
         if ($super && $super?->fcm_token) {
             $appmessage = "A booking ID {$bid} has been cancelled. View details in the Bookings tab and notify the client";
             $n_tdata = [
-                'user_id' => $user?->id,
+                'user_id' => $user?->id ?? 0,
                 'booking_id' => $booking->id,
                 'studio_id' => $booking->studio_id,
                 'vendor_id' => $booking->vendor_id,
