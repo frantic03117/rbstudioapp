@@ -1164,30 +1164,34 @@ class BookingController extends Controller
         $bstatus = ['0' => 'Pending', '1' => 'Confirmed', '2' => 'Cancelled'];
         $pstatus = ['0' => 'Unpaid', '1' => 'Paid', '2' => 'Refunded'];
         $res = compact('title', 'items', 'studio', 'booking', 'user', 'ritems', 'trans', 'bstatus', 'pstatus');
-        // return response()->json($booking);
-        // die;
+        // return response()->json($items);
         return view('admin.bookings.bill', $res);
     }
     public function download_bill(Request $request, $id)
     {
-        $booking = Booking::find($id);
+        $booking = Booking::where('id', $id)->withSum('extra_added', 'amount')->with('gst')->first();
         $studio = Studio::where('vendor_id', $booking->vendor_id)
             ->with('country')->with('state')->with('district')
             ->first();
-        $sid = $studio->id;
         // return response()->json($studio);
         // die;
+        $sid = $studio->id;
+        $trans = Transaction::where('booking_id', $id)->where('status', 'Success')->get();
         $user = User::where('id', $booking->user_id)->first();
         $items = BookingItem::with('rents')->where('booking_id', $id)->get();
 
         $title = "Generate Bill";
-
         $ritems = Rent::whereIn('id', function ($query) use ($sid) {
             $query->from('charges')->select('item_id')->where('studio_id', $sid)->where('type', 'Item');
         })->whereNotIn('id', function ($q) use ($id) {
             $q->from('booking_items')->where('booking_id', $id)->select('item_id');
         })->get();
-        $res = compact('title', 'items', 'studio', 'booking', 'user', 'ritems');
+        $bstatus = ['0' => 'Pending', '1' => 'Confirmed', '2' => 'Cancelled'];
+        $pstatus = ['0' => 'Unpaid', '1' => 'Paid', '2' => 'Refunded'];
+        $res = compact('title', 'items', 'studio', 'booking', 'user', 'ritems', 'trans', 'bstatus', 'pstatus');
+        // return response()->json($booking);
+        // die;
+        return view('admin.bookings.d-bill', $res);
         $pdf = Pdf::loadView('admin.bookings.d-bill', $res)->setOptions(['defaultFont' => 'sans-serif']);
 
         return $pdf->download('invoice.pdf');

@@ -4,19 +4,27 @@
         <div class="container">
             <div class="row">
 
-                <div class="col-md-3">
+                <div class="col-md-3 mb-5">
                     <div class="text-end">
 
                         <a href="{{ route('download_bill', $booking->id) }}" class="btn btn-gradient">Download</a>
                         <a href="{{ route('bookingsview', 'upcoming') }}?booking_status=1" class="btn btn-gradient">Back</a>
                     </div>
                 </div>
+
                 <div class="col-md-12">
-                    <div class="w-100" style="max-width: 800px;background:#ccc;">
+                    <div class="w-100" style="max-width: 800px;background:#ccc;margin: 0 auto;margin-left:auto;">
                         <table class="table table-sm table-bordered" style="background:#ccc;border:2px solid #ccc;">
                             <tbody>
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="4">
+                                        <div style="margin-inline-start: 10px;margin-top:10px;">
+                                            <img src="{{ url('public/images/logo.png') }}" style="width: 100px"
+                                                alt="">
+
+                                        </div>
+                                    </td>
+                                    <td colspan="4">
                                         <h2>
                                             {{ $studio->name }}
                                         </h2>
@@ -24,6 +32,30 @@
                                         <p>
                                             {{ $studio->address . ' , ' . $studio->district?->city . ' , ' . $studio->state?->state . ' , ' . $studio->country?->country . ' , ' . $studio->pincode }}
                                         </p>
+                                    </td>
+                                    <td colspan="4">
+                                        <p style="margin-bottom: 10px"></p>
+                                        <p class="mb-0">Phone No: +91-989285600</p>
+                                        <p class="mb-0">Email: admin@rbstudios.info</p>
+                                        <p class="mb-0">Website: rbstudios.info</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12" style="text-align: center">
+                                        <h4>Receipt</h4>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8" style="text-align: center">
+                                        <h4>Customer Details</h4>
+                                    </td>
+                                    <td colspan="4">
+                                        <h4>Receipt Details</h4>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8">
+
 
                                         <div class="w-100">
                                             <h5>
@@ -64,121 +96,73 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <div class="w-100" style="background: #ddd;padding:10px;">
-                                            check In Date
-                                        </div>
-                                    </td>
-                                    <td colspan="4">
-                                        <div class="w-100" style="background: #ddd;padding:10px;">
-                                            check Out Date
-                                        </div>
-                                    </td>
-                                    <td colspan="4">
-                                        <!--<div class="w-100" style="background: #ddd;padding:10px;">-->
-                                        <!--    Payment Thorough-->
-                                        <!--</div>-->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <div class="w-100">
-                                            {{ date('d-M-Y', strtotime($booking->booking_start_date)) }}
-                                        </div>
-                                    </td>
-                                    <td colspan="4">
-                                        <div class="w-100">
-                                            {{ date('d-M-Y', strtotime($booking->booking_end_date)) }}
-                                        </div>
-                                    </td>
-                                    <td colspan="4" rowspan="3">
-                                        <!--<div class="text-center">-->
-                                        <!--    Cash-->
-                                        <!--</div>-->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <div class="w-100" style="background: #ddd;padding:10px;">
-                                            check In Time
-                                        </div>
-                                    </td>
-                                    <td colspan="4">
-                                        <div class="w-100" style="background: #ddd;padding:10px;">
-                                            check Out Time
-                                        </div>
-                                    </td>
 
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <div class="w-100">
-                                            {{ date('h:i A', strtotime($booking->booking_start_date)) }}
-                                        </div>
-                                    </td>
-                                    <td colspan="4">
-                                        <div class="w-100">
-                                            {{ date('h:i A', strtotime($booking->booking_end_date)) }}
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="12">
-                                        <div class="w" style="width: 100%;padding:10px;"></div>
-                                    </td>
-                                </tr>
                                 <tr>
                                     <td colspan="2">
-                                        <div class="w-100" style="background:#ddd;padding:10px;">
+                                        <div class="w-100" style="padding:10px;">
                                             Date
                                         </div>
                                     </td>
                                     <td colspan="4">
-                                        <div class="w-100" style="background:#ddd;padding:10px;">
+                                        <div class="w-100" style="padding:10px;">
                                             Description
                                         </div>
                                     </td>
-                                    <td colspan="3">
-                                        <div class="w-100" style="background:#ddd;padding:10px;">
-                                            Charges
+                                    <td colspan="2">
+                                        <div class="w-100" style="padding:10px;">
+                                            Hours
                                         </div>
                                     </td>
-                                    <td colspan="3">
-                                        <div class="w-100" style="background:#ddd;padding:10px;">
-                                            Credit
+                                    <td colspan="2">
+                                        <div class="w-100" style="padding:10px;">
+                                            Rate
                                         </div>
                                     </td>
-                                    <!--<td colspan="2">-->
-                                    <!--    <div class="w-100" style="background:#ddd;padding:10px;">-->
-                                    <!--        Action-->
-                                    <!--    </div>-->
-                                    <!--</td>-->
+                                    <td colspan="2">
+                                        <div class="w-100" style="padding:10px;">
+                                            Amount
+                                        </div>
+                                    </td>
+
 
                                 </tr>
                                 <tr>
                                     <td colspan="2">
-                                        <div class="" style="padding:10px;">{{ date('d-M-Y') }}</div>
+                                        <div class="" style="padding:10px;">
+                                            {{ date('d-M-Y', strtotime($booking->booking_start_date)) }}
+                                        </div>
                                     </td>
                                     <td colspan="4">
                                         <div class="w-100" style="padding:10px;">
-                                            <p>
+                                            {{-- <p>
                                                 {{ $booking->studio_charge }}/hour X {{ $booking->duration }} hours =
+                                            </p> --}}
+                                            <p>
+                                                {{ $booking->studio->name }}
+                                            </p>
+                                            <p>
+                                                From {{ date('d-M-Y h:i A', strtotime($booking->booking_start_date)) }}
+                                                to {{ date('d-M-Y h:i A', strtotime($booking->booking_end_date)) }}
                                             </p>
                                         </div>
                                     </td>
-                                    <td colspan="3">
+                                    <td colspan="2">
                                         <div class="w-00" style="padding:10px;">
-                                            {{ $booking->studio_charge * $booking->duration }}
+                                            {{ $booking->duration }}
                                         </div>
                                     </td>
-                                    <td colspan="3">
-                                        <div class="w-00" style="padding:10px;"> </div>
+                                    <td colspan="2">
+                                        <div class="w-00" style="padding:10px;">
+                                            ₹ {{ $booking->studio_charge }}
+                                        </div>
                                     </td>
-                                    <!--<td>-->
-                                    <!--    <button data-bs-toggle="modal" data-bs-target="#staticBackdrop"-->
-                                    <!--        class="btn btn-sm btn-gradient">Add Item</button>-->
-                                    <!--</td>-->
+
+                                    <td colspan="2">
+                                        <div class="w-00" style="padding:10px;">
+                                            ₹ {{ $booking->studio_charge * $booking->duration }}
+                                        </div>
+                                    </td>
+
 
                                 </tr>
                                 @php
@@ -188,19 +172,30 @@
                                     <tr>
                                         <td colspan="2">
                                             <div class="" style="padding:10px;">
-                                                {{ date('d-M-Y', strtotime($item->created_at)) }}</div>
+                                                {{ date('d-M-Y', strtotime($booking->booking_start_date)) }}</div>
                                         </td>
                                         <td colspan="4">
                                             <div class="w-100" style="padding:10px;">
                                                 <p>
-                                                    <b>
-                                                        {{ $item->rents->name }} :
-                                                    </b>
-                                                    {{ $item->charge }}/hour X {{ $item->uses_hours }} hours =
+
+                                                    {{ $item->rents->name }}
+
+
                                                 </p>
                                             </div>
                                         </td>
-                                        <td colspan="3">
+                                        <td colspan="2">
+                                            <div class="w-00" style="padding:10px;">
+                                                {{ $item->uses_hours }}
+
+                                            </div>
+                                        </td>
+                                        <td colspan="2">
+                                            <div class="w-00" style="padding:10px;">
+                                                ₹ {{ $item->charge }}
+                                            </div>
+                                        </td>
+                                        <td colspan="2">
                                             <div class="w-00" style="padding:10px;">
                                                 {{ $item->charge * $item->uses_hours }}
                                                 @php
@@ -208,9 +203,7 @@
                                                 @endphp
                                             </div>
                                         </td>
-                                        <td colspan="3">
-                                            <div class="w-00" style="padding:10px;"> </div>
-                                        </td>
+
                                         <!--<td>-->
                                         <!--    <div class="d-flex gap-1">-->
                                         <!--        <a href="{{ route('booking_item.destroy', $item->id) }}" class="btn btn-soft-danger btn-sm border-danger">Delete</a>-->
@@ -237,69 +230,66 @@
                                                 </p>
                                             </div>
                                         </td>
-                                        <td colspan="3">
+                                        <td colspan="2">
                                             <div class="w-00" style="padding:10px;">
 
                                             </div>
                                         </td>
-                                        <td colspan="3">
+                                        <td colspan="2">
                                             <div class="w-00" style="padding:10px;">
-                                                {{ $t->amount }}
+                                                ₹ {{ $t->amount }}
 
                                                 @php
                                                     array_push($crr, $t->amount);
                                                 @endphp
                                             </div>
                                         </td>
+                                        <td colspan="2">
+
+                                        </td>
 
                                     </tr>
                                 @endforeach
-                                <tr>
-                                    <td colspan="12">
-                                        <div class="w" style="width: 100%;padding:10px;"></div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="8">
 
-                                    </td>
-                                    <td colspan="2">
+                                <tr>
+                                    <td colspan="6" style="text-align: right;">
+
+
+
                                         Extra Added Amount
                                     </td>
-                                    <td>
-                                        {{ $booking->extra_added_sum_amount ?? 0 }}
+                                    <td colspan="6">
+                                        ₹ {{ $booking->extra_added_sum_amount ?? 0 }}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="6" style="text-align: right;">
 
-                                    </td>
-                                    <td colspan="2">
+
                                         Sub Total
                                     </td>
-                                    <td colspan="2">
+                                    <td colspan="6">
+                                        ₹
                                         {{ $subt = array_sum($arr) + $booking->studio_charge * $booking->duration + $booking->extra_added_sum_amount }}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="6" style="text-align: right;">
 
-                                    </td>
-                                    <td colspan="2">
+
                                         GST
                                     </td>
-                                    <td colspan="2">
-                                        {{ $gst = $subt * 0.18 }}
+                                    <td colspan="6">
+                                        ₹ {{ $gst = $subt * 0.18 }}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="6" style="text-align: right;">
 
-                                    </td>
-                                    <td colspan="2">
+
                                         Discount
                                     </td>
-                                    <td colspan="2">
+                                    <td colspan="6">
                                         {!! Form::open(['route' => ['booking.discount']]) !!}
                                         <input type="hidden" name="booking_id" value="{{ $booking->id }}">
                                         <div class="input-group">
@@ -311,26 +301,40 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="6" style="text-align: right;">
 
-                                    </td>
-                                    <td colspan="2">
+
                                         Payment Status
                                     </td>
-                                    <td colspan="2">
+                                    <td colspan="6">
                                         <span
-                                            class="badge bg-gradient p-2">{{ $pstatus[$booking->payment_status] }}</span>
+                                            class="badge bg-gradient p-2">₹{{ $pstatus[$booking->payment_status] }}</span>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="6" style="text-align: right;">
 
+
+                                        Balance Due
                                     </td>
-                                    <td colspan="2">
-                                        Net Balance
+                                    <td colspan="6">
+                                        ₹ {{ $subt + $gst - array_sum($crr) - $d }}
                                     </td>
-                                    <td colspan="2">
-                                        {{ $subt + $gst - array_sum($crr) - $d }}
+                                </tr>
+                                <tr>
+                                    <td colspan="6" style="text-align: right;">
+                                        <p>
+                                            Certified that the particulars given above are true
+                                            and correct. (E & O.E.)
+                                        </p>
+                                    </td>
+                                    <td colspan="6">
+                                        <p>
+                                            This is computer-generated document
+                                        </p>
+                                        <p>
+                                            No signature is required
+                                        </p>
                                     </td>
                                 </tr>
                             </tbody>
