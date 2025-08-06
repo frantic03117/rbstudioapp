@@ -237,17 +237,18 @@
                                             </div>
                                         </td>
                                         <td colspan="2">
+
+                                        </td>
+                                        <td colspan="2">
                                             <div class="w-00" style="padding:10px;">
-                                                ₹ {{ $t->amount }}
+                                                ₹ {{ number_format($t->amount, 2) }}
 
                                                 @php
                                                     array_push($crr, $t->amount);
                                                 @endphp
                                             </div>
                                         </td>
-                                        <td colspan="2">
 
-                                        </td>
 
                                     </tr>
                                 @endforeach

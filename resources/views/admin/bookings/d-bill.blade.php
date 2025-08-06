@@ -233,10 +233,7 @@
                                             <td colspan="4">
                                                 <div class="w-100" style="padding:10px;">
                                                     <p>
-                                                        <b>
-                                                            Transaction Id : {{ $t->id }}
-                                                        </b>
-
+                                                        {{ $t->type }}
                                                     </p>
                                                 </div>
                                             </td>
@@ -244,6 +241,9 @@
                                                 <div class="w-00" style="padding:10px;">
 
                                                 </div>
+                                            </td>
+                                            <td colspan="2">
+
                                             </td>
                                             <td colspan="2">
                                                 <div class="w-00" style="padding:10px;">
@@ -254,18 +254,13 @@
                                                     @endphp
                                                 </div>
                                             </td>
-                                            <td colspan="2">
 
-                                            </td>
 
                                         </tr>
                                     @endforeach
 
                                     <tr>
                                         <td colspan="6" style="text-align: right;">
-
-
-
                                             Extra Added Amount
                                         </td>
                                         <td colspan="6">
@@ -274,8 +269,6 @@
                                     </tr>
                                     <tr>
                                         <td colspan="6" style="text-align: right;">
-
-
                                             Sub Total
                                         </td>
                                         <td colspan="6">
@@ -285,8 +278,6 @@
                                     </tr>
                                     <tr>
                                         <td colspan="6" style="text-align: right;">
-
-
                                             GST
                                         </td>
                                         <td colspan="6">
