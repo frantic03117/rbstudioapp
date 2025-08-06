@@ -60,10 +60,10 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="8" style="text-align: center">
+                                        <td colspan="8" style="text-align: center;font-size:14px;">
                                             <h4>Customer Details</h4>
                                         </td>
-                                        <td colspan="4">
+                                        <td colspan="4" style="font-size:14px;">
                                             <h4>Receipt Details</h4>
                                         </td>
                                     </tr>
