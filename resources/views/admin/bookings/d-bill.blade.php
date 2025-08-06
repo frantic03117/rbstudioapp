@@ -247,7 +247,7 @@
                                             </td>
                                             <td colspan="2">
                                                 <div class="w-00" style="padding:10px;">
-                                                    ₹ {{ $t->amount }}
+                                                    ₹ {{ number_format($t->amount, 2) }}
 
                                                     @php
                                                         array_push($crr, $t->amount);
@@ -312,7 +312,8 @@
                                             Balance Due
                                         </td>
                                         <td colspan="6">
-                                            ₹ {{ $subt + $gst - array_sum($crr) - $d }}
+                                            ₹ {{ number_format($subt + $gst - array_sum($crr) - $d, 2) }}
+
                                         </td>
                                     </tr>
                                     <tr>
