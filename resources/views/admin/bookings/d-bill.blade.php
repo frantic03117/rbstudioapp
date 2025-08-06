@@ -323,13 +323,13 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="8" style="text-align: right;">
+                                        <td colspan="6" style="text-align: right;">
                                             <p>
                                                 Certified that the particulars given above are true
                                                 and correct. (E & O.E.)
                                             </p>
                                         </td>
-                                        <td colspan="4">
+                                        <td colspan="6">
                                             <p>
                                                 This is computer-generated document
                                             </p>
