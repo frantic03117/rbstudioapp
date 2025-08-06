@@ -70,11 +70,12 @@ class BookingController extends Controller
         $now = date('Y-m-d H:i:s');
         $title = "List of Booking";
         $items = Booking::where('id', '>', '0');
+        $yesterday = Carbon::yesterday()->format('Y-m-d');
         if ($booking_id) {
             $items->where('id', $booking_id);
         } else {
             if ($type == "upcoming") {
-                $items->whereDate('booking_start_date', '>=', date('Y-m-d'))->orderBy('booking_start_date', 'ASC');
+                $items->whereDate('booking_start_date', '>=', $yesterday)->orderBy('booking_start_date', 'ASC');
             }
             if ($type == "today") {
                 $items->whereDate('booking_start_date', '=', date('Y-m-d'))->orderBy('booking_start_date', 'ASC');
