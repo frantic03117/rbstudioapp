@@ -265,70 +265,71 @@
                                     @endforeach
 
                                     <tr>
-                                        <td colspan="6" style="text-align: right;">
+                                        <td colspan="8" style="text-align: right;">
                                             Extra Added Amount
                                         </td>
-                                        <td colspan="6">
+                                        <td colspan="4">
                                             ₹ {{ $booking->extra_added_sum_amount ?? 0 }}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="6" style="text-align: right;">
+                                        <td colspan="8" style="text-align: right;">
                                             Sub Total
                                         </td>
-                                        <td colspan="6">
+                                        <td colspan="4">
                                             ₹
                                             {{ $subt = array_sum($arr) + $booking->studio_charge * $booking->duration + $booking->extra_added_sum_amount }}
                                         </td>
                                     </tr>
+
                                     <tr>
-                                        <td colspan="6" style="text-align: right;">
+                                        <td colspan="8" style="text-align: right;">
                                             GST
                                         </td>
-                                        <td colspan="6">
+                                        <td colspan="4">
                                             ₹ {{ $gst = $subt * 0.18 }}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="6" style="text-align: right;">
+                                        <td colspan="8" style="text-align: right;">
 
 
                                             Discount
                                         </td>
-                                        <td colspan="6">
+                                        <td colspan="4">
                                             {{ $d = $booking->discount }}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="6" style="text-align: right;">
+                                        <td colspan="8" style="text-align: right;">
 
 
                                             Payment Status
                                         </td>
-                                        <td colspan="6">
+                                        <td colspan="4">
                                             <span
                                                 class="badge bg-gradient p-2">{{ $pstatus[$booking->payment_status] }}</span>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="6" style="text-align: right;">
+                                        <td colspan="8" style="text-align: right;">
 
 
                                             Balance Due
                                         </td>
-                                        <td colspan="6">
+                                        <td colspan="4">
                                             ₹ {{ number_format($subt + $gst - array_sum($crr) - $d, 2) }}
 
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="6" style="text-align: right;">
+                                        <td colspan="8" style="text-align: right;">
                                             <p>
                                                 Certified that the particulars given above are true
                                                 and correct. (E & O.E.)
                                             </p>
                                         </td>
-                                        <td colspan="6">
+                                        <td colspan="4">
                                             <p>
                                                 This is computer-generated document
                                             </p>
