@@ -10,6 +10,11 @@
         table tr td {
             font-size: 14px !important;
         }
+
+        table tr td p,
+        table tr td h4 {
+            font-size: 14px !important;
+        }
     </style>
 </head>
 
