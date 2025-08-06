@@ -39,7 +39,7 @@
                                             </div>
                                         </td>
                                         <td colspan="4">
-                                            <h2 class="mb-0">
+                                            <h2 class="mb-0" style="font-size:16px;">
                                                 {{ $studio->name }}
                                             </h2>
 
@@ -55,7 +55,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="12" style="text-align: center">
+                                        <td colspan="12" style="text-align: center;font-size:14px;">
                                             <h4>Receipt</h4>
                                         </td>
                                     </tr>
