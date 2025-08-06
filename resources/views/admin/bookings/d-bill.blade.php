@@ -72,7 +72,7 @@
 
 
                                             <div class="w-100">
-                                                <h5>
+                                                <h5 style="font-size: 14px;">
                                                     <b>Name of Guest :</b>
                                                     {{ $user->name }}
                                                 </h5>
