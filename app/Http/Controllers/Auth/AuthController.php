@@ -30,17 +30,18 @@ class AuthController extends Controller
         } else {
             $mobile = $request->mobile;
             $check = User::where(['mobile' =>  $mobile])->first();
-            if ($check->deleted_at) {
-                $data = [
-                    'errors' => $validator->errors(),
-                    'data' => [],
-                    'success' => 0,
-                    'message' =>  'Account deleted. Please contact us to activate your account'
-                ];
-                return  response()->json($data, 200);
-            }
+
             $otp  = $mobile  == "8888888888" ? '8888' : mt_rand(1111, 9999);
             if ($check) {
+                if ($check->deleted_at) {
+                    $data = [
+                        'errors' => $validator->errors(),
+                        'data' => [],
+                        'success' => 0,
+                        'message' =>  'Account deleted. Please contact us to activate your account'
+                    ];
+                    return  response()->json($data, 200);
+                }
                 if ($check->role != "User") {
                     $data = [
                         'errors' => ['message' => ['Invalid mobile number']],
