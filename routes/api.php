@@ -55,7 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('book-studio', [BookingController::class, 'store']);
     Route::post('find_start_slot', [AjaxController::class, 'find_start_slot'])->name('find_start_slot');
     Route::post('find_end_slot', [AjaxController::class, 'find_end_slot'])->name('find_end_slot');
-    Route::delete('delete-account',  [ApiController::class, 'delete_account']);
+    Route::post('delete-account',  [ApiController::class, 'delete_account']);
     Route::post('search', [ApiController::class, 'search_bookings']);
     Route::post('coupan', [ApiController::class, 'add_promo_code']);
     Route::post('add-fcm', [ApiController::class, 'update_fcm']);
