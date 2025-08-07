@@ -562,7 +562,8 @@ class ApiController extends Controller
     public function delete_account(Request $request)
     {
         $uid = auth('sanctum')->user()->id;
-        User::where('id', $uid)->update(['deleted_at' => date('Y-m-d H:i:s'), 'email' => '', 'mobile' => '']);
+        $finduser =  User::where('id', $uid)->first();
+        User::where('id', $uid)->update(['deleted_at' => date('Y-m-d H:i:s'), 'email' =>  $finduser->email . 'd', 'mobile' =>         $finduser->mobile . 'd']);
         return response()->json([
             'data' => [],
             'success' => 1,
