@@ -61,7 +61,7 @@ class AuthController extends Controller
             $data = [
                 'fcm' => $check ? $check->fcm_token : "",
                 'errors' => $isSend,
-                'data' => ['OTP' => $otp, 'mobile' => $mobile],
+                'data' => ['OTP' => '', 'mobile' => $mobile],
                 'success' => 1,
                 'message' =>  'Otp has been sent to your mobile number.'
             ];
