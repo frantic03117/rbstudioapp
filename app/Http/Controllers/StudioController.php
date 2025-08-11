@@ -736,7 +736,7 @@ class StudioController extends Controller
         $transactions = Transaction::where([
             'type' => 'Credit',
             'mode' => 'Razorpay'
-        ])->where('gateway_order_id', '!=', null)->where('status', '!=', 'Success')->get();
+        ])->where('status', '!=', 'Success')->get();
         return response()->json($transactions);
         foreach ($transactions as $trs) {
             $gateway_id = $trs['razorpay_order_id'];
