@@ -737,7 +737,7 @@ class StudioController extends Controller
             'type' => 'Credit',
             'mode' => 'Razorpay'
         ])->where('status', '!=', 'Success')->get();
-        $odata = $api->order->fetch('order_R42Y2phBi1kwPB');
+        $odata = $api->order->fetch('order_R42jdH1DG7Qjjb');
         return response()->json([$transactions,  $odata]);
         foreach ($transactions as $trs) {
             $gateway_id = $trs['razorpay_order_id'];
