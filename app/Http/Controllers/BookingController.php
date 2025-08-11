@@ -485,7 +485,6 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-
         date_default_timezone_set('Asia/kolkata');
         $validator = Validator::make($request->all(), [
             'mobile' => 'required|min:10|max:10',
@@ -577,7 +576,7 @@ class BookingController extends Controller
                 $updata['email'] = $email;
             }
             if ($mobile) {
-                $updata['email'] = $mobile;
+                $updata['mobile'] = $mobile;
             }
             $user_id = !$user ? User::insertGetId($updata) :  $user->id;
             $studio = Studio::where('id', $studio_id)->first();
