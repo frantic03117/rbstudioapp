@@ -733,12 +733,11 @@ class StudioController extends Controller
     {
         date_default_timezone_set('Asia/kolkata');
         $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
-        $transactions = Transaction::where([
-            'type' => 'Credit',
-            'mode' => 'Razorpay'
-        ])->where('status', '!=', 'Success')->get();
-        $odata = $api->order->fetch('order_R42jdH1DG7Qjjb');
-        return response()->json([$transactions,  $odata]);
+        $transactions = Transaction::where('status', null)->where('mode', 'Razorpay')->get();
+        $orders = $api->order->all(['count' => 1]);
+
+        echo json_encode($orders);
+        die;
         foreach ($transactions as $trs) {
             $gateway_id = $trs['razorpay_order_id'];
             $orderData = $api->order->fetch($gateway_id);
