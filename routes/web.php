@@ -34,6 +34,7 @@ Route::get('/login', [AdminController::class, 'index'])->name('login');
 Route::post('/admin', [AdminController::class, 'login'])->name('login.store');
 Route::get('/admin', [AdminController::class, 'login'])->name('login.index');
 Route::any('logout', [AdminController::class, 'logout'])->name('logout');
+Route::any('check-payment', [StudioController::class, 'getPaymentStatusAfterPending']);
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/policy/{url}', [HomeController::class, 'terms'])->name('terms');

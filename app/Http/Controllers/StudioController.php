@@ -729,6 +729,63 @@ class StudioController extends Controller
         }
         return view('admin.bookings.razorpay_payment', $res);
     }
+    public function getPaymentStatusAfterPending(Request $request)
+    {
+        date_default_timezone_set('Asia/kolkata');
+        $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
+        $transactions = Transaction::where([
+            'type' => 'Credit',
+            'mode' => 'Razorpay'
+        ])->where('gateway_order_id', '!=', null)->where('status', '!=', 'Success')->get();
+        foreach ($transactions as $trs) {
+            $gateway_id = $trs['razorpay_order_id'];
+            $orderData = $api->order->fetch($gateway_id);
+            if ($orderData['status'] == "paid") {
+                Transaction::where('id', $trs['id'])->update([
+                    'status' => 'Success',
+                    'ret_resp' => json_encode($orderData->toArray())
+                ]);
+                $bid = $trs->booking_id;
+                Booking::where('id', $bid)->update(['booking_status' => '1']);
+                $booking = Booking::where('id', $bid)->with('studio')
+                    ->with('transactions')->withSum('transactions', 'amount')
+                    ->with('rents')->withSum('extra_added', 'amount')->with('gst')
+                    ->with('service:id,name')
+                    ->first();
+                $extra_added = $booking['extra_added_sum_amount'] ?? 0;
+                $extra_charge_per_hour = 200;
+                $extra_hours = 0;
+                $start_time = strtotime($booking['booking_start_date']);
+                $end_time = strtotime($booking['booking_end_date']);
+                $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
+                $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+                if ($start_time >= $night_start) {
+                    $morning_end += 86400;
+                }
+                while ($start_time < $end_time) {
+                    if ($start_time >= $night_start || $start_time < $morning_end) {
+                        $extra_hours++;
+                    }
+                    $start_time = strtotime('+1 hour', $start_time);
+                }
+                $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
+                $rents = $booking->rents;
+                $rentcharge = 0;
+                foreach ($rents as $r) {
+                    $rentcharge += $r->pivot->charge * $r->pivot->uses_hours;
+                }
+                $paid = $booking->transactions_sum_amount;
+                $totalPaable = $booking->duration * $booking->studio_charge + $rentcharge + $extra_charge + $extra_added;
+                $withgst =  $totalPaable * 1.18;
+                $netPending = $withgst - $paid - floatval($booking->promo_discount_calculated);
+                $amount = $netPending;
+                if (ceil($amount) <= 1) {
+                    Booking::where('id', $bid)->update(['payment_status' => '1', 'booking_status' => '1']);
+                }
+                return true;
+            }
+        }
+    }
     public function paymentCallbackRazorpay(Request $request)
     {
         date_default_timezone_set('Asia/kolkata');
