@@ -1148,7 +1148,7 @@ class BookingController extends Controller
     }
     public function generate_bill($id)
     {
-        $booking = Booking::where('id', $id)->withSum('extra_added', 'amount')->with('gst')->first();
+        $booking = Booking::where('id', $id)->withSum('extra_added', 'amount')->with('gst')->with('service:id,name')->first();
         $studio = Studio::where('vendor_id', $booking->vendor_id)
             ->with('country')->with('state')->with('district')
             ->first();
@@ -1168,7 +1168,7 @@ class BookingController extends Controller
         $bstatus = ['0' => 'Pending', '1' => 'Confirmed', '2' => 'Cancelled'];
         $pstatus = ['0' => 'Unpaid', '1' => 'Paid', '2' => 'Refunded'];
         $res = compact('title', 'items', 'studio', 'booking', 'user', 'ritems', 'trans', 'bstatus', 'pstatus');
-        // return response()->json($items);
+        // return response()->json($booking);
         return view('admin.bookings.bill', $res);
     }
     public function download_bill(Request $request, $id)

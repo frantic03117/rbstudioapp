@@ -39,13 +39,15 @@
                                             </div>
                                         </td>
                                         <td colspan="4">
-                                            <h2 class="mb-0" style="font-size:16px;">
-                                                {{ $studio->name }}
+                                            <h2 class="mb-0 " style="font-size:16px;">
+                                              R & B Studio
                                             </h2>
 
-                                            <p class="mb-0">
-                                                {{ $studio->address . ' , ' . $studio->district?->city . ' , ' . $studio->state?->state . ' , ' . $studio->country?->country . ' , ' . $studio->pincode }}
-                                            </p>
+                                         <p class="mb-0">
+                                            905 B Wing, Venus Tower, Veera Desai Road, Azad Nagar
+                                            <br/>
+                                            Mumbai - 400052
+                                         </p>
                                         </td>
                                         <td colspan="4">
                                             <p style="margin-bottom: 10px"></p>
@@ -73,9 +75,16 @@
 
                                             <div class="w-100">
                                                 <h5 style="font-size: 14px;">
-                                                    <b>Name of Guest :</b>
+                                                    <b>Name :</b>
                                                     {{ $user->name }}
                                                 </h5>
+                                                @if ($user?->gst)
+                                                    <p>
+                                                        <b>Address : </b>
+
+                                                        {{ $user?->gst?->address }}   {{ $user?->gst?->pincode }}
+                                                    </p>
+                                                @endif
                                                 <p>
                                                     <b>Mobile : </b>
                                                     {{ $user->mobile }}
@@ -155,9 +164,10 @@
                                                     {{ $booking->studio->name }}
                                                 </p>
                                                 <p class="mb-0">
-                                                    From
-                                                    {{ date('d-M-Y h:i A', strtotime($booking->booking_start_date)) }}
-                                                    to {{ date('d-M-Y h:i A', strtotime($booking->booking_end_date)) }}
+                                                  {{ $booking->duration }} hours
+                                                </p>
+                                                <p class="mb-0">
+                                                  {{ $booking->service?->name }}
                                                 </p>
                                             </div>
                                         </td>
@@ -263,6 +273,15 @@
 
                                         </tr>
                                     @endforeach
+                                      <tr>
+                                        <td colspan="8" style="text-align: right;">
+                                            Amount
+                                        </td>
+                                        <td colspan="4">
+                                            ₹
+                                            {{ $subt = array_sum($arr) + $booking->studio_charge * $booking->duration  }}
+                                        </td>
+                                    </tr>
 
                                     <tr>
                                         <td colspan="8" style="text-align: right;">
@@ -298,6 +317,15 @@
                                         </td>
                                         <td colspan="4">
                                             {{ $d = $booking->discount }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8" style="text-align: right;">
+                                            Advance
+
+                                        </td>
+                                        <td colspan="4">
+                                          ₹  {{  array_sum($crr) - $d, 2) }}
                                         </td>
                                     </tr>
                                     <tr>
