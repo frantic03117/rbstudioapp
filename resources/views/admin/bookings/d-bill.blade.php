@@ -98,6 +98,10 @@
                                                     {{ $booking->gst?->gst }}
                                                 </p>
                                                 <p>
+                                                    <b>Artist/Band : </b>
+                                                    {{ $booking?->artist }}
+                                                </p>
+                                                <p>
                                                     <b>Booking Status :</b>
                                                     <span
                                                         class="badge p-2 {{ $booking->booking_status == '2' ? 'bg-danger' : 'bg-gradient' }}">
@@ -316,7 +320,7 @@
                                             Discount
                                         </td>
                                         <td colspan="4">
-                                            {{ $d = $booking->discount }}
+                                            {{ $d = $booking->discount + $booking->promo_discount_calculated}}
                                         </td>
                                     </tr>
                                     <tr>
