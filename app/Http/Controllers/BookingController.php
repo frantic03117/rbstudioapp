@@ -600,7 +600,7 @@ class BookingController extends Controller
                 'created_by' => auth('sanctum')->user()->id ?? auth()->user()->id,
                 "created_at" =>  date('Y-m-d H:i:s')
             ];
-            if($request->artist){
+            if ($request->artist) {
                 $bdata['artist'] = $request->artist;
             }
             if ($creatorRole == "User") {
@@ -621,6 +621,9 @@ class BookingController extends Controller
                     "pincode" => $request->pincode,
                     "created_at" =>  date('Y-m-d H:i:s')
                 ];
+                if ($request->company) {
+                    $gdata['company'] = $request->company;
+                }
                 $gstid = DB::table('booking_gsts')->insertGetId($gdata);
                 Booking::where('id', $bid)->update(['gst_id' => $gstid]);
             }
@@ -979,9 +982,9 @@ class BookingController extends Controller
             "studio_charge" => $serviceStudio->charge,
             "updated_at" =>  date('Y-m-d H:i:s')
         ];
-         if($request->artist){
-                $bdata['artist'] = $request->artist;
-            }
+        if ($request->artist) {
+            $bdata['artist'] = $request->artist;
+        }
 
         Booking::where(['id' => $booking->id])->update($bdata);
         $bid = $booking->id;
@@ -1013,6 +1016,9 @@ class BookingController extends Controller
                 "pincode" => $request->pincode,
                 "created_at" =>  date('Y-m-d H:i:s')
             ];
+            if ($request->company) {
+                $gdata['company'] = $request->company;
+            }
             DB::table('booking_gsts')->insert($gdata);
         }
         $msg  = "Your booking has been successfully rescheduled. Check the updated details in the Bookings Tab.";
