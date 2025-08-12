@@ -979,6 +979,9 @@ class BookingController extends Controller
             "studio_charge" => $serviceStudio->charge,
             "updated_at" =>  date('Y-m-d H:i:s')
         ];
+         if($request->artist){
+                $bdata['artist'] = $request->artist;
+            }
 
         Booking::where(['id' => $booking->id])->update($bdata);
         $bid = $booking->id;
