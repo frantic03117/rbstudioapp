@@ -600,7 +600,9 @@ class BookingController extends Controller
                 'created_by' => auth('sanctum')->user()->id ?? auth()->user()->id,
                 "created_at" =>  date('Y-m-d H:i:s')
             ];
-
+            if($request->artist){
+                $bdata['artist'] = $request->artist;
+            }
             if ($creatorRole == "User") {
                 $bdata['approved_at'] = $serviceStudio->is_permissable == "0" ? date('Y-m-d H:i:s') : null;
             } else {
