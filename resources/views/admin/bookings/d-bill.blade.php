@@ -325,7 +325,7 @@
 
                                         </td>
                                         <td colspan="4">
-                                          ₹  {{  array_sum($crr) - $d, 2) }}
+                                          ₹  {{  (array_sum($crr) - $d, 2) }}
                                         </td>
                                     </tr>
                                     <tr>
