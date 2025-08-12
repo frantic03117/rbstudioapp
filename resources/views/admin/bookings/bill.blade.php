@@ -261,7 +261,7 @@
                                         Extra Added Amount
                                     </td>
                                     <td colspan="6">
-                                        ₹ {{ $booking->extra_added_sum_amount ?? 0 }}
+                                        ₹ {{ $extm =  $booking->extra_added_sum_amount ?? 0 }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -303,9 +303,16 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                     <td colspan="6" style="text-align: right;">
+                                      Promo Discount
+                                    </td>
+                                      <td colspan="6">
+                                        <span
+                                            class="">₹{{ $booking->promo_discount_calculated }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td colspan="6" style="text-align: right;">
-
-
                                         Payment Status
                                     </td>
                                     <td colspan="6">
@@ -315,12 +322,10 @@
                                 </tr>
                                 <tr>
                                     <td colspan="6" style="text-align: right;">
-
-
                                         Balance Due
                                     </td>
                                     <td colspan="6">
-                                        ₹ {{ $subt + $gst - array_sum($crr) - $d }}
+                                        ₹ {{ $subt + $gst + $extm - array_sum($crr) - $d }}
                                     </td>
                                 </tr>
                                 <tr>
