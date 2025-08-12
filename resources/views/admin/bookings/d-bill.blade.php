@@ -329,7 +329,7 @@
 
                                         </td>
                                         <td colspan="4">
-                                          ₹  {{  number_format(array_sum($crr) - $d, 2) }}
+                                          ₹  {{  number_format(array_sum($crr) , 2) }}
                                         </td>
                                     </tr>
                                     <tr>
