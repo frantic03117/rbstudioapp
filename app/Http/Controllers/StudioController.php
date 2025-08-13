@@ -10,7 +10,7 @@ use App\Models\ServiceStudio;
 use App\Models\Studio\Charge;
 use App\Models\Studio\Service;
 use App\Models\Studio\Studio;
-
+use Illuminate\Support\Facades\Log;
 use App\Models\StudioImage;
 use App\Models\RbNotification;
 use App\Models\Vendor;
@@ -863,6 +863,34 @@ class StudioController extends Controller
             return response()->json(['message' => 'Payment successful and verified.']);
         } catch (\Razorpay\Api\Errors\SignatureVerificationError $e) {
             return response()->json(['error' => 'Signature verification failed.'], 400);
+        }
+    }
+    public function paymentCallbackRazorpayWebHook(Request $request)
+    {
+        date_default_timezone_set('Asia/kolkata');
+        $input = $request->all();
+        $secret =  env('RAZORPAY_SECRET');
+        $receivedSignature = $request->header('x-razorpay-signature');
+        $body = $request->getContent();
+        Log::info('receivedSignature: ' . $receivedSignature);
+        Log::info('secret: ' . $secret);
+        Log::info('body: ' . $body);
+        $expectedSignature = hash_hmac('sha256', $body, $secret);
+        if ($receivedSignature === $expectedSignature) {
+            $event = $request->input('event');
+            if ($event === 'order.paid') {
+                $orderData = $request->input('payload.order.entity');
+                $paymentData = $request->input('payload.payment.entity');
+
+                // Do something with $orderData and $paymentData
+                Log::info('Order Paid Event', [
+                    'order' => $orderData,
+                    'payment' => $paymentData
+                ]);
+            }
+        } else {
+            Log::warning('Invalid signature - possible fraud attempt.');
+            return response()->json(['error' => 'Invalid signature'], 400);
         }
     }
 }

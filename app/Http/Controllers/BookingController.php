@@ -202,6 +202,8 @@ class BookingController extends Controller
 
                 // Base amount
                 $base_amount = $b['duration'] * $b['studio_charge'];
+                $b['studio_charge_sum'] = $base_amount;
+
                 $extra_added = $b['extra_added_sum_amount'];
                 $rents = $b->rents;
                 $rent_charge = 0;
@@ -212,6 +214,7 @@ class BookingController extends Controller
                 // Final total calculation including GST (18%)
                 $total_amount = ($base_amount + $extra_charge + $extra_added + $rent_charge) * 1.18;
                 $b['extra_charge'] = $extra_charge;
+                $b['gst_sum'] = ($base_amount + $extra_charge + $extra_added + $rent_charge) * 0.18;
                 // Add the calculated total to the booking object
                 $b['total_amount'] = round($total_amount, 2);
 
@@ -766,6 +769,7 @@ class BookingController extends Controller
         $rents =  $booking->rents;
         $booking['rents_price'] = $rent_charge;
         $booking['extra_charge'] = $extra_charge;
+        $booking['studio_charge_sum'] =  $booking->duration * $booking->studio_charge;
         $totalPaable = $booking->duration * $booking->studio_charge + $rent_charge + $extra_charge + $booking['extra_added_sum_amount'];
         $withgst = $totalPaable * 1.18;
         $booking['total_to_pay'] = $withgst;
@@ -1142,12 +1146,16 @@ class BookingController extends Controller
     {
         $request->validate([
             'booking_id' => 'required',
-            'discount' => 'required|numeric'
+            'discount' => 'required|numeric',
+
         ]);
         $bid = $request->booking_id;
+
         $data = [
             'discount' => $request->discount
         ];
+
+
         if (Booking::where('id', $bid)->update($data)) {
             return redirect()->back()->with('success', 'Discount Added Successfully');
         }

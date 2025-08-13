@@ -9,30 +9,30 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="POST" class="d-block w-100 ">
-                    @csrf
-                    <div class="row">
-                        <input type="hidden" name="booking_id" value="{{ $bid }}">
-                        <div class="col-md-12">
-                            <div class="form-group mb-3">
-                                <label for="">Enter Discount</label>
-                                <div class="input-group">
-                                    <input type="number" name="amount" id="amount" value="{{ $discount }}"
-                                        class="form-control">
-                                    <select name="discount_type" id="">
-                                        <option value="Fixed">Fixed</option>
-                                        <option value="Percent">Percent</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <button type="submit" class="btn d-block  btn-primary">Add Amount</button>
+                {!! Form::open(['route' => ['booking.discount']]) !!}
+                @csrf
+                <div class="row">
+                    <input type="hidden" name="booking_id" value="{{ $bid }}">
+                    <div class="col-md-12">
+                        <div class="form-group mb-3">
+                            <label for="">Enter Discount</label>
+                            <div class="input-group">
+                                <input type="number" name="discount" id="discount" value="{{ $discount }}"
+                                    class="form-control">
+                                {{-- <select name="discount_type" id="">
+                                    <option value="Fixed">Fixed</option>
+                                    <option value="Percent">Percent</option>
+                                </select> --}}
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <button type="submit" class="btn d-block  btn-primary">Add Amount</button>
+                        </div>
                     </div>
-                </form>
+
+                </div>
+                {!! Form::close() !!}
 
             </div>
         </div>

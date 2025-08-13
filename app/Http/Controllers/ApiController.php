@@ -58,6 +58,7 @@ class ApiController extends Controller
             return response()->json($data);
         }
     }
+
     public function services()
     {
         $items = Service::all();

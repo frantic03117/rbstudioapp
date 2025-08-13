@@ -356,9 +356,12 @@
                                                 @endphp --}}
                                                 <ul class="list-unstyled text-nowrap">
 
-                                                    <li>
-                                                        Total Amount : {{ $b->total_amount }}
 
+                                                    <li>
+                                                        Studio Charges : {{ $b->studio_charge_sum ?? 0 }}
+                                                    </li>
+                                                    <li>
+                                                        Extra Charges : {{ $b->extra_added_sum_amount ?? 0 }}
                                                     </li>
                                                     <li>
                                                         Overnight Charges : {{ $b->extra_charge }}
@@ -371,7 +374,23 @@
                                                     </li>
                                                     <li>
                                                         Promo Code Discount :
-                                                        {{ $discount = floatval($b->promo_discount_calculated) }}
+                                                        {{ floatval($b->promo_discount_calculated) }}
+                                                    </li>
+
+                                                    <li>
+                                                        Admin Discount :
+                                                        {{ floatval($b->discount) }}
+                                                    </li>
+                                                    <li>
+                                                        Total Discount :
+                                                        {{ $discount = $b->promo_discount_calculated + $b->discount }}
+                                                    </li>
+                                                    <li>
+                                                        GST : {{ $b->gst_sum }}
+                                                    </li>
+                                                    <li>
+                                                        Total Amount : {{ $b->total_amount }}
+
                                                     </li>
                                                     <li>
                                                         Paid Amount : {{ $paid = $b->transactions_sum_amount }}
