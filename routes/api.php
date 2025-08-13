@@ -39,7 +39,7 @@ Route::post('verify-mobile', [AuthController::class, 'verify_otp']);
 Route::post('register', [AuthController::class, 'register']);
 Route::get('cancel-booking', [ApiController::class, 'cancel_booking']);
 Route::get('payment-pending-notification', [ApiController::class, 'payment_notification']);
-Route::get('webhook-handler', [ApiController::class, 'webhook_payment']);
+Route::get('webhook-handler', [ApiController::class, 'paymentCallbackRazorpayWebHook']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
