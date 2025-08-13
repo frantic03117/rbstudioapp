@@ -120,6 +120,11 @@
                                         value="{{ $keyword }}">
                                 </div>
                                 <div class="col-md-2">
+                                    <label for="">Booking ID</label>
+                                    <input type="text" name="booking_id" id=""
+                                        class="form-control form-control-sm" value="{{ $booking_id }}">
+                                </div>
+                                <div class="col-md-2">
                                     <label for="">Booking Date</label>
                                     <input type="date" id="booking_date_form" class="form-control form-control-sm"
                                         name="booking_date_form" value="{{ $bdf }}" id="">
@@ -428,6 +433,9 @@
                                                     <button data-bs-toggle="modal"
                                                         data-bs-target="#staticBackdropExtra{{ $b->id }}"
                                                         class="btn btn-sm btn-primary">Add Extra Amount</button>
+                                                    <button data-bs-toggle="modal"
+                                                        data-bs-target="#staticBackdropdiscount{{ $b->id }}"
+                                                        class="btn btn-sm btn-primary">Add Discount Amount</button>
                                                     <div class="dropdown inline-block">
                                                         <button class="btn btn-success  btn-sm dropdown-toggle"
                                                             type="button" data-bs-toggle="dropdown"
@@ -459,6 +467,10 @@
                                                     @include('admin.bookings.ExtraAmontPopup', [
                                                         'bid' => $b->id,
                                                         'items' => $b->extra_added,
+                                                    ])
+                                                    @include('admin.bookings.DiscountPopup', [
+                                                        'bid' => $b->id,
+                                                        'discount' => $b->discount,
                                                     ])
                                                 </div>
                                             @endif

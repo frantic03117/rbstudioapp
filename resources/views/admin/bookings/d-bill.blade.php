@@ -40,14 +40,14 @@
                                         </td>
                                         <td colspan="4">
                                             <h2 class="mb-0 " style="font-size:16px;">
-                                              R & B Studio
+                                                R & B Studio
                                             </h2>
 
-                                         <p class="mb-0">
-                                            905 B Wing, Venus Tower, Veera Desai Road, Azad Nagar
-                                            <br/>
-                                            Mumbai - 400052
-                                         </p>
+                                            <p class="mb-0">
+                                                905 B Wing, Venus Tower, Veera Desai Road, Azad Nagar
+                                                <br />
+                                                Mumbai - 400052
+                                            </p>
                                         </td>
                                         <td colspan="4">
                                             <p style="margin-bottom: 10px"></p>
@@ -82,7 +82,7 @@
                                                     <p>
                                                         <b>Address : </b>
 
-                                                        {{ $user?->gst?->address }}   {{ $user?->gst?->pincode }}
+                                                        {{ $user?->gst?->address }} {{ $user?->gst?->pincode }}
                                                     </p>
                                                 @endif
                                                 <p>
@@ -168,10 +168,10 @@
                                                     {{ $booking->studio->name }}
                                                 </p>
                                                 <p class="mb-0">
-                                                  {{ $booking->duration }} hours
+                                                    {{ $booking->duration }} hours
                                                 </p>
                                                 <p class="mb-0">
-                                                  {{ $booking->service?->name }}
+                                                    {{ $booking->service?->name }}
                                                 </p>
                                             </div>
                                         </td>
@@ -277,13 +277,13 @@
 
                                         </tr>
                                     @endforeach
-                                      <tr>
+                                    <tr>
                                         <td colspan="8" style="text-align: right;">
                                             Amount
                                         </td>
                                         <td colspan="4">
                                             ₹
-                                            {{ $subt = array_sum($arr) + $booking->studio_charge * $booking->duration  }}
+                                            {{ $subt = array_sum($arr) + $booking->studio_charge * $booking->duration }}
                                         </td>
                                     </tr>
 
@@ -320,7 +320,7 @@
                                             Discount
                                         </td>
                                         <td colspan="4">
-                                            {{ $d = $booking->discount + $booking->promo_discount_calculated}}
+                                            {{ $d = $booking->discount + $booking->promo_discount_calculated }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -329,7 +329,7 @@
 
                                         </td>
                                         <td colspan="4">
-                                          ₹  {{  number_format(array_sum($crr) , 2) }}
+                                            ₹ {{ number_format(array_sum($crr), 2) }}
                                         </td>
                                     </tr>
                                     <tr>

@@ -247,7 +247,7 @@ class BookingController extends Controller
         $vendors = $vends->orderBy('id', 'DESC')->get();
         $svs = Service::where('id', '>', '0');
         $services = $svs->get();
-        $res = compact('title', 'type', 'bookings', 'keyword', 'vendors', 'vendor_id', 'studio_id', 'service_id', 'approved_at', 'booking_status', 'payment_status', 'duration', 'created_by', 'bdf', 'services', 'bdt', 'studios', 'payment_filter');
+        $res = compact('title', 'type', 'booking_id', 'bookings', 'keyword', 'vendors', 'vendor_id', 'studio_id', 'service_id', 'approved_at', 'booking_status', 'payment_status', 'duration', 'created_by', 'bdf', 'services', 'bdt', 'studios', 'payment_filter');
 
         if ($request->expectsJson()) {
             return response()->json(['data' => $bookings, 'success' => 1, 'message' => $title]);
@@ -1154,7 +1154,60 @@ class BookingController extends Controller
     }
     public function generate_bill($id)
     {
-        $booking = Booking::where('id', $id)->withSum('extra_added', 'amount')->with('gst')->with('service:id,name')->first();
+        $bookings = Booking::where('id', $id)->withSum('transactions', 'amount')->withSum('extra_added', 'amount')->with('gst')->with('service:id,name')->get();
+        $extra_charge_per_hour = 200;
+        $bookings->transform(
+            function ($b) use ($extra_charge_per_hour) {
+
+                $extra_hours = 0;
+
+                $start_time = strtotime($b['booking_start_date']);
+                $end_time = strtotime($b['booking_end_date']);
+
+                // Define extra charge period (11 PM - 8 AM)
+                $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
+                $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+
+                // Fix: Use next day's 8 AM **only if booking crosses midnight**
+                if ($start_time >= $night_start) {
+                    $morning_end += 86400;
+                }
+
+
+                while ($start_time < $end_time) {
+                    // Fix: Use AND (`&&`) instead of OR (`||`)
+                    if ($start_time >= $night_start || $start_time < $morning_end) {
+                        $extra_hours++;
+                    }
+                    $start_time = strtotime('+1 hour', $start_time);
+                }
+
+
+
+                // Apply extra charge only if extra hours exist
+                $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
+
+                // Base amount
+                $base_amount = $b['duration'] * $b['studio_charge'];
+                $extra_added = $b['extra_added_sum_amount'];
+                $rents = $b->rents;
+                $rent_charge = 0;
+                foreach ($rents as $r) {
+                    $rent_charge += $r->pivot->charge * $r->pivot->uses_hours;
+                }
+                $b['rent_charges'] = $rent_charge;
+                // Final total calculation including GST (18%)
+                $total_amount = ($base_amount + $extra_charge + $extra_added + $rent_charge) * 1.18;
+                $b['extra_charge'] = $extra_charge;
+                // Add the calculated total to the booking object
+                $b['total_amount'] = round($total_amount, 2);
+
+                return $b;
+            }
+        );
+
+        $booking = $bookings[0];
+
         $studio = Studio::where('vendor_id', $booking->vendor_id)
             ->with('country')->with('state')->with('district')
             ->first();

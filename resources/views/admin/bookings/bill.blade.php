@@ -26,12 +26,14 @@
                                         </div>
                                     </td>
                                     <td colspan="4">
-                                        <h2>
-                                            {{ $studio->name }}
+                                        <h2 class="mb-0 " style="font-size:16px;">
+                                            R & B Studio
                                         </h2>
 
-                                        <p>
-                                            {{ $studio->address . ' , ' . $studio->district?->city . ' , ' . $studio->state?->state . ' , ' . $studio->country?->country . ' , ' . $studio->pincode }}
+                                        <p class="mb-0">
+                                            905 B Wing, Venus Tower, Veera Desai Road, Azad Nagar
+                                            <br />
+                                            Mumbai - 400052
                                         </p>
                                     </td>
                                     <td colspan="4">
@@ -261,7 +263,7 @@
                                         Extra Added Amount
                                     </td>
                                     <td colspan="6">
-                                        ₹ {{ $extm =  $booking->extra_added_sum_amount ?? 0 }}
+                                        ₹ {{ $extm = $booking->extra_added_sum_amount ?? 0 }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -303,12 +305,11 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                     <td colspan="6" style="text-align: right;">
-                                      Promo Discount
+                                    <td colspan="6" style="text-align: right;">
+                                        Promo Discount
                                     </td>
-                                      <td colspan="6">
-                                        <span
-                                            class="">₹{{ $booking->promo_discount_calculated }}</span>
+                                    <td colspan="6">
+                                        <span class="">₹{{ $booking->promo_discount_calculated }}</span>
                                     </td>
                                 </tr>
                                 <tr>
