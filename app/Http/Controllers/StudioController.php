@@ -875,22 +875,56 @@ class StudioController extends Controller
         Log::info('receivedSignature: ' . $receivedSignature);
         Log::info('secret: ' . $secret);
         Log::info('body: ' . $body);
-        $expectedSignature = hash_hmac('sha256', $body, $secret);
-        if ($receivedSignature === $expectedSignature) {
-            $event = $request->input('event');
-            if ($event === 'order.paid') {
-                $orderData = $request->input('payload.order.entity');
-                $paymentData = $request->input('payload.payment.entity');
+        $event = $request->input('event');
+        $orderId = $request->input('payload.payment.entity.order_id');
 
-                // Do something with $orderData and $paymentData
-                Log::info('Order Paid Event', [
-                    'order' => $orderData,
-                    'payment' => $paymentData
+        $expectedSignature = hash_hmac('sha256', $body, $secret);
+        if ($event == "payment.captured") {
+            $transctionfound = Transaction::where('gateway_order_id',  $orderId)->first();
+            if ($transctionfound) {
+
+                Transaction::where('id', $transctionfound['id'])->update([
+                    'status' => 'Success',
+                    'ret_resp' => json_encode($input)
                 ]);
+                $bid = $transctionfound->booking_id;
+                Booking::where('id', $bid)->update(['booking_status' => '1']);
+                $booking = Booking::where('id', $bid)->with('studio')
+                    ->with('transactions')->withSum('transactions', 'amount')
+                    ->with('rents')->withSum('extra_added', 'amount')->with('gst')
+                    ->with('service:id,name')
+                    ->first();
+                $extra_added = $booking['extra_added_sum_amount'] ?? 0;
+                $extra_charge_per_hour = 200;
+                $extra_hours = 0;
+                $start_time = strtotime($booking['booking_start_date']);
+                $end_time = strtotime($booking['booking_end_date']);
+                $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
+                $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+                if ($start_time >= $night_start) {
+                    $morning_end += 86400;
+                }
+                while ($start_time < $end_time) {
+                    if ($start_time >= $night_start || $start_time < $morning_end) {
+                        $extra_hours++;
+                    }
+                    $start_time = strtotime('+1 hour', $start_time);
+                }
+                $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
+                $rents = $booking->rents;
+                $rentcharge = 0;
+                foreach ($rents as $r) {
+                    $rentcharge += $r->pivot->charge * $r->pivot->uses_hours;
+                }
+                $paid = $booking->transactions_sum_amount;
+                $totalPaable = $booking->duration * $booking->studio_charge + $rentcharge + $extra_charge + $extra_added;
+                $withgst =  $totalPaable * 1.18;
+                $netPending = $withgst - $paid - floatval($booking->promo_discount_calculated) - floatval($booking->discount);
+                $amount = $netPending;
+                if (ceil($amount) <= 1) {
+                    Booking::where('id', $bid)->update(['payment_status' => '1', 'booking_status' => '1']);
+                }
             }
-        } else {
-            Log::warning('Invalid signature - possible fraud attempt.');
-            return response()->json(['error' => 'Invalid signature'], 400);
         }
     }
 }
