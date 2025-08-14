@@ -178,19 +178,21 @@ class AjaxController extends Controller
         ]);
         $sid = $request->studio_id;
         $sdate = Carbon::parse($request->sdate)->format('Y-m-d');
+
+
         $studio = Studio::findOrFail($sid); // Use findOrFail to ensure studio exists
         $opens = Carbon::parse($studio->opens_at);
         $close = Carbon::parse($studio->ends_at);
         $bid = $request->booking_id ?? "a1";
         $isEdit = $request->isEdit;
+        $blocked = BlockedSlot::whereDate('bdate', $sdate)->where('studio_id', $sid);
+        if ($bid != "a1") {
+            $blocked->where('booking_id', '!=', $bid);
+        }
+        $brr = $blocked->pluck('slot_id')->toArray();
+
         $currentTime = now()->format('H:i:s');
-        $query = Slot::whereNotIn('id', function ($q) use ($sdate, $sid, $isEdit, $bid) {
-            $q->from('blocked_slots')
-                ->where('bdate', $sdate)
-                ->where('studio_id', $sid)
-                ->where('booking_id', '!=', $bid)
-                ->select('slot_id');
-        })
+        $query = Slot::whereNotIn('id', $brr)
             ->whereNotExists(function ($q) use ($sdate, $sid, $isEdit, $bid) {
                 $q->from('bookings')
                     ->whereIn('booking_status', ['1', '0'])

@@ -40,7 +40,8 @@ Route::post('register', [AuthController::class, 'register']);
 Route::get('cancel-booking', [ApiController::class, 'cancel_booking']);
 Route::get('payment-pending-notification', [ApiController::class, 'payment_notification']);
 Route::post('webhook-handler', [StudioController::class, 'paymentCallbackRazorpayWebHook']);
-
+Route::post('find_start_slot', [AjaxController::class, 'find_start_slot'])->name('find_start_slot');
+Route::post('find_end_slot', [AjaxController::class, 'find_end_slot'])->name('find_end_slot');
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -54,8 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('create-order/{id}', [StudioController::class, 'pay_now_razorpay']);
     Route::get('policies', [ApiController::class, 'policies']);
     Route::post('book-studio', [BookingController::class, 'store']);
-    Route::post('find_start_slot', [AjaxController::class, 'find_start_slot'])->name('find_start_slot');
-    Route::post('find_end_slot', [AjaxController::class, 'find_end_slot'])->name('find_end_slot');
+
     Route::post('delete-account',  [ApiController::class, 'delete_account']);
     Route::post('search', [ApiController::class, 'search_bookings']);
     Route::post('coupan', [ApiController::class, 'add_promo_code']);
