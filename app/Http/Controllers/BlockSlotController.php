@@ -21,7 +21,7 @@ class BlockSlotController extends Controller
         $query = BlockedSlot::orderBy('bdate', 'DESC')
             ->orderBy('slot_id', 'asc')
             ->whereDate('bdate', '>=', $today)
-            ->where('reason', 'other')
+
             ->with('slot')
             ->with('studio:id,name');
 
@@ -64,13 +64,20 @@ class BlockSlotController extends Controller
         // Store combinations
         foreach ($studioIds as $studioId) {
             foreach ($slotIds as $slotId) {
-                BlockedSlot::create([
+                $isAlredyBlocked = BlockedSlot::where([
                     'studio_id' => $studioId,
                     'slot_id'   => $slotId,
-                    'booking_id' => 0,
-                    'bdate'     => $bdate,
-                    'reason'    => 'other',
-                ]);
+                    'bdate'     => $bdate
+                ])->first();
+                if (!$isAlredyBlocked) {
+                    BlockedSlot::create([
+                        'studio_id' => $studioId,
+                        'slot_id'   => $slotId,
+                        'booking_id' => 0,
+                        'bdate'     => $bdate,
+                        'reason'    => 'other',
+                    ]);
+                }
             }
         }
         if ($request->expectsJson()) {
