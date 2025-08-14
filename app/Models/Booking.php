@@ -64,7 +64,7 @@ class Booking extends Model
     }
     public function gst()
     {
-        return $this->hasOne(BookingGst::class, 'id', 'gst_id');
+        return $this->hasOne(BookingGst::class, 'id', 'gst_id')->with('state')->with('city');
     }
     public function transactions()
     {

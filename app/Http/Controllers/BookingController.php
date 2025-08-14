@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BlockedSlot;
 use App\Models\Booking;
 use App\Models\BookingItem;
+use App\Models\BookingGst;
 use App\Models\ServiceStudio;
 use App\Models\Location\State;
 use App\Models\Location\City;
@@ -251,7 +252,9 @@ class BookingController extends Controller
         $vendors = $vends->orderBy('id', 'DESC')->get();
         $svs = Service::where('id', '>', '0');
         $services = $svs->get();
-        $res = compact('title', 'type', 'booking_id', 'bookings', 'keyword', 'vendors', 'vendor_id', 'studio_id', 'service_id', 'approved_at', 'booking_status', 'payment_status', 'duration', 'created_by', 'bdf', 'services', 'bdt', 'studios', 'payment_filter');
+        $states = State::where('country_id', 19)->get();
+        $cities = [];
+        $res = compact('title', 'type', 'states', 'cities', 'booking_id', 'bookings', 'keyword', 'vendors', 'vendor_id', 'studio_id', 'service_id', 'approved_at', 'booking_status', 'payment_status', 'duration', 'created_by', 'bdf', 'services', 'bdt', 'studios', 'payment_filter');
 
         if ($request->expectsJson()) {
             return response()->json(['data' => $bookings, 'success' => 1, 'message' => $title]);
@@ -1376,5 +1379,42 @@ class BookingController extends Controller
         $res = compact('booking', 'title', 'vendors', 'states', 'studios', 'services', 'cities');
 
         return view('admin.bookings.copy-booking', $res);
+    }
+    public function update_gst_details(Request $request)
+    {
+        $bid = $request->booking_id;
+        $booking = Booking::where('id', $bid)->first();
+        if ($request->gst && !$request->gst_id) {
+            $gdata = [
+                "booking_id" => $bid,
+                "user_id" => $booking->user_id,
+                "gst" => $request->gst,
+                "address" => $request->address,
+                "country_id" => '19',
+                "state_id" => $request->state_id,
+                "city_id" => $request->city_id,
+                "pincode" => $request->pincode,
+                "updated_at" =>  date('Y-m-d H:i:s')
+            ];
+            if ($request->company) {
+                $gdata['company'] = $request->company;
+            }
+            $gstId = $booking->gst_id;
+            if ($gstId) {
+                BookingGst::where('id', $gstId)->update($gdata);
+            } else {
+                $gstinst = BookingGst::create($gdata);
+                $gstId = $gstinst->id;
+                Booking::where('id', $bid)->update(['gst_id' => $gstId]);
+            }
+            if ($request->expectsJson()) {
+                $resp = [
+                    'success' => 1,
+                    'message' => 'Updated successfully'
+                ];
+                return response()->json($resp);
+            }
+            return redirect()->back()->with('success', 'GST updated successfully');
+        }
     }
 }

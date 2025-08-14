@@ -178,8 +178,6 @@ class AjaxController extends Controller
         ]);
         $sid = $request->studio_id;
         $sdate = Carbon::parse($request->sdate)->format('Y-m-d');
-
-
         $studio = Studio::findOrFail($sid); // Use findOrFail to ensure studio exists
         $opens = Carbon::parse($studio->opens_at);
         $close = Carbon::parse($studio->ends_at);

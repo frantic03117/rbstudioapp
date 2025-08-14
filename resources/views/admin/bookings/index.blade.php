@@ -444,6 +444,11 @@
                                                     @if ($b->booking_status == '2')
                                                         <button class="btn btn-sm btn-danger">Add Refund</button>
                                                     @endif
+
+                                                    <button data-bs-toggle="modal"
+                                                        data-bs-target="#staticBackdropdisgst{{ $b->id }}"
+                                                        class="btn btn-sm btn-outline-success">GST Details</button>
+
                                                     <a href="{{ route('generate_bill', $b->id) }}"
                                                         class="btn btn-sm btn-gradient">Billing</a>
                                                     <button data-bs-toggle="modal"
@@ -490,6 +495,11 @@
                                                     @include('admin.bookings.DiscountPopup', [
                                                         'bid' => $b->id,
                                                         'discount' => $b->discount,
+                                                    ])
+                                                    @include('admin.bookings.editgst', [
+                                                        'bid' => $b->id,
+                                                        'dgst' => $b->gst,
+                                                        'states' => $states,
                                                     ])
                                                 </div>
                                             @endif

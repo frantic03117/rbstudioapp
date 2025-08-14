@@ -56,19 +56,22 @@
                             <div class="col-md-3">
                                 <label for="">Booking Start Date</label>
                                 <input type="date" onchange="getEndDate(event)" min="{{ date('Y-m-d') }}"
-                                    name="booking_start_date"
-                                    value="{{ date('Y-m-d', strtotime($booking->booking_start_date)) }}"
-                                    id="booking_start_date" class="form-control">
+                                    name="booking_start_date" value="" id="booking_start_date" class="form-control">
+                                <p class="fw-bold text-primary px-2">Booking Start
+                                    Date:{{ date('d-M-Y', strtotime($booking->booking_start_date)) }}</p>
                             </div>
                             <div class="col-md-3">
                                 <label for="">Select Start Time</label>
                                 <select class="form-select" name="start_slot" id="start_slot">
                                     <option value="">---Select---</option>
                                     @foreach ($slots as $s)
-                                        <option value="{{ $s->id }}" @selected($booking->start_at == $s->start_at)>{{ $s->start_at }}
+                                        <option value="{{ $s->id }}">{{ $s->start_at }}
                                         </option>
                                     @endforeach
                                 </select>
+
+                                <p class="fw-bold text-primary px-2">Booking Start
+                                    at:{{ date('h:i A', strtotime($booking->start_at)) }}</p>
                             </div>
 
 
@@ -78,6 +81,8 @@
                                     <option value="">---Select---</option>
                                     <option selected>{{ date('d-M-Y', strtotime($booking->booking_end_date)) }}</option>
                                 </select>
+                                <p class="fw-bold text-primary px-2">Booking End
+                                    Date:{{ date('d-M-Y', strtotime($booking->booking_start_date)) }}</p>
                             </div>
                             <div class="col-md-3">
                                 <label for="">Select End Time</label>
@@ -86,6 +91,8 @@
                                     <option value="{{ $booking->booking_end_date }}" selected>
                                         {{ date('h:i A', strtotime($booking->booking_end_date)) }}</option>
                                 </select>
+                                <p class="fw-bold text-primary px-2">Booking End
+                                    at:{{ date('h:i A', strtotime($booking->end_at)) }}</p>
                             </div>
 
 
@@ -121,6 +128,10 @@
                                         onclick="gst_applicable_is(event)" /> <label for="gst_applicable">GST
                                         Applicable</label>
                                 </div>
+                            </div>
+                            <div class="col-md-3 gst_box" @if (!$dgst) style="display:none;" @endif>
+                                <label for="">Company Name</label>
+                                <input type="text" name="company" value="{{ $dgst?->company }}" class="form-control" />
                             </div>
                             <div class="col-md-3 gst_box" @if (!$dgst) style="display:none;" @endif>
                                 <label for="">Enter Address</label>

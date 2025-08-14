@@ -117,6 +117,10 @@
                                 </div>
                             </div>
                             <div class="col-md-3 gst_box" style="display:none;">
+                                <label for="">Company Name</label>
+                                <input type="text" name="company" class="form-control" />
+                            </div>
+                            <div class="col-md-3 gst_box" style="display:none;">
                                 <label for="">Enter Address</label>
                                 <input type="text" name="address" class="form-control" />
                             </div>

@@ -55,7 +55,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('create-order/{id}', [StudioController::class, 'pay_now_razorpay']);
     Route::get('policies', [ApiController::class, 'policies']);
     Route::post('book-studio', [BookingController::class, 'store']);
-
     Route::post('delete-account',  [ApiController::class, 'delete_account']);
     Route::post('search', [ApiController::class, 'search_bookings']);
     Route::post('coupan', [ApiController::class, 'add_promo_code']);
