@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\BlockSlotController;
 use App\Http\Controllers\ExtraBookingAmountController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RentController;
@@ -53,6 +54,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('studio', StudioController::class);
     Route::resource('vendor', VendorController::class);
     Route::resource('setting', SettingController::class);
+    Route::resource('blocked-slot', BlockSlotController::class);
     Route::get('add-resource/{id}', [StudioController::class, 'add_resource'])->name('add_resource');
     Route::get('delete_s_service/{id}', [StudioController::class, 'delete_s_service'])->name('delete_s_service');
     Route::post('add-resource/{id}', [StudioController::class, 'save_resource'])->name('studio.add_resource');

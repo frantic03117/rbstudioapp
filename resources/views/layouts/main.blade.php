@@ -316,6 +316,12 @@
                                     <span data-key="t-store">Vendors</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('blocked-slot.index') }}">
+                                    <i class=" fas fa-store"></i>
+                                    <span data-key="t-store">Blocked Slot</span>
+                                </a>
+                            </li>
                         @endcan
 
                         @can('studios-list')
