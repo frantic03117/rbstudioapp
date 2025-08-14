@@ -181,7 +181,7 @@ class AjaxController extends Controller
         $studio = Studio::findOrFail($sid); // Use findOrFail to ensure studio exists
         $opens = Carbon::parse($studio->opens_at);
         $close = Carbon::parse($studio->ends_at);
-        $bid = $request->booking_id ?? 0;
+        $bid = $request->booking_id ?? "a1";
         $isEdit = $request->isEdit;
         $currentTime = now()->format('H:i:s');
         $query = Slot::whereNotIn('id', function ($q) use ($sdate, $sid, $isEdit, $bid) {
@@ -246,7 +246,7 @@ class AjaxController extends Controller
         }
         $slot_id = $request->slot_id;
         $sid = $request->studio_id;
-        $booking_id = $request->booking_id ?? 0;
+        $booking_id = $request->booking_id ?? "a1";
         $slot = Slot::where('id', $slot_id)->first();
         $sdate = Carbon::parse($request->sdate)->format('Y-m-d');
         $start_time = $slot->start_at;
