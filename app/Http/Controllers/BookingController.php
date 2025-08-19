@@ -901,7 +901,7 @@ class BookingController extends Controller
         $sid = $booking->studio_id;
         $bid = $booking->id;
 
-        $studios = Studio::where("vendor_id", $booking->vendor_id)->select(['id', 'name'])->get();
+        $studios = Studio::select(['id', 'name'])->get();
         $studio = Studio::where("id", $sid)->first();
         $slots = Slot::whereNotIn('id', function ($q) use ($sdate, $sid, $bid, $studio) {
             $q->from('blocked_slots')->where('bdate', $sdate)->select('slot_id')->where('studio_id', $sid)->where('booking_id', '!=', $bid);
