@@ -320,40 +320,6 @@
                                                 <span class="badge bg-danger text-white">Cancelled</span>
                                             @endif
                                             @if ($b->booking_status != '2')
-                                                {{-- @php
-                                                    $rents = $b->rents;
-                                                    $arr = [];
-                                                    foreach ($rents as $r) {
-                                                        array_push($arr, $r->pivot->charge * $r->pivot->uses_hours);
-                                                    }
-                                                    $rentcharge = array_sum($arr);
-
-                                                    $extra_charge_per_hour = 200;
-                                                    $extra_hours = 0;
-
-                                                    $start_time = strtotime($b['booking_start_date']);
-                                                    $end_time = strtotime($b['booking_end_date']);
-
-                                                    $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
-                                                    $morning_end =
-                                                        strtotime(date('Y-m-d', $start_time) . ' 08:00:00') + 86400;
-
-                                                    if ($start_time < $morning_end || $end_time > $night_start) {
-                                                        while ($start_time < $end_time) {
-                                                            if (
-                                                                $start_time >= $night_start ||
-                                                                $start_time < $morning_end
-                                                            ) {
-                                                                $extra_hours++;
-                                                            }
-                                                            $start_time = strtotime('+1 hour', $start_time);
-                                                        }
-                                                    }
-
-                                                    // Calculate extra charge (only if extra hours exist)
-                                                    $extra_charge =
-                                                        $extra_hours > 0 ? $extra_hours * $extra_charge_per_hour : 0;
-                                                @endphp --}}
                                                 <ul class="list-unstyled text-nowrap">
 
 
@@ -383,7 +349,7 @@
                                                     </li>
                                                     <li>
                                                         Total Discount :
-                                                        {{ $discount = $b->promo_discount_calculated + $b->discount }}
+                                                        {{ $discount = $b->discount_total }}
                                                     </li>
                                                     <li>
                                                         GST : {{ $b->gst_sum }}
@@ -393,13 +359,13 @@
 
                                                     </li>
                                                     <li>
-                                                        Paid Amount : {{ $paid = $b->transactions_sum_amount }}
+                                                        Paid Amount : {{ $paid = $b->paid_sum }}
                                                     </li>
                                                     <li>
                                                         Remaining Amount :
-                                                        {{ $remainingamount = floor($b->total_amount - $paid - $discount) }}
+                                                        {{ $remainingamount = floor($b->balance) }}
                                                     </li>
-                                                    @if (floor($b->total_amount - $paid - $discount) > 0 && $b->approved_at != null)
+                                                    @if (floor($remainingamount) > 0 && $b->approved_at != null)
                                                         <li>
                                                             <div class="d-flex gap-2">
                                                                 <form action="{{ route('pay_now_razorpay', $b->id) }}"
@@ -423,33 +389,13 @@
                                         <td>
                                             @if ($b->booking_status != '2')
                                                 <div class="d-flex w-full text-nowrap flex-wrap gap-2 align-items-center">
-                                                    @if ($b->booking_status != '2')
-                                                        <a href="{{ route('booking.edit', $b->id) }}"
-                                                            class="btn btn-warning btn-sm">Rescheule</a>
-                                                        {!! Form::open([
-                                                            'route' => ['booking.destroy', $b->id],
-                                                            'method' => 'DELETE',
-                                                            'onsubmit' => 'return confirmCancel()',
-                                                        ]) !!}
-                                                        <button type="submit"
-                                                            class="btn btn-danger btn-sm">Cancel</button>
-                                                        {!! Form::close() !!}
 
-                                                        <script>
-                                                            function confirmCancel() {
-                                                                return confirm("Are you sure you want to cancel this booking?");
-                                                            };
-                                                        </script>
-                                                    @endif
-                                                    @if ($b->booking_status == '2')
-                                                        <button class="btn btn-sm btn-danger">Add Refund</button>
-                                                    @endif
 
                                                     <button data-bs-toggle="modal"
                                                         data-bs-target="#staticBackdropdisgst{{ $b->id }}"
                                                         class="btn btn-sm btn-outline-success">GST Details</button>
 
-                                                    <a href="{{ route('generate_bill', $b->id) }}"
+                                                    <a target="_blank" href="{{ route('generate_bill', $b->id) }}"
                                                         class="btn btn-sm btn-gradient">Billing</a>
                                                     <button data-bs-toggle="modal"
                                                         data-bs-target="#staticBackdrop{{ $b->id }}{{ $b->studio->id }}"
@@ -484,6 +430,27 @@
                                                         href="{{ route('rebook', ['id' => $b['id']]) }}">
                                                         Book Again
                                                     </a>
+                                                    @if ($b->booking_status != '2')
+                                                        <a href="{{ route('booking.edit', $b->id) }}"
+                                                            class="btn btn-warning btn-sm">Rescheule</a>
+                                                        {!! Form::open([
+                                                            'route' => ['booking.destroy', $b->id],
+                                                            'method' => 'DELETE',
+                                                            'onsubmit' => 'return confirmCancel()',
+                                                        ]) !!}
+                                                        <button type="submit"
+                                                            class="btn btn-danger btn-sm">Cancel</button>
+                                                        {!! Form::close() !!}
+
+                                                        <script>
+                                                            function confirmCancel() {
+                                                                return confirm("Are you sure you want to cancel this booking?");
+                                                            };
+                                                        </script>
+                                                    @endif
+                                                    @if ($b->booking_status == '2')
+                                                        <button class="btn btn-sm btn-danger">Add Refund</button>
+                                                    @endif
                                                     @include('admin.bookings.booking_items', [
                                                         'bid' => $b->id,
                                                         'sid' => $b->studio->id,

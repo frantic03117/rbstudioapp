@@ -16,6 +16,7 @@ use App\Models\RbNotification;
 use App\Models\Vendor;
 use App\Models\Booking;
 use App\Models\Transaction;
+use App\Models\User;
 use Razorpay\Api\Api;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -546,6 +547,24 @@ class StudioController extends Controller
             if ($user && $user->fcm_token) {
                 $this->send_notification($user->fcm_token, 'Booking Reserved', $appmessage, $user->id);
             }
+            $super = User::where('role', 'Super')->first();
+            if ($super && $super?->fcm_token) {
+                $appmessage = "A booking has been reserved with Booking ID {$bid}. View the updated details in the Bookings Tab.";
+                $n_tdata = [
+                    'user_id' => $$booking->user->id,
+                    'booking_id' => $bid,
+                    'studio_id' => $booking->studio_id,
+                    'vendor_id' => $booking->vendor_id,
+                    'shown_to_user' => '0',
+                    'type' => 'Booking',
+                    'title' => 'Payment Received',
+                    "message" => $appmessage,
+                    "created_at" => date('Y-m-d H:i:s')
+                ];
+                RbNotification::insert($n_tdata);
+
+                $this->send_notification($super?->fcm_token, 'Payment Received', $appmessage, $super->id);
+            }
         }
         $transaction = Transaction::where('order_id', $order_id)->first();
         $bitem = Booking::where('id', $bid)->first();
@@ -882,7 +901,6 @@ class StudioController extends Controller
         if ($event == "payment.captured") {
             $transctionfound = Transaction::where('gateway_order_id',  $orderId)->first();
             if ($transctionfound) {
-
                 Transaction::where('id', $transctionfound['id'])->update([
                     'status' => 'Success',
                     'ret_resp' => json_encode($input)

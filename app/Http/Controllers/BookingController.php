@@ -171,58 +171,63 @@ class BookingController extends Controller
         $bookings = $items->paginate(10)->appends(request()->query());
         // return response()->json($bookings);
         // die;
-        $bookings->getCollection()->transform(
-            function ($b) use ($extra_charge_per_hour) {
+        $extra_charge_per_hour = 200;
+        // $bookings->getCollection()->transform(
+        //     function ($b) use ($extra_charge_per_hour) {
 
-                $extra_hours = 0;
+        //         $extra_hours = 0;
 
-                $start_time = strtotime($b['booking_start_date']);
-                $end_time = strtotime($b['booking_end_date']);
+        //         $start_time = strtotime($b['booking_start_date']);
+        //         $end_time = strtotime($b['booking_end_date']);
 
-                // Define extra charge period (11 PM - 8 AM)
-                $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
-                $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
+        //         // Define extra charge period (11 PM - 8 AM)
+        //         $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
+        //         $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
 
-                // Fix: Use next day's 8 AM **only if booking crosses midnight**
-                if ($start_time >= $night_start) {
-                    $morning_end += 86400;
-                }
-
-
-                while ($start_time < $end_time) {
-                    // Fix: Use AND (`&&`) instead of OR (`||`)
-                    if ($start_time >= $night_start || $start_time < $morning_end) {
-                        $extra_hours++;
-                    }
-                    $start_time = strtotime('+1 hour', $start_time);
-                }
-
-
-
-                // Apply extra charge only if extra hours exist
-                $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
-
-                // Base amount
-                $base_amount = $b['duration'] * $b['studio_charge'];
-                $b['studio_charge_sum'] = $base_amount;
-
-                $extra_added = $b['extra_added_sum_amount'];
-                $rents = $b->rents;
-                $rent_charge = 0;
-                foreach ($rents as $r) {
-                    $rent_charge += $r->pivot->charge * $r->pivot->uses_hours;
-                }
-                $b['rent_charges'] = $rent_charge;
-                // Final total calculation including GST (18%)
-                $total_amount = ($base_amount + $extra_charge + $extra_added + $rent_charge) * 1.18;
-                $b['extra_charge'] = $extra_charge;
-                $b['gst_sum'] = ($base_amount + $extra_charge + $extra_added + $rent_charge) * 0.18;
-                // Add the calculated total to the booking object
-                $b['total_amount'] = round($total_amount, 2);
-
-                return $b;
-            }
-        );
+        //         // Fix: Use next day's 8 AM **only if booking crosses midnight**
+        //         if ($start_time >= $night_start) {
+        //             $morning_end += 86400;
+        //         }
+        //         while ($start_time < $end_time) {
+        //             if ($start_time >= $night_start || $start_time < $morning_end) {
+        //                 $extra_hours++;
+        //             }
+        //             $start_time = strtotime('+1 hour', $start_time);
+        //         }
+        //         $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
+        //         $base_amount = $b['duration'] * $b['studio_charge'];
+        //         $b['studio_charge_sum'] = $base_amount;
+        //         $extra_added = $b['extra_added_sum_amount'];
+        //         $rents = $b->rents;
+        //         $rent_charge = 0;
+        //         foreach ($rents as $r) {
+        //             $rent_charge += $r->pivot->charge * $r->pivot->uses_hours;
+        //         }
+        //         $subtotal = $base_amount + $extra_charge + $extra_added + $rent_charge;
+        //         $b['rent_charges'] = $rent_charge;
+        //         $discount_type = $b->discount_type;
+        //         $discount_value = $b->discount;
+        //         $discount_amount = 0;
+        //         $promo_discount = $b->promo_discount_calculated;
+        //         if ($discount_type == 'Fixed') {
+        //             $discount_amount = $discount_value;
+        //         } elseif ($discount_type == 'Percent') {
+        //             $discount_amount = ($subtotal * $discount_value) / 100;
+        //         }
+        //         if ($discount_amount > $subtotal) {
+        //             $discount_amount = $subtotal;
+        //         }
+        //         $discount_amount_total = $discount_amount + floatval($promo_discount);
+        //         $b['discount_total']  = $discount_amount_total;
+        //         $b['net_total'] = $subtotal -  $discount_amount;
+        //         $b['gst'] = ($subtotal -  $discount_amount) * 0.18;
+        //         $total_amount =  ($subtotal -  $discount_amount) * 1.18;
+        //         $b['extra_charge'] = $extra_charge;
+        //         $b['gst'] = ($subtotal -  $discount_amount) * 0.18;
+        //         $b['total_amount'] = round($total_amount, 2);
+        //         return $b;
+        //     }
+        // );
         if ($payment_filter) {
             $bookings->setCollection(
                 $bookings->getCollection()->filter(function ($b) use ($payment_filter) {
@@ -1240,7 +1245,7 @@ class BookingController extends Controller
         $pstatus = ['0' => 'Unpaid', '1' => 'Paid', '2' => 'Refunded'];
         $res = compact('title', 'items', 'studio', 'booking', 'user', 'ritems', 'trans', 'bstatus', 'pstatus');
         // return response()->json($booking);
-        return view('admin.bookings.bill', $res);
+        return view('admin.bookings.d-bill', $res);
     }
     public function download_bill(Request $request, $id)
     {

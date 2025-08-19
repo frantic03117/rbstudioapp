@@ -15,7 +15,7 @@
 
                 <div class="col-md-12">
                     <div class="w-100" style="max-width: 800px;background:#ccc;margin: 0 auto;margin-left:auto;">
-                        <table class="table table-sm table-bordered" style="background:#ccc;border:2px solid #ccc;">
+                        <table class="table table-sm " style="background:#ccc;border:none;">
                             <tbody>
                                 <tr>
                                     <td colspan="4">
