@@ -803,7 +803,9 @@ class StudioController extends Controller
                     'ret_resp' => json_encode($input)
                 ]);
                 $bid = $transctionfound->booking_id;
-                Booking::where('id', $bid)->update(['booking_status' => '1']);
+                $booking = Booking::find($transctionfound->booking_id);
+                $booking->booking_status = '1';
+                $booking->save();
                 $booking = Booking::where('id', $bid)->with('studio')
                     ->with('transactions')->withSum('transactions', 'amount')
                     ->with('rents')->withSum('extra_added', 'amount')->with('gst')
