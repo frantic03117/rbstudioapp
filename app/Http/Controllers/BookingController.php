@@ -434,7 +434,11 @@ class BookingController extends Controller
     }
     public function confirm_booking($id)
     {
-        Booking::where('id', $id)->update(['booking_status' => '1', 'approved_at' => date('Y-m-d H:i:s')]);
+        date_default_timezone_set('Asia/kolkata');
+        $booking = Booking::find($id);            // Load model
+        $booking->booking_status = '1';           // Set status
+        $booking->approved_at = now();            // Set approval date
+        $booking->save();
         $booking =  Booking::where('id', $id)->first();
         $user = User::where('id', $booking->user_id)->first();
         $msg = "Your booking has been reserved with Booking ID {$id}. You can view the details anytime in the Bookings Tab";

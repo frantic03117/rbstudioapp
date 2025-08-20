@@ -485,6 +485,8 @@ class StudioController extends Controller
         if ($data[0]["order_status"] == "Success") {
             $findtrnx =   Transaction::where('order_id', $order_id)->first();
             Booking::where('id', $bid)->update(['booking_status' => '1']);
+            // $booking = Booking::find($id);
+
             //$item =  Booking::where('id', $bid)->with('rents')->withSum('transactions', 'amount')->with('studio')->with('vendor')->with('service')->with('user')->first();
 
             $booking = Booking::where('id', $bid)->with('studio')
@@ -741,6 +743,9 @@ class StudioController extends Controller
                         'ret_resp' => json_encode($orderData->toArray())
                     ]);
                     $bid = $transctionfound->booking_id;
+                    $booking = Booking::find($transctionfound->booking_id);
+                    $booking->booking_status = '1';
+                    $booking->save();
                     Booking::where('id', $bid)->update(['booking_status' => '1']);
                     $booking = Booking::where('id', $bid)->with('studio')
                         ->with('transactions')->withSum('transactions', 'amount')
