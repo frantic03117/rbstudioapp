@@ -19,10 +19,10 @@
                             <div class="input-group">
                                 <input type="number" name="discount" id="discount" value="{{ $discount }}"
                                     class="form-control">
-                                {{-- <select name="discount_type" id="">
+                                <select name="discount_type" id="discount_type">
                                     <option value="Fixed">Fixed</option>
                                     <option value="Percent">Percent</option>
-                                </select> --}}
+                                </select>
                             </div>
                         </div>
 

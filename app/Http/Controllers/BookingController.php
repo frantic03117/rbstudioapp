@@ -1156,12 +1156,13 @@ class BookingController extends Controller
         $request->validate([
             'booking_id' => 'required',
             'discount' => 'required|numeric',
-
+            'discount_type' => 'required|in:Fixed,Percent'
         ]);
         $bid = $request->booking_id;
 
         $data = [
-            'discount' => $request->discount
+            'discount' => $request->discount,
+            'discount_type' => $request->discount_type,
         ];
 
 

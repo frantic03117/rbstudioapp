@@ -24,6 +24,7 @@ class Booking extends Model
         'duration',
         'payment_status',
         'discount',
+        'discount_type',
         'refunded',
         'booking_status',
         'studio_charge',
