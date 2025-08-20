@@ -207,7 +207,7 @@ class Booking extends Model
 
         static::saving(function ($booking) {
             // Only assign bill_no the first time booking_status becomes 1
-            if ($booking->booking_status == 1 && empty($booking->bill_no)) {
+            if ($booking->booking_status == '1' && empty($booking->bill_no)) {
                 $booking->bill_no = self::generateBillNo();
             }
         });
