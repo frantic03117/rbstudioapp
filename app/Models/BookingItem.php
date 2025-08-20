@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class BookingItem extends Model
 {
     use HasFactory;
-    public function rents(){
+    public function rents()
+    {
         return $this->belongsTo(Rent::class, 'item_id', 'id');
     }
 }

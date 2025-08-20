@@ -200,4 +200,40 @@ class Booking extends Model
     {
         return round($this->total_amount - $this->paid_sum, 2);
     }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($booking) {
+            // Only assign bill_no the first time booking_status becomes 1
+            if ($booking->booking_status == 1 && empty($booking->bill_no)) {
+                $booking->bill_no = self::generateBillNo();
+            }
+        });
+    }
+
+    /**
+     * Generate bill number based on financial year
+     *
+     * Format: YY-YY/{running_number}
+     * Example: 24-25/1, 24-25/2, 25-26/1
+     */
+    public static function generateBillNo()
+    {
+        // Determine current financial year (April → March)
+        $year = now()->month >= 4
+            ? now()->year
+            : now()->year - 1;
+
+        $nextYear = $year + 1;
+
+        // Example: "24-25"
+        $prefix = substr($year, -2) . '-' . substr($nextYear, -2);
+
+        // Count existing bills with this prefix
+        $count = self::where('bill_no', 'like', "$prefix/%")->count();
+
+        // Bill number = prefix + next number
+        return $prefix . '/' . ($count + 1);
+    }
 }

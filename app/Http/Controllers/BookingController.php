@@ -1422,4 +1422,55 @@ class BookingController extends Controller
             return redirect()->back()->with('success', 'GST updated successfully');
         }
     }
+    public function update_rental_item_in_booking(Request $request)
+    {
+        $rules = [
+            'booking_id' => 'required|exists:booking_items,booking_id',
+            'item_id'    => 'required|exists:booking_items,item_id'
+        ];
+
+        $validation = Validator::make($request->all(), $rules);
+
+        if ($validation->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors'  => $validation->errors(),
+                'message' =>  $validation->errors()->first()
+            ]);
+        }
+        $data = $request->except(['_token', '_method']);
+        $bid = $request->booking_id;
+        $item_id = $request->item_id;
+        BookingItem::where('booking_id', $bid)->where('item_id', $item_id)->update($data);
+        if ($request->mode || $request->expectsJson()) {
+            return response()->json(['success' => 1, 'message' => 'Updated successfully']);
+        } else {
+            return redirect()->back()->with('success', 'Updated successfully')->withErrors($validation)->withInput();
+        }
+    }
+    public function remove_rental_item_from_booking(Request $request)
+    {
+        $rules = [
+            'booking_id' => 'required|exists:booking_items,booking_id',
+            'item_id'    => 'required|exists:booking_items,item_id'
+        ];
+
+        $validation = Validator::make($request->all(), $rules);
+
+        if ($validation->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors'  => $validation->errors(),
+                'message' =>  $validation->errors()->first()
+            ]);
+        }
+        $bid = $request->booking_id;
+        $item_id = $request->item_id;
+        BookingItem::where('booking_id', $bid)->where('item_id', $item_id)->delete();
+        if ($request->mode || $request->expectsJson()) {
+            return response()->json(['success' => 1, 'message' => 'Updated successfully']);
+        } else {
+            return redirect()->back()->with('success', 'Updated successfully')->withErrors($validation)->withInput();
+        }
+    }
 }

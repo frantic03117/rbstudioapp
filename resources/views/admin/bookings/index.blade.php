@@ -389,8 +389,6 @@
                                         <td>
                                             @if ($b->booking_status != '2')
                                                 <div class="d-flex w-full text-nowrap flex-wrap gap-2 align-items-center">
-
-
                                                     <button data-bs-toggle="modal"
                                                         data-bs-target="#staticBackdropdisgst{{ $b->id }}"
                                                         class="btn btn-sm btn-outline-success">GST Details</button>
@@ -400,6 +398,9 @@
                                                     <button data-bs-toggle="modal"
                                                         data-bs-target="#staticBackdrop{{ $b->id }}{{ $b->studio->id }}"
                                                         class="btn btn-sm btn-primary">Add Item</button>
+                                                    <button data-bs-toggle="modal"
+                                                        data-bs-target="#staticBackdropRent{{ $b->id }}{{ $b->studio->id }}"
+                                                        class="btn btn-sm btn-outline-info">Edit Item</button>
                                                     <button data-bs-toggle="modal"
                                                         data-bs-target="#staticBackdropExtra{{ $b->id }}"
                                                         class="btn btn-sm btn-primary">Add Extra Amount</button>
@@ -454,6 +455,10 @@
                                                     @include('admin.bookings.booking_items', [
                                                         'bid' => $b->id,
                                                         'sid' => $b->studio->id,
+                                                    ])
+                                                    @include('admin.bookings.booking_items_edit', [
+                                                        'bid' => $b->id,
+                                                        'booking' => $b,
                                                     ])
                                                     @include('admin.bookings.ExtraAmontPopup', [
                                                         'bid' => $b->id,

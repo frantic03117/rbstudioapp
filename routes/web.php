@@ -94,6 +94,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/edit_user/{id}', [UserController::class, 'edit_user'])->name('edit_user');
     Route::post('/edit_user/{id}', [UserController::class, 'update_edit_user'])->name('edit_user.update');
     Route::post('/update_admin_profile', [AdminController::class, 'update_admin_profile'])->name('update_admin_profile');
+    Route::post('/update_rental_item', [BookingController::class, 'update_rental_item_in_booking'])->name('update_rental_item_in_booking');
+    Route::post('/remove_rental_item_from_booking', [BookingController::class, 'remove_rental_item_from_booking'])->name('remove_rental_item_from_booking');
 });
 Route::prefix('ajax')->middleware(['auth'])->group(function () {
     Route::post('/get-state', [AjaxController::class, 'states'])->name('ajax_states');
