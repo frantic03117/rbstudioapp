@@ -734,6 +734,9 @@ class BookingController extends Controller
         $booking['paid'] = $paid;
         $booking['net_payable'] = $withgst  - ($paid + $booking->promo_discount_calculated);
         $booking['calculation'] = ['gst' => 18, 'discount' => ['partial' => '0', 'full' => '0', 'type' => 'percent']];
+        $booking['created_at'] = Carbon::parse($booking->created_at)
+            ->timezone('Asia/Kolkata')
+            ->format('Y-m-d H:i:s');
         $data = [
             'data' => $booking,
             'success' => 1,
