@@ -699,6 +699,9 @@ class BookingController extends Controller
             ->with('rents')->with('gst')
             ->with('service:id,name')
             ->first();
+        $booking->created_at = Carbon::parse($booking->created_at)
+            ->timezone('Asia/Kolkata')
+            ->format('Y-m-d H:i:s');
         $extra_charge_per_hour = 200;
         $extra_hours = 0;
         $start_time = strtotime($booking['booking_start_date']);
