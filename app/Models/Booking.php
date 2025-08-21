@@ -47,7 +47,7 @@ class Booking extends Model
         'total_amount',
         'paid_sum',
         'balance',
-        'created_at'
+
     ];
 
     protected $extra_charge_per_hour = 200;
