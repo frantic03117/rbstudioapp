@@ -195,6 +195,10 @@ class BookingController extends Controller
         $services = $svs->get();
         $states = State::where('country_id', 19)->get();
         $cities = [];
+        $bookings->getCollection()->transform(function ($item) {
+            $item->created_at = $item->created_at->timezone('Asia/Kolkata')->toDateTimeString();
+            return $item;
+        });
         $res = compact('title', 'type', 'states', 'cities', 'booking_id', 'bookings', 'keyword', 'vendors', 'vendor_id', 'studio_id', 'service_id', 'approved_at', 'booking_status', 'payment_status', 'duration', 'created_by', 'bdf', 'services', 'bdt', 'studios', 'payment_filter');
 
         if ($request->expectsJson()) {
