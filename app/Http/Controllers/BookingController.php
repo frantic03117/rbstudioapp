@@ -165,9 +165,7 @@ class BookingController extends Controller
         // $extra_charge_per_hour = 200;
         $bookings = $items->paginate(10)->appends(request()->query());
         $bookings->getCollection()->transform(function ($item) {
-            $item->created_at = Carbon::parse($item->created_at)
-                ->timezone('Asia/Kolkata')   // set timezone first
-                ->format('Y-m-d H:i:s');
+            $item->created_at = date('Y-m-d H:i A', strtotime($item->created_at));
             return $item;
         });
         if ($payment_filter) {
