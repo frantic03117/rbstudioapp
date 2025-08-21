@@ -208,6 +208,12 @@ class Booking extends Model
             ->timezone('Asia/Kolkata')
             ->toDateTimeString();
     }
+    public function getUpdatedAtAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)
+            ->timezone('Asia/Kolkata')
+            ->toDateTimeString();
+    }
     protected static function boot()
     {
         parent::boot();
