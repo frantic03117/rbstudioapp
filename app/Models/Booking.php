@@ -201,6 +201,10 @@ class Booking extends Model
     {
         return round($this->total_amount - $this->paid_sum, 2);
     }
+    public function getCreatedAtAttribute()
+    {
+        return $this->created_at->timezone('Asia/Kolkata')->toDateTimeString();
+    }
     protected static function boot()
     {
         parent::boot();

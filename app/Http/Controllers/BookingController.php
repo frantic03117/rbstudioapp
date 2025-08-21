@@ -91,7 +91,7 @@ class BookingController extends Controller
 
             if ($keyword) {
                 $items->where(function ($query) use ($keyword) {
-                    // Match related user
+
                     $query->whereIn('user_id', function ($sub) use ($keyword) {
                         $sub->from('users')
                             ->select('id')
@@ -104,13 +104,13 @@ class BookingController extends Controller
 
                         ->orWhere('id', 'LIKE', "%{$keyword}%");
 
-                    // OR match by studio name
+
                     $findstudios = Studio::where('name', 'like', "%{$keyword}%")->pluck('id');
                     if ($findstudios->count()) {
                         $query->orWhereIn('studio_id', $findstudios);
                     }
 
-                    // OR match by service name
+
                     $findServices = Service::where('name', 'like', "%{$keyword}%")->pluck('id');
                     if ($findServices->count()) {
                         $query->orWhereIn('service_id', $findServices);
@@ -151,12 +151,6 @@ class BookingController extends Controller
                 $items->where('booking_status', $booking_status);
             }
             if ($approved_at == "approved") {
-                // if ($booking_status) {
-                //     $items->where('booking_status', $booking_status);
-                // }
-                // if ($booking_status == "0") {
-                //     $items->where('booking_status', "0");
-                // }
 
                 $items->where('approved_at', '!=', null);
             }
@@ -167,67 +161,9 @@ class BookingController extends Controller
         if ($booking_tenure == "past") {
             $items->where('booking_start_date', '<', $now);
         }
-        $extra_charge_per_hour = 200;
+        // $extra_charge_per_hour = 200;
         $bookings = $items->paginate(10)->appends(request()->query());
-        // return response()->json($bookings);
-        // die;
-        $extra_charge_per_hour = 200;
-        // $bookings->getCollection()->transform(
-        //     function ($b) use ($extra_charge_per_hour) {
 
-        //         $extra_hours = 0;
-
-        //         $start_time = strtotime($b['booking_start_date']);
-        //         $end_time = strtotime($b['booking_end_date']);
-
-        //         // Define extra charge period (11 PM - 8 AM)
-        //         $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
-        //         $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
-
-        //         // Fix: Use next day's 8 AM **only if booking crosses midnight**
-        //         if ($start_time >= $night_start) {
-        //             $morning_end += 86400;
-        //         }
-        //         while ($start_time < $end_time) {
-        //             if ($start_time >= $night_start || $start_time < $morning_end) {
-        //                 $extra_hours++;
-        //             }
-        //             $start_time = strtotime('+1 hour', $start_time);
-        //         }
-        //         $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
-        //         $base_amount = $b['duration'] * $b['studio_charge'];
-        //         $b['studio_charge_sum'] = $base_amount;
-        //         $extra_added = $b['extra_added_sum_amount'];
-        //         $rents = $b->rents;
-        //         $rent_charge = 0;
-        //         foreach ($rents as $r) {
-        //             $rent_charge += $r->pivot->charge * $r->pivot->uses_hours;
-        //         }
-        //         $subtotal = $base_amount + $extra_charge + $extra_added + $rent_charge;
-        //         $b['rent_charges'] = $rent_charge;
-        //         $discount_type = $b->discount_type;
-        //         $discount_value = $b->discount;
-        //         $discount_amount = 0;
-        //         $promo_discount = $b->promo_discount_calculated;
-        //         if ($discount_type == 'Fixed') {
-        //             $discount_amount = $discount_value;
-        //         } elseif ($discount_type == 'Percent') {
-        //             $discount_amount = ($subtotal * $discount_value) / 100;
-        //         }
-        //         if ($discount_amount > $subtotal) {
-        //             $discount_amount = $subtotal;
-        //         }
-        //         $discount_amount_total = $discount_amount + floatval($promo_discount);
-        //         $b['discount_total']  = $discount_amount_total;
-        //         $b['net_total'] = $subtotal -  $discount_amount;
-        //         $b['gst'] = ($subtotal -  $discount_amount) * 0.18;
-        //         $total_amount =  ($subtotal -  $discount_amount) * 1.18;
-        //         $b['extra_charge'] = $extra_charge;
-        //         $b['gst'] = ($subtotal -  $discount_amount) * 0.18;
-        //         $b['total_amount'] = round($total_amount, 2);
-        //         return $b;
-        //     }
-        // );
         if ($payment_filter) {
             $bookings->setCollection(
                 $bookings->getCollection()->filter(function ($b) use ($payment_filter) {
