@@ -165,7 +165,7 @@ class BookingController extends Controller
         // $extra_charge_per_hour = 200;
         $bookings = $items->paginate(10)->appends(request()->query());
         $bookings->getCollection()->transform(function ($item) {
-            $item->created_at = date('Y-m-d H:i A', strtotime($item->created_at));
+            $item->created_at_local = date('Y-m-d H:i A', strtotime($item->created_at));
             return $item;
         });
         if ($payment_filter) {
