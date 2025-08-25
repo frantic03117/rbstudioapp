@@ -277,7 +277,7 @@ class TransactionController extends Controller
      * @param  \App\Models\Transaction  $transaction
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $findTransaction = Transaction::findOrFail($id);
 
@@ -291,10 +291,13 @@ class TransactionController extends Controller
 
         // Delete the transaction
         $findTransaction->delete();
-
-        return response()->json([
-            'success' => 1,
-            'message' => 'Transaction deleted successfully'
-        ]);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => 1,
+                'message' => 'Transaction deleted successfully'
+            ]);
+        } else {
+            return redirect()->back()->with('success', 'Transaction deleted successfully');
+        }
     }
 }
