@@ -277,8 +277,24 @@ class TransactionController extends Controller
      * @param  \App\Models\Transaction  $transaction
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Transaction $transaction)
+    public function destroy($id)
     {
-        //
+        $findTransaction = Transaction::findOrFail($id);
+
+        // Only allow deletion for manual transactions
+        if ($findTransaction->mode == "Razorpay") {
+            return response()->json([
+                'success' => 0,
+                "message" => 'Only manual transactions can be deleted'
+            ]);
+        }
+
+        // Delete the transaction
+        $findTransaction->delete();
+
+        return response()->json([
+            'success' => 1,
+            'message' => 'Transaction deleted successfully'
+        ]);
     }
 }

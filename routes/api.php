@@ -67,6 +67,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/mark-read', [AdminController::class, 'mark_read'])->name('mark-read');
     Route::get('/is-all-read', [ApiController::class, 'is_all_notification_read'])->name('is_all_notification_read');
     Route::post('/mark-all-read', [ApiController::class, 'mark_all_read']);
+    Route::post('update-gst-details', [BookingController::class, 'update_gst_details']);
+    Route::post('/update_rental_item', [BookingController::class, 'update_rental_item_in_booking']);
+    Route::post('/remove_rental_item_from_booking', [BookingController::class, 'remove_rental_item_from_booking']);
+    Route::post('booking-discount', [BookingController::class, 'discount']);
 });
 Route::post('admin', [AdminController::class, 'api_login']);
 Route::get('/transactions-all', [TransactionController::class, 'index'])->name('api_transactions');
@@ -80,6 +84,7 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::get('/transactions', [TransactionController::class, 'index']);
     Route::post('/transactions', [TransactionController::class, 'store']);
     Route::put('/transactions/update/{id}', [TransactionController::class, 'update']);
+    Route::post('/transactions/delete/{id}', [TransactionController::class, 'delete']);
     Route::get('/', [AdminController::class, 'admin_profile']);
     Route::get('/vendors', [VendorController::class, 'index']);
     Route::get('/studios', [StudioController::class, 'index']);

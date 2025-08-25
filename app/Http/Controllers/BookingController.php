@@ -1103,11 +1103,18 @@ class BookingController extends Controller
     }
     public function discount(Request $request)
     {
-        $request->validate([
-            'booking_id' => 'required',
-            'discount' => 'required|numeric',
-            'discount_type' => 'required|in:Fixed,Percent'
+        $validator = Validator::make($request->all(), [
+            'booking_id' => 'required|exists:bookings,id',
+            'discount' => 'required|numeric|min:0',
+            'discount_type' => 'required|in:Fixed,Percent',
         ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => 0,
+                'errors' => $validator->errors(),
+                "message" =>  $validator->errors()->first()
+            ]);
+        }
         $bid = $request->booking_id;
 
         $data = [
@@ -1117,6 +1124,13 @@ class BookingController extends Controller
 
 
         if (Booking::where('id', $bid)->update($data)) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => 1,
+                    'message' => 'Discount added successfully',
+                    'data' => Booking::find($request->booking_id)
+                ], 200);
+            }
             return redirect()->back()->with('success', 'Discount Added Successfully');
         }
     }
