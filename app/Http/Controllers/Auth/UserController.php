@@ -187,7 +187,7 @@ class UserController extends Controller
 
         $itms = User::where('role', 'User')->where('otp_verified', '1')->where('mobile', '!=', null);
         if ($key) {
-            $itms->where('name', 'LIKE', "%{$key}%")->orWhere('email', 'LIKE', "%{$key}%")->orWhere('mobile', 'LIKE', "%{$key}%");
+            $itms->where('name', 'LIKE', "%{$key}%")->orWhere('email', 'LIKE', "%{$key}%")->orWhere('mobile', 'LIKE', "%{$key}%")->orWhere('id', '=', $key);
         }
         $items = $itms->orderBy('id', 'DESC')->paginate(20);
         $res = compact('title', 'items', 'key');
