@@ -23,7 +23,28 @@
                         </tr>
                     </thead>
                     <tbody id="tableBody">
+                        @foreach ($booking->transactions as $k => $tr)
+                            <tr>
+                                <td>
+                                    {{ $k + 1 }}
+                                </td>
+                                <td>
+                                    {{ $tr->mode }}
+                                </td>
+                                <td>
+                                    {{ $tr->transaction_id }}
+                                </td>
+                                <td>
+                                    {{ $tr->transaction_date }}
+                                </td>
+                                <td>
+                                    {{ $tr->amount }}
+                                </td>
+                                <td>
 
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
 
@@ -31,10 +52,3 @@
         </div>
     </div>
 </div>
-<script>
-    const getBookingTransactions = () => {
-        const trnsroute = "route('api_transactions')?booking_id={{ $bid }}";
-        const resp = $.get(trnsroute);
-        console.log(resp);
-    };
-</script>

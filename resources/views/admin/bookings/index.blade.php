@@ -383,7 +383,7 @@
                                                                     Payments</button>
                                                                 @include(
                                                                     'admin.bookings.TransactionsPopup',
-                                                                    ['bid' => $b->id]
+                                                                    ['bid' => $b->id, 'booking' => $b]
                                                                 )
 
                                                             </div>
