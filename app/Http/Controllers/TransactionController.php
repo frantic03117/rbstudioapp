@@ -233,10 +233,43 @@ class TransactionController extends Controller
      * @param  \App\Models\Transaction  $transaction
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Transaction $transaction)
+    public function update(Request $request, $id)
     {
-        //
+        $findTransaction = Transaction::findOrFail($id);
+
+        if ($findTransaction->mode == "Razorpay") {
+            return response()->json([
+                'success' => 0,
+                "message" => 'Only manual transactions can be edited'
+            ]);
+        }
+
+        // Collect only the allowed fields from the request
+        $data = $request->only(['amount', 'transaction_date', 'transaction_id', 'type']);
+
+        // Remove null/empty values (so we only update provided ones)
+        $data = array_filter($data, function ($value) {
+            return !is_null($value) && $value !== '';
+        });
+
+        // If no valid params found, return error
+        if (empty($data)) {
+            return response()->json([
+                'success' => 0,
+                "message" => 'No parameters provided for update'
+            ]);
+        }
+
+        // Perform update
+        $findTransaction->update($data);
+
+        return response()->json([
+            'success' => 1,
+            "message" => 'Transaction updated successfully',
+            "transaction" => $findTransaction
+        ]);
     }
+
 
     /**
      * Remove the specified resource from storage.

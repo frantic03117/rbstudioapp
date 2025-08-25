@@ -69,6 +69,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/mark-all-read', [ApiController::class, 'mark_all_read']);
 });
 Route::post('admin', [AdminController::class, 'api_login']);
+Route::get('/transactions-all', [TransactionController::class, 'index'])->name('api_transactions');
 Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard']);
     Route::post('/book-studio', [BookingController::class, 'store']);
@@ -78,6 +79,7 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::post('bookings/update/{id}', [BookingController::class, 'update']);
     Route::get('/transactions', [TransactionController::class, 'index']);
     Route::post('/transactions', [TransactionController::class, 'store']);
+    Route::put('/transactions/update/{id}', [TransactionController::class, 'update']);
     Route::get('/', [AdminController::class, 'admin_profile']);
     Route::get('/vendors', [VendorController::class, 'index']);
     Route::get('/studios', [StudioController::class, 'index']);

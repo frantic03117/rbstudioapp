@@ -164,6 +164,7 @@ class BookingController extends Controller
 
         // $extra_charge_per_hour = 200;
         $bookings = $items->paginate(10)->appends(request()->query());
+        // return response()->json($bookings);
 
 
         if ($payment_filter) {

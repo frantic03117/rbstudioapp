@@ -377,9 +377,17 @@
                                                                 <button onclick="setbookingid({{ $b->id }})"
                                                                     class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                                                     data-bs-target="#staticBackdrop">Add Payment</button>
+                                                                <button class="btn btn-sm btn-outline-primary"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#staticBackdropTransactions{{ $b->id }}">View
+                                                                    Payments</button>
+                                                                @include(
+                                                                    'admin.bookings.TransactionsPopup',
+                                                                    ['bid' => $b->id]
+                                                                )
 
                                                             </div>
-                                                            <!--<a target="_blank" href="https://api.whatsapp.com/send/?phone={{ $b->user?->mobile }}&text&type=phone_number&app_absent=0" class="btn btn-sm mt-2 btn-outline-success">Whatsapp</a>-->
+
 
                                                         </li>
                                                     @endif
