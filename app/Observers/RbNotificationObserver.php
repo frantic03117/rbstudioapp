@@ -29,25 +29,38 @@ class RbNotificationObserver
          */
 
         $user = $rbNotification->user;
-        Log::info($user);
-        if ($user && $user->fcm_token) {
-            Log::info($user->fcm_token);
-            $data = [
-                'notification_id' => (string) $rbNotification->id,
-                'type'            => $rbNotification->type ?? 'General',
-                'studio'          => $rbNotification->studio?->name ?? '',
-                'booking_id'      => (string) $rbNotification->booking_id,
-            ];
 
+        $super = User::where('role', 'Super')->first();
+
+
+        $data = [
+            'notification_id' => (string) $rbNotification->id,
+            'type'            => $rbNotification->type ?? 'General',
+            'studio'          => $rbNotification->studio?->name ?? '',
+            'booking_id'      => (string) $rbNotification->booking_id,
+        ];
+        if ($rbNotification->shown_to_user == "0") {
             $this->send_notification(
-                $user->fcm_token,
+                $super->fcm_token,
                 $rbNotification->title,
                 $rbNotification->message,
-                $user->id,
+                $super->id,
                 $rbNotification->type,
                 $data
             );
+        } else {
+            if ($user->fcm_token) {
+                $this->send_notification(
+                    $user->fcm_token,
+                    $rbNotification->title,
+                    $rbNotification->message,
+                    $user->id,
+                    $rbNotification->type,
+                    $data
+                );
+            }
         }
+
 
 
         /**
