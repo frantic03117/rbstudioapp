@@ -16,6 +16,12 @@ trait RbTrait
     {
         date_default_timezone_set('Asia/Kolkata');
         try {
+            $response = Http::timeout(5)->post('http://213.210.36.202:5001/send-notification', [
+                'fcm_token' => $token,
+                'title' => $title,
+                'message' => $message,
+                'data' => $data
+            ]);
             // Path to your service account
             $serviceAccountPath = storage_path('app/firebase/serviceAccount.json');
 
