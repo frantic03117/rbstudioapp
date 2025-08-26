@@ -85,7 +85,8 @@
 
             <div class="col-xl-3 col-md-6">
                 <!-- card -->
-                <a href="{{ route('bookingsview', ['slug' => 'upcoming']) }}" class="card card-h-100">
+                <a href="{{ route('bookingsview', ['slug' => 'upcoming', 'approved_at' => 'pending']) }}"
+                    class="card card-h-100">
                     <!-- card body -->
                     <div class="card-body">
                         <div class="row align-items-center">

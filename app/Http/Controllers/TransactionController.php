@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\RbNotification;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\RbTrait;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
@@ -149,8 +149,8 @@ class TransactionController extends Controller
                 'created_at' => date('Y-m-d H:i:s'),
                 'type' => 'Payment'
             ];
-            DB::table('notifications')->insert($ndata);
-            $ndata = [
+            RbNotification::create($ndata);
+            $n_tdata = [
                 'user_id' => $item->user->id,
                 'booking_id' => $bid,
                 'studio_id' => $item->studio_id,
@@ -162,11 +162,11 @@ class TransactionController extends Controller
                 'created_at' => date('Y-m-d H:i:s'),
                 'type' => 'Payment'
             ];
-            DB::table('notifications')->insert($ndata);
+            RbNotification::create($n_tdata);
             $super = User::where('role', 'Super')->first();
-            if ($super && $super?->fcm_token) {;
-                $this->send_notification($super?->fcm_token, 'Payment Received', $notmessage, $super->id);
-            }
+            // if ($super && $super?->fcm_token) {;
+            //     $this->send_notification($super?->fcm_token, 'Payment Received', $notmessage, $super->id);
+            // }
             $rents =  $item->rents;
             $arr = [];
             foreach ($rents as $r) {
@@ -178,9 +178,9 @@ class TransactionController extends Controller
             if (ceil($remainamount) <= 1) {
                 Booking::where('id', $bid)->update(['payment_status' => '1', 'booking_status' => '1']);
             }
-            if ($item->user && $item->user?->fcm_token) {
-                $this->send_notification($item->user->fcm_token, 'Payment Received', $notmessage, $booking->user_id, 'Payment');
-            }
+            // if ($item->user && $item->user?->fcm_token) {
+            //     $this->send_notification($item->user->fcm_token, 'Payment Received', $notmessage, $booking->user_id, 'Payment');
+            // }
             if ($request->wantsJson()) {
                 return response()->json(['success' => '1', 'message' => 'Transaction Created Successfully']);
             } else {

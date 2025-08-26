@@ -318,14 +318,14 @@ class ApiController extends Controller
                     'message'        => $appMessage,
                     'created_at'     => now(),
                 ];
-                RbNotification::insert($notificationData);
+                RbNotification::create($notificationData);
 
-                $this->send_notification(
-                    $user->fcm_token,
-                    'Payment Pending',
-                    $appMessage,
-                    $user->id
-                );
+                // $this->send_notification(
+                //     $user->fcm_token,
+                //     'Payment Pending',
+                //     $appMessage,
+                //     $user->id
+                // );
             }
             if ($super && $super?->fcm_token) {;
                 $appmessage = "A confirmed booking is awaiting for client payment. Notify client to avoid Auto-cancellation.";
@@ -340,8 +340,8 @@ class ApiController extends Controller
                     "message" => $appmessage,
                     "created_at" => date('Y-m-d H:i:s')
                 ];
-                RbNotification::insert($n_tdata);
-                $this->send_notification($super?->fcm_token,  'Payment Pending', $appmessage, $super->id);
+                RbNotification::create($n_tdata);
+                // $this->send_notification($super?->fcm_token,  'Payment Pending', $appmessage, $super->id);
             }
         }
     }

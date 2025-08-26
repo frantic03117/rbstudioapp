@@ -4,27 +4,44 @@ namespace App\Traits;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
 
 trait RbTrait
 {
 
 
-    public function send_notification($token, $title, $message, $uid = null, $type = null)
+    public function send_notification($token, $title, $message, $uid = null, $type = null, $data)
     {
         date_default_timezone_set('Asia/Kolkata');
-        $u_id = $uid ?? auth('sanctum')->user()->id;
         try {
+            // Path to your service account
+            $serviceAccountPath = storage_path('app/firebase/serviceAccount.json');
+
+            $factory = (new Factory)
+                ->withServiceAccount($serviceAccountPath);
+
+            $messaging = $factory->createMessaging();
+
+            $message = CloudMessage::withTarget('token', $token)
+                ->withNotification([
+                    'title' => $title,
+                    'body'  => $message,
+                ])
+                ->withData($data);
+
+            $messaging->send($message);
             $response = Http::timeout(5)->post('http://213.210.36.202:5001/send-notification', [
                 'fcm_token' => $token,
                 'title' => $title,
-                'message' => $message
+                'message' => $message,
+                'data' => $data
             ]);
-            return $response->json();
-        } catch (\Illuminate\Http\Client\RequestException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Notification server is not responding.'
-            ], 200);
+            return ['success' => true];
+        } catch (\Throwable $e) {
+            Log::error('Firebase notification error: ' . $e->getMessage());
+            return ['success' => false, 'message' => $e->getMessage()];
         }
     }
 

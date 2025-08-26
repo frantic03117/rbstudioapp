@@ -19,6 +19,7 @@ use App\Http\Controllers\PromoCodeController;
 use App\Http\Controllers\PolicyController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
+use Kreait\Firebase\Factory;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/test-fcm', function () {
+    $factory = (new Factory)->withServiceAccount(storage_path('app/firebase/serviceAccount.json'));
+    $messaging = $factory->createMessaging();
+    return 'Firebase connection OK';
+});
 Route::get('/login', [AdminController::class, 'index'])->name('login');
 Route::post('/admin', [AdminController::class, 'login'])->name('login.store');
 Route::get('/admin', [AdminController::class, 'login'])->name('login.index');

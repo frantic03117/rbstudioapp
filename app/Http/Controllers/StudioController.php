@@ -545,12 +545,12 @@ class StudioController extends Controller
                 'created_at' => date('Y-m-d H:i:s'),
                 'type' => 'Payment'
             ];
-            RbNotification::insert($ndata);
+            RbNotification::create($ndata);
             $user = $booking->user;
             $appmessage  = "Your booking has been reserved with Booking ID {$bid}";
-            if ($user && $user->fcm_token) {
-                $this->send_notification($user->fcm_token, 'Booking Reserved', $appmessage, $user->id);
-            }
+            // if ($user && $user->fcm_token) {
+            //     $this->send_notification($user->fcm_token, 'Booking Reserved', $appmessage, $user->id);
+            // }
             $super = User::where('role', 'Super')->first();
             if ($super && $super?->fcm_token) {
                 $appmessage = "A booking has been reserved with Booking ID {$bid}. View the updated details in the Bookings Tab.";
@@ -565,9 +565,9 @@ class StudioController extends Controller
                     "message" => $appmessage,
                     "created_at" => date('Y-m-d H:i:s')
                 ];
-                RbNotification::insert($n_tdata);
+                RbNotification::create($n_tdata);
 
-                $this->send_notification($super?->fcm_token, 'Payment Received', $appmessage, $super->id);
+                // $this->send_notification($super?->fcm_token, 'Payment Received', $appmessage, $super->id);
             }
         }
         $transaction = Transaction::where('order_id', $order_id)->first();
@@ -768,12 +768,12 @@ class StudioController extends Controller
                         'created_at' => date('Y-m-d H:i:s'),
                         'type' => 'Payment'
                     ];
-                    RbNotification::insert($ndata);
-                    $user = $booking->user;
-                    $appmessage  = "Your booking has been reserved with Booking ID {$bid}";
-                    if ($user && $user->fcm_token) {
-                        $this->send_notification($user->fcm_token, 'Booking Reserved', $appmessage, $user->id);
-                    }
+                    RbNotification::create($ndata);
+                    // $user = $booking->user;
+                    // $appmessage  = "Your booking has been reserved with Booking ID {$bid}";
+                    // if ($user && $user->fcm_token) {
+                    //     $this->send_notification($user->fcm_token, 'Booking Reserved', $appmessage, $user->id);
+                    // }
                 }
             }
             return response()->json(['message' => 'Payment successful and verified.']);
