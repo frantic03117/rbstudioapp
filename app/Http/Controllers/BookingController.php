@@ -1073,6 +1073,7 @@ class BookingController extends Controller
             'studio_id' => $booking->studio_id,
             'vendor_id' => $booking->vendor_id,
             'type' => 'Booking',
+            'shown_to_user' => '1',
             'title' => 'Booking Cancelled',
             'message' => $msg
         ];
