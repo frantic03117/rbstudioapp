@@ -53,27 +53,27 @@ class RbNotificationObserver
         /**
          * Case 2: Notification for ADMIN (shown_to_user = 0)
          */
-        if ($rbNotification->shown_to_user == "0") {
-            $super = User::where('role', 'Super')->first();
+        // if ($rbNotification->shown_to_user == "0") {
+        //     $super = User::where('role', 'Super')->first();
 
-            if ($super && $super->fcm_token) {
-                $data = [
-                    'notification_id' => (string) $rbNotification->id,
-                    'type'            => $rbNotification->type ?? 'General',
-                    'studio'          => $rbNotification->studio?->name ?? '',
-                    'booking_id'      => (string) $rbNotification->booking_id,
-                ];
+        //     if ($super && $super->fcm_token) {
+        //         $data = [
+        //             'notification_id' => (string) $rbNotification->id,
+        //             'type'            => $rbNotification->type ?? 'General',
+        //             'studio'          => $rbNotification->studio?->name ?? '',
+        //             'booking_id'      => (string) $rbNotification->booking_id,
+        //         ];
 
-                $this->send_notification(
-                    $super->fcm_token,
-                    $rbNotification->title,
-                    $rbNotification->message,
-                    $super->id,
-                    $rbNotification->type,
-                    $data
-                );
-            }
-        }
+        //         $this->send_notification(
+        //             $super->fcm_token,
+        //             $rbNotification->title,
+        //             $rbNotification->message,
+        //             $super->id,
+        //             $rbNotification->type,
+        //             $data
+        //         );
+        //     }
+        // }
     }
 
     /**
