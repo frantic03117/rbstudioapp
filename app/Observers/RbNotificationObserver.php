@@ -5,7 +5,7 @@ namespace App\Observers;
 use App\Models\RbNotification;
 use App\Models\User;
 use App\Traits\RbTrait;
-
+use Illuminate\Support\Facades\Log;
 
 class RbNotificationObserver
 {
@@ -29,7 +29,9 @@ class RbNotificationObserver
          */
         if ($rbNotification->shown_to_user == "1") {
             $user = $rbNotification->user;
+            Log::info($user);
             if ($user && $user->fcm_token) {
+                Log::info($user->fcm_token);
                 $data = [
                     'notification_id' => (string) $rbNotification->id,
                     'type'            => $rbNotification->type ?? 'General',
