@@ -29,28 +29,29 @@ trait RbTrait
                 'message' => $message,
                 'data' => $data
             ]);
-            // Path to your service account
-            $serviceAccountPath = public_path('firebase/serviceAccount.json');
+            Log::info($response);
+            // // Path to your service account
+            // $serviceAccountPath = public_path('firebase/serviceAccount.json');
 
-            $factory = (new Factory)
-                ->withServiceAccount($serviceAccountPath);
+            // $factory = (new Factory)
+            //     ->withServiceAccount($serviceAccountPath);
 
-            $messaging = $factory->createMessaging();
+            // $messaging = $factory->createMessaging();
 
-            $message = CloudMessage::withTarget('token', $token)
-                ->withNotification([
-                    'title' => $title,
-                    'body'  => $message,
-                ])
-                ->withData($data);
+            // $message = CloudMessage::withTarget('token', $token)
+            //     ->withNotification([
+            //         'title' => $title,
+            //         'body'  => $message,
+            //     ])
+            //     ->withData($data);
 
-            $messaging->send($message);
-            $response = Http::timeout(5)->post('http://213.210.36.202:5001/send-notification', [
-                'fcm_token' => $token,
-                'title' => $title,
-                'message' => $message,
-                'data' => $data
-            ]);
+            // $messaging->send($message);
+            // $response = Http::timeout(5)->post('http://213.210.36.202:5001/send-notification', [
+            //     'fcm_token' => $token,
+            //     'title' => $title,
+            //     'message' => $message,
+            //     'data' => $data
+            // ]);
             return ['success' => true];
         } catch (\Throwable $e) {
             Log::error('Firebase notification error: ' . $e->getMessage());
