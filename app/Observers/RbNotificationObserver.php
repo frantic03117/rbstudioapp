@@ -19,7 +19,7 @@ class RbNotificationObserver
     public function created(RbNotification $rbNotification)
     {
         $rbNotification->load(['user', 'booking', 'studio']);
-        Log::info($rbNotification);
+
         if ($rbNotification->type !== "Booking") {
             return;
         }
@@ -27,28 +27,28 @@ class RbNotificationObserver
         /**
          * Case 1: Notification for USER (shown_to_user = 1)
          */
-        if ($rbNotification->shown_to_user == "1") {
-            $user = $rbNotification->user;
-            Log::info($user);
-            if ($user && $user->fcm_token) {
-                Log::info($user->fcm_token);
-                $data = [
-                    'notification_id' => (string) $rbNotification->id,
-                    'type'            => $rbNotification->type ?? 'General',
-                    'studio'          => $rbNotification->studio?->name ?? '',
-                    'booking_id'      => (string) $rbNotification->booking_id,
-                ];
 
-                $this->send_notification(
-                    $user->fcm_token,
-                    $rbNotification->title,
-                    $rbNotification->message,
-                    $user->id,
-                    $rbNotification->type,
-                    $data
-                );
-            }
+        $user = $rbNotification->user;
+        Log::info($user);
+        if ($user && $user->fcm_token) {
+            Log::info($user->fcm_token);
+            $data = [
+                'notification_id' => (string) $rbNotification->id,
+                'type'            => $rbNotification->type ?? 'General',
+                'studio'          => $rbNotification->studio?->name ?? '',
+                'booking_id'      => (string) $rbNotification->booking_id,
+            ];
+
+            $this->send_notification(
+                $user->fcm_token,
+                $rbNotification->title,
+                $rbNotification->message,
+                $user->id,
+                $rbNotification->type,
+                $data
+            );
         }
+
 
         /**
          * Case 2: Notification for ADMIN (shown_to_user = 0)
