@@ -19,7 +19,7 @@ class RbNotificationObserver
     public function created(RbNotification $rbNotification)
     {
         $rbNotification->load(['user', 'booking', 'studio']);
-
+        Log::info($rbNotification);
         if ($rbNotification->type !== "Booking") {
             return;
         }
