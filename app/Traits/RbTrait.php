@@ -17,18 +17,18 @@ trait RbTrait
         Log::info($data);
         date_default_timezone_set('Asia/Kolkata');
         try {
-            // $response = Http::timeout(5)->post('http://213.210.36.202:5001/send-notification', [
-            //     'fcm_token' => $token,
-            //     'title' => $title,
-            //     'message' => $message,
-            //     'data' => $data
-            // ]);
-            $response = Http::timeout(5)->post('http://localhost:5001/send-notification', [
+            $response = Http::timeout(5)->post('http://213.210.36.202:5001/send-notification', [
                 'fcm_token' => $token,
                 'title' => $title,
                 'message' => $message,
                 'data' => $data
             ]);
+            // $response = Http::timeout(5)->post('http://localhost:5001/send-notification', [
+            //     'fcm_token' => $token,
+            //     'title' => $title,
+            //     'message' => $message,
+            //     'data' => $data
+            // ]);
             Log::info($response);
             // // Path to your service account
             // $serviceAccountPath = public_path('firebase/serviceAccount.json');
