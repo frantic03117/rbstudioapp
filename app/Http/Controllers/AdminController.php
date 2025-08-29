@@ -202,12 +202,14 @@ class AdminController extends Controller
             $books->whereDate('booking_start_date', '<=', $booking_date_to);
         }
         $items = $books->with('studio:id,name,mobile,color')->with('vendor')->orderBy('booking_start_date', 'ASC')->get();
-        //   return response()->json($items);
-        //   die;
+        // return response()->json($items);
+        // die;
 
         foreach ($items as $item) {
+            $rentNames = $item->rents->pluck('name')->toArray();
+            $rentNamesString = implode(' | ', $rentNames);
             $urr = [
-                "title" => $item->id . '|' . $item->user->name . ' | ' . $item->studio->name . ' | ' . $item->service?->name,
+                "title" => $item->id . '|' . $item->user->name . ' | ' . $item->studio->name . ' | ' . $item->service?->name . ' | ' . $rentNamesString,
                 "start" => $item->booking_start_date,
                 "end" => $item->booking_end_date,
                 "id" => $item->id,
@@ -217,6 +219,7 @@ class AdminController extends Controller
                 "service" => $item->service?->name,
                 'classNames' => [implode('_', explode(' ', $item->studio->name))],
                 "backgroundColor" => $item->studio->color,
+                "rents" => $item->rents
             ];
             array_push($arr, $urr);
         }

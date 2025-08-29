@@ -439,6 +439,11 @@
                                                         href="{{ route('rebook', ['id' => $b['id']]) }}">
                                                         Book Again
                                                     </a>
+                                                    <a class="btn btn-sm btn-soft-danger position-relative"
+                                                        href="{{ route('add_buffer_time', ['id' => $b['id']]) }}">
+                                                        Add Buffer Time <span
+                                                            class="bg-danger text-white px-1 rounded-pill">{{ count($b->buffer_slot) }}</span>
+                                                    </a>
                                                     @if ($b->booking_status != '2')
                                                         <a href="{{ route('booking.edit', $b->id) }}"
                                                             class="btn btn-warning btn-sm">Rescheule</a>

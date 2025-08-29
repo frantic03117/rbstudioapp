@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BlockedSlot;
+use App\Models\Booking;
 use App\Models\Slot;
 use App\Models\Studio\Studio;
 use Carbon\Carbon;
@@ -85,5 +86,40 @@ class BlockSlotController extends Controller
         } else {
             return redirect()->back()->with('success', 'Blocked slots saved successfully!');
         }
+    }
+    public function add_buffer_time(Request $request, $id)
+    {
+        $booking = Booking::findOrFail($id);
+
+        if (!$booking) {
+            return redirect()->back()->with('error', 'Booking not found');
+        }
+
+        // get the last booked slot (by date + slot_id)
+        $bookedSlot = BlockedSlot::where('booking_id', $id)
+            ->orderBy('bdate', 'desc')
+            ->orderBy('slot_id', 'desc')
+            ->first();
+
+        if (!$bookedSlot) {
+            return redirect()->back()->with('error', 'No blocked slots found');
+        }
+
+        // logic: if slot < 25 → next slot on same day, else move to next day slot 1
+        $nextSlotToBlock = $bookedSlot->slot_id < 25 ? $bookedSlot->slot_id + 1 : 1;
+        $blockDate = $bookedSlot->slot_id < 25
+            ? $bookedSlot->bdate
+            : date('Y-m-d', strtotime($bookedSlot->bdate . ' +1 day'));
+
+        // create the buffer slot
+        BlockedSlot::create([
+            'studio_id'  => $booking->studio_id,
+            'booking_id' => $booking->id,
+            'slot_id'    => $nextSlotToBlock,
+            'bdate'      => $blockDate,
+            'reason'     => 'buffer',
+        ]);
+
+        return redirect()->back()->with('success', 'Buffer time added successfully');
     }
 }

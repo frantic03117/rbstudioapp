@@ -108,7 +108,10 @@ class Booking extends Model
     {
         return $this->hasMany(ExtraBookingAmount::class, 'booking_id', 'id');
     }
-
+    public function buffer_slot()
+    {
+        return $this->hasMany(BlockedSlot::class, 'booking_id', 'id')->where('reason', 'buffer');
+    }
     /*
     |--------------------------------------------------------------------------
     | Computed Attributes
