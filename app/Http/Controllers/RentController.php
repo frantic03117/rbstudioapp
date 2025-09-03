@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
+use App\Models\BookingItem;
 use App\Models\Rent;
+use App\Models\Studio\Charge;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class RentController extends Controller
 {
@@ -148,5 +153,86 @@ class RentController extends Controller
     {
         $rent->delete();
         return redirect()->route('services.index')->with('success', 'Deleted Successfully');
+    }
+    public static function findRentalItems($id)
+    {
+        // $rules = [
+        //     'booking_id' => 'required|exists:bookings,id'
+        // ];
+
+        // $validation = Validator::make($request->all(), $rules);
+        // if ($validation->fails()) {
+        //     return response()->json([
+        //         'data' => null,
+        //         'success' => 0,
+        //         'message' => $validation->errors()->first()
+        //     ], 422);
+        // }
+
+        $bookingId = $id;
+
+        // Get booking start/end date and studio in one query
+        $booking = Booking::select('booking_start_date', 'booking_end_date', 'studio_id')
+            ->where('id', $bookingId)
+            ->first();
+
+        // If booking not found (should not happen due to exists validation)
+        if (!$booking) {
+            return response()->json(['success' => 0, 'message' => 'Invalid booking id'], 404);
+        }
+
+
+        $blockedBloced = Booking::where('booking_start_date', $booking->booking_start_date)
+            ->pluck('id');
+        $blockeditems = BookingItem::whereIn('booking_id', $blockedBloced)->pluck('item_id');
+        // Use a single query to get available items
+
+        $items = Charge::where('studio_id', $booking->studio_id)
+            ->whereNotIn('item_id', $blockeditems)->whereNotIn('id', function ($q) use ($bookingId) {
+                $q->from('booking_items')->where('booking_id', $bookingId)->select('item_id');
+            })->with('item')
+            ->get();
+        // if ($request->expectsJson()) {
+        //     return response()->json([
+        //         'data' => $items,
+        //         'success' => 1,
+        //         'message' => 'List of rental items'
+        //     ]);
+        // }
+        return  $items;
+    }
+    public  function findRentalItemsApi(Request $request, $id)
+    {
+
+        $bookingId = $id;
+        // Get booking start/end date and studio in one query
+        $booking = Booking::select('booking_start_date', 'booking_end_date', 'studio_id')
+            ->where('id', $bookingId)
+            ->first();
+
+        // If booking not found (should not happen due to exists validation)
+        if (!$booking) {
+            return response()->json(['success' => 0, 'message' => 'Invalid booking id'], 404);
+        }
+
+
+        $blockedBloced = Booking::where('booking_start_date', $booking->booking_start_date)
+            ->pluck('id');
+        $blockeditems = BookingItem::whereIn('booking_id', $blockedBloced)->pluck('item_id');
+        // Use a single query to get available items
+
+        $items = Charge::where('studio_id', $booking->studio_id)
+            ->whereNotIn('item_id', $blockeditems)->whereNotIn('id', function ($q) use ($bookingId) {
+                $q->from('booking_items')->where('booking_id', $bookingId)->select('item_id');
+            })->with('item')
+            ->get();
+        if ($request->expectsJson()) {
+            return response()->json([
+                'data' => $items,
+                'success' => 1,
+                'message' => 'List of rental items'
+            ]);
+        }
+        // return  $items;
     }
 }

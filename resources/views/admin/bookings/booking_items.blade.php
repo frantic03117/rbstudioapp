@@ -1,8 +1,10 @@
  @php
 
      use App\Http\Controllers\BookingController;
+     use App\Http\Controllers\RentController;
      $ritems = BookingController::resource_items($sid, $bid);
-
+     $citems = RentController::findRentalItems($bid);
+     //  echo json_encode($citems);
  @endphp
 
  <div class="modal fade" id="staticBackdrop{{ $bid }}{{ $sid }}" data-bs-backdrop="static"
@@ -21,8 +23,8 @@
                      <label for="">Select Item</label>
                      <select name="item_id" id="" class="form-select">
                          <option value="">---Select---</option>
-                         @foreach ($ritems as $item)
-                             <option value="{{ $item->id }}">{{ $item->name }}</option>
+                         @foreach ($citems as $item)
+                             <option value="{{ $item->item->id }}">{{ $item->item->name }}</option>
                          @endforeach
                      </select>
                  </div>

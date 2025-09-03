@@ -55,7 +55,7 @@
                                     <option value="">---Select---</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3 d-none">
                                 <label for="">Select Rent Items</label>
                                 <select class="form-select" name="rents[]" id="rents" multiple="multiple">
                                     <option value="">---Select---</option>

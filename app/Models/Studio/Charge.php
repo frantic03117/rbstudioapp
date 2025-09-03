@@ -10,9 +10,14 @@ class Charge extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'studio_id', 'type', 'item_id', 'charge', 'created_at'
-    ] ;
-    public function item(){
+        'studio_id',
+        'type',
+        'item_id',
+        'charge',
+        'created_at'
+    ];
+    public function item()
+    {
         return $this->belongsTo(Rent::class);
     }
 }
