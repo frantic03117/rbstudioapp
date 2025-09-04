@@ -1246,9 +1246,10 @@ class BookingController extends Controller
             'item_id' => 'required|exists:rents,id',
             'uses_hours' => 'required|numeric|min:0.1',
             'booking_id' => 'required|exists:bookings,id',
-            'studio_id' => 'required|exists:studios,id',
+            // 'studio_id' => 'required|exists:studios,id',
         ]);
-        $charge = Charge::where('studio_id', $validated['studio_id'])
+        $booking = Booking::where('id', $request->booking_id)->first();
+        $charge = Charge::where('studio_id', $booking['studio_id'])
             ->where('item_id', $validated['item_id'])
             ->first();
 
