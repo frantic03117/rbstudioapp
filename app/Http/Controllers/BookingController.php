@@ -1389,7 +1389,7 @@ class BookingController extends Controller
     public function update_rental_item_in_booking(Request $request)
     {
         $rules = [
-            'booking_id' => 'required|exists:bookings,id',
+            'booking_id' => 'required',
             'item_id'    => 'required'
         ];
 
