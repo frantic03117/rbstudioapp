@@ -1415,8 +1415,8 @@ class BookingController extends Controller
     public function remove_rental_item_from_booking(Request $request)
     {
         $rules = [
-            'booking_id' => 'required|exists:booking_items,booking_id',
-            'item_id'    => 'required|exists:booking_items,item_id'
+            'booking_id' => 'required',
+            'item_id'    => 'required'
         ];
 
         $validation = Validator::make($request->all(), $rules);
