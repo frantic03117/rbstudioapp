@@ -1389,7 +1389,7 @@ class BookingController extends Controller
     public function update_rental_item_in_booking(Request $request)
     {
         $rules = [
-            'booking_id' => 'required|exists:booking_items,booking_id',
+            'booking_id' => 'required|exists:bookings,id',
             'item_id'    => 'required|exists:booking_items,item_id'
         ];
 
@@ -1397,7 +1397,7 @@ class BookingController extends Controller
 
         if ($validation->fails()) {
             return response()->json([
-                'success' => false,
+                'success' => 0,
                 'errors'  => $validation->errors(),
                 'message' =>  $validation->errors()->first()
             ]);
