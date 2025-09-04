@@ -226,13 +226,11 @@ class RentController extends Controller
                 $q->from('booking_items')->where('booking_id', $bookingId)->select('item_id');
             })->with('item')
             ->get();
-        if ($request->expectsJson()) {
-            return response()->json([
-                'data' => $items,
-                'success' => 1,
-                'message' => 'List of rental items'
-            ]);
-        }
+        return response()->json([
+            'data' => $items,
+            'success' => 1,
+            'message' => 'List of rental items'
+        ]);
         // return  $items;
     }
 }

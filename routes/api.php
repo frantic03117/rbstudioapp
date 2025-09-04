@@ -68,6 +68,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/is-all-read', [ApiController::class, 'is_all_notification_read'])->name('is_all_notification_read');
     Route::post('/mark-all-read', [ApiController::class, 'mark_all_read']);
     Route::get('/find-rental-items/{id}', [RentController::class, 'findRentalItemsApi']);
+    Route::post('add-rental-item', [BookingController::class, 'update_rental_item_in_booking']);
 });
 Route::post('admin', [AdminController::class, 'api_login']);
 Route::get('/transactions-all', [TransactionController::class, 'index'])->name('api_transactions');
