@@ -1424,7 +1424,7 @@ class BookingController extends Controller
     {
         $rules = [
             'booking_id' => 'required|integer|exists:bookings,id',
-            'item_id'    => 'required|integer|exists:items,id'
+            'item_id'    => 'required|integer|exists:rents,id'
         ];
 
         $validation = Validator::make($request->all(), $rules);
