@@ -1423,12 +1423,20 @@ class BookingController extends Controller
     public function remove_rental_item_from_booking(Request $request)
     {
         $rules = [
-            'booking_id' => 'required',
-            'item_id'    => 'required'
+            'booking_id' => 'required|integer|exists:bookings,id',
+            'item_id'    => 'required|integer|exists:items,id'
         ];
 
         $validation = Validator::make($request->all(), $rules);
+        $validation->after(function ($validator) use ($request) {
+            $exists = BookingItem::where('booking_id', $request->booking_id)
+                ->where('item_id', $request->item_id)
+                ->exists();
 
+            if (!$exists) {
+                $validator->errors()->add('item_id', 'This item does not exist in the booking.');
+            }
+        });
         if ($validation->fails()) {
             return response()->json([
                 'success' => false,
