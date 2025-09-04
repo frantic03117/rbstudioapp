@@ -1263,13 +1263,20 @@ class BookingController extends Controller
             'uses_hours' => $request->uses_hours,
             'created_at' => date('Y-m-d H:i:s')
         ];
-        if (BookingItem::insert($data)) {
-            $resp = ['success' => 1, 'message' => 'Booking item added successfully'];
-            if ($request->expectsJson()) {
-                return response()->json($resp);
-            }
-            return redirect()->back();
+        $findIsExists = BookingItem::where([
+            'item_id' => $request->item_id,
+            'booking_id' => $request->booking_id
+        ])->first();
+        if ($findIsExists) {
+            BookingItem::where('id', $findIsExists['id'])->update($data);
+        } else {
+            BookingItem::insert($data);
         }
+        $resp = ['success' => 1, 'message' => 'Booking item added successfully'];
+        if ($request->expectsJson()) {
+            return response()->json($resp);
+        }
+        return redirect()->back();
     }
     public function booking_item_delete($id)
     {
