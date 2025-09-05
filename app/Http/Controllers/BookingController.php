@@ -693,7 +693,7 @@ class BookingController extends Controller
     {
         $booking = Booking::where('id', $id)
             ->with('user')
-            ->with('vendor')
+            ->with('vendor')->with('buffer_slot')->withCount('buffer_slot')
             ->with('studio')->with('transactions')
             ->withSum('transactions', 'amount')
             ->withSum('extra_added', 'amount')
