@@ -239,47 +239,134 @@ class AjaxController extends Controller
 
 
 
+    // public function find_end_slot(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'sdate' => 'required',
+    //         "studio_id" => "required",
+    //         "slot_id" => "required"
+    //     ]);
+    //     if ($validator->fails()) {
+    //         $data = [
+    //             'data' => [],
+    //             'success' => 0,
+    //             'errors' => $validator->errors(),
+    //             'message' => 'List of Services'
+    //         ];
+    //         return response()->json($data);
+    //     }
+    //     $slot_id = $request->slot_id;
+    //     $sid = $request->studio_id;
+    //     $booking_id = $request->booking_id ?? "a1";
+    //     $slot = Slot::where('id', $slot_id)->first();
+    //     $sdate = Carbon::parse($request->sdate)->format('Y-m-d');
+    //     $start_time = $slot->start_at;
+    //     // $bsdate = date('Y-m-d H:i:s', strtotime($sdate.' '.$start_time));
+    //     $bsdate = Carbon::parse($sdate . ' ' . $start_time)->minute(0)->second(0)->format('Y-m-d H:i:s');
+
+    //     $arr = [];
+    //     $hours = $request->mode || $request->expectsJson() ? 24 : 720;
+    //     for ($i = 1; $i <= $hours; $i++) {
+    //         // $bedate = date('Y-m-d H:0:0', strtotime($bsdate)+$i*3600);
+    //         $bedate = Carbon::parse($bsdate)->addHours($i)->minute(0)->second(0)->format('Y-m-d H:i:s');
+    //         $inndata =  [
+    //             'booking_start_date' => $bsdate,
+    //             'booking_end_date' => $bedate,
+    //             'studio_id' => $sid,
+    //             'booking_status' => '0'
+    //         ];
+    //         $innerBook = Booking::where($inndata)->where('id', '!=', $booking_id)->count();
+    //         $outerBook = Booking::where('booking_start_date', '>', $bsdate)->where('booking_start_date', '<', $bedate)->where('studio_id', $sid)->where('booking_status',  '0')->where('id', '!=', $booking_id)->count();
+    //         #$lcrosBook = Booking::where('booking_end_date', '>', $bsdate)->where('studio_id', $sid)->count();
+    //         #$ucrosBook = Booking::where('booking_start_date', '>', $bedate)->where('studio_id', $sid)->count();
+    //         $overlappingBookings = Booking::where('studio_id', $sid)->where('id', '!=', $booking_id)
+    //             ->whereIn('booking_status', ['1', '0'])
+    //             ->where(function ($query) use ($bsdate, $bedate) {
+    //                 $query->where(function ($q) use ($bsdate, $bedate) {
+    //                     $q->where('booking_start_date', '<', $bedate)
+    //                         ->where('booking_end_date', '>', $bsdate);
+    //                 });
+    //             })
+    //             ->count();
+    //         $sum = $innerBook + $outerBook + $overlappingBookings;
+    //         if ($sum == 0) {
+    //             array_push($arr, $bedate);
+    //         }
+    //     }
+    //     $res = [
+    //         'success' => 1,
+    //         'data' => $arr
+    //     ];
+    //     return response()->json($res);
+    // }
     public function find_end_slot(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'sdate' => 'required',
-            "studio_id" => "required",
-            "slot_id" => "required"
+            'sdate'     => 'required|date',
+            "studio_id" => "required|exists:studios,id",
+            "slot_id"   => "required|exists:slots,id"
         ]);
+
         if ($validator->fails()) {
-            $data = [
-                'data' => [],
+            return response()->json([
+                'data'    => [],
                 'success' => 0,
-                'errors' => $validator->errors(),
-                'message' => 'List of Services'
-            ];
-            return response()->json($data);
+                'errors'  => $validator->errors(),
+                'message' => 'Validation failed'
+            ]);
         }
-        $slot_id = $request->slot_id;
-        $sid = $request->studio_id;
+
+        $slot_id   = $request->slot_id;
+        $sid       = $request->studio_id;
         $booking_id = $request->booking_id ?? "a1";
-        $slot = Slot::where('id', $slot_id)->first();
-        $sdate = Carbon::parse($request->sdate)->format('Y-m-d');
+
+        $slot   = Slot::findOrFail($slot_id);
+        $sdate  = Carbon::parse($request->sdate)->format('Y-m-d');
         $start_time = $slot->start_at;
-        // $bsdate = date('Y-m-d H:i:s', strtotime($sdate.' '.$start_time));
-        $bsdate = Carbon::parse($sdate . ' ' . $start_time)->minute(0)->second(0)->format('Y-m-d H:i:s');
+
+        $bsdate = Carbon::parse($sdate . ' ' . $start_time)->minute(0)->second(0);
+
+        // 🔹 Find the earliest blocked slot after this start time
+        $nextBlocked = BlockedSlot::where('studio_id', $sid)
+            ->whereDate('bdate', $sdate)
+            ->when($booking_id !== "a1", fn($q) => $q->where('booking_id', '!=', $booking_id))
+            ->with('slot:id,start_at') // eager load slot
+            ->get()
+            ->map(fn($b) => Carbon::parse($sdate . ' ' . $b->slot->start_at))
+            ->filter(fn($blockedTime) => $blockedTime->gt($bsdate))
+            ->sort()
+            ->first();
 
         $arr = [];
         $hours = $request->mode || $request->expectsJson() ? 24 : 720;
+
         for ($i = 1; $i <= $hours; $i++) {
-            // $bedate = date('Y-m-d H:0:0', strtotime($bsdate)+$i*3600);
-            $bedate = Carbon::parse($bsdate)->addHours($i)->minute(0)->second(0)->format('Y-m-d H:i:s');
-            $inndata =  [
+            $bedate = (clone $bsdate)->addHours($i);
+
+            // ⛔ Stop if we reached a blocked slot
+            if ($nextBlocked && $bedate->gte($nextBlocked)) {
+                break;
+            }
+
+            // Booking conflict checks
+            $innerBook = Booking::where([
                 'booking_start_date' => $bsdate,
-                'booking_end_date' => $bedate,
-                'studio_id' => $sid,
-                'booking_status' => '0'
-            ];
-            $innerBook = Booking::where($inndata)->where('id', '!=', $booking_id)->count();
-            $outerBook = Booking::where('booking_start_date', '>', $bsdate)->where('booking_start_date', '<', $bedate)->where('studio_id', $sid)->where('booking_status',  '0')->where('id', '!=', $booking_id)->count();
-            #$lcrosBook = Booking::where('booking_end_date', '>', $bsdate)->where('studio_id', $sid)->count();
-            #$ucrosBook = Booking::where('booking_start_date', '>', $bedate)->where('studio_id', $sid)->count();
-            $overlappingBookings = Booking::where('studio_id', $sid)->where('id', '!=', $booking_id)
+                'booking_end_date'   => $bedate,
+                'studio_id'          => $sid,
+                'booking_status'     => '0',
+            ])
+                ->when($booking_id !== "a1", fn($q) => $q->where('id', '!=', $booking_id))
+                ->count();
+
+            $outerBook = Booking::where('booking_start_date', '>', $bsdate)
+                ->where('booking_start_date', '<', $bedate)
+                ->where('studio_id', $sid)
+                ->where('booking_status', '0')
+                ->when($booking_id !== "a1", fn($q) => $q->where('id', '!=', $booking_id))
+                ->count();
+
+            $overlappingBookings = Booking::where('studio_id', $sid)
+                ->when($booking_id !== "a1", fn($q) => $q->where('id', '!=', $booking_id))
                 ->whereIn('booking_status', ['1', '0'])
                 ->where(function ($query) use ($bsdate, $bedate) {
                     $query->where(function ($q) use ($bsdate, $bedate) {
@@ -288,17 +375,20 @@ class AjaxController extends Controller
                     });
                 })
                 ->count();
+
             $sum = $innerBook + $outerBook + $overlappingBookings;
+
             if ($sum == 0) {
-                array_push($arr, $bedate);
+                $arr[] = $bedate->format('Y-m-d H:i:s');
             }
         }
-        $res = [
+
+        return response()->json([
             'success' => 1,
-            'data' => $arr
-        ];
-        return response()->json($res);
+            'data'    => $arr
+        ]);
     }
+
     public function get_services(Request $request)
     {
         $request->validate([
