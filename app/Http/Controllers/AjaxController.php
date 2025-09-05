@@ -172,61 +172,71 @@ class AjaxController extends Controller
     public function find_start_slot(Request $request)
     {
         date_default_timezone_set('Asia/Kolkata');
+
         $request->validate([
-            'sdate' => 'required|date',
+            'sdate'     => 'required|date',
             'studio_id' => 'required|exists:studios,id',
         ]);
-        $sid = $request->studio_id;
-        $sdate = Carbon::parse($request->sdate)->format('Y-m-d');
-        $studio = Studio::findOrFail($sid); // Use findOrFail to ensure studio exists
-        $opens = Carbon::parse($studio->opens_at);
-        $close = Carbon::parse($studio->ends_at);
-        $bid = $request->booking_id ?? "a1";
-        $isEdit = $request->isEdit;
-        $blocked = BlockedSlot::whereDate('bdate', $sdate)->where('studio_id', $sid);
-        if ($bid != "a1") {
-            $blocked->where('booking_id', '!=', $bid);
+
+        $studioId   = $request->studio_id;
+        $sdate      = Carbon::parse($request->sdate)->format('Y-m-d');
+        $studio     = Studio::findOrFail($studioId);
+        $opens      = Carbon::parse($studio->opens_at)->format('H:i:s');
+        $closes     = Carbon::parse($studio->ends_at)->format('H:i:s');
+        $bookingId  = $request->booking_id ?? "a1";
+        $isEdit     = $request->isEdit ?? false;
+
+
+        $blockedQuery = BlockedSlot::whereDate('bdate', $sdate)
+            ->where('studio_id', $studioId);
+
+        if ($bookingId !== "a1") {
+            $blockedQuery->where('booking_id', '!=', $bookingId);
         }
-        $brr = $blocked->pluck('slot_id')->toArray();
+
+        $blockedSlots = $blockedQuery->pluck('slot_id')->toArray();
 
         $currentTime = now()->format('H:i:s');
-        $query = Slot::whereNotIn('id', $brr)
-            ->whereNotExists(function ($q) use ($sdate, $sid, $isEdit, $bid) {
+
+        $query = Slot::whereNotIn('id', $blockedSlots)
+            ->whereNotExists(function ($q) use ($sdate, $studioId, $isEdit, $bookingId) {
                 $q->from('bookings')
                     ->whereIn('booking_status', ['1', '0'])
                     ->whereDate('booking_start_date', $sdate)
-                    ->where('studio_id', $sid)
+                    ->where('studio_id', $studioId)
                     ->whereColumn('bookings.start_at', '<', 'slots.end_at')
                     ->whereColumn('bookings.end_at', '>', 'slots.start_at')
-                    ->where('id', '!=', $bid);
+                    ->when($bookingId !== "a1", function ($sub) use ($bookingId) {
+                        $sub->where('id', '!=', $bookingId);
+                    });
             });
 
-        if ($sdate == date('Y-m-d')) {
-            $query->where(function ($q) use ($sdate, $currentTime) {
-                $q->where('start_at', '>=', $currentTime);
-            });
+
+        if ($sdate === date('Y-m-d')) {
+            $query->where('start_at', '>=', $currentTime);
         }
-        // Optional: Add time-based constraints if "mode" is passed
+
+
         if ($request->has('mode') && $request->mode) {
-            $query->whereBetween('start_at', [$opens, $close]);
+            $query->whereBetween('start_at', [$opens, $closes]);
         }
 
-        // Execute the query and get the slots
-        $slots = $query->get();
+        // Get slots
+        $slots = $query->orderBy('start_at')->get();
 
-        // Modify the returned slots, adding the date field
-        $modifiedObjects = $slots->map(function ($slot) use ($sdate) {
-            $slot->date = $sdate; // Add the 'date' field
+        // Add date field to each slot
+        $modifiedSlots = $slots->map(function ($slot) use ($sdate) {
+            $slot->date = $sdate;
             return $slot;
         });
 
-        // Return the response with success and data
         return response()->json([
             'success' => 1,
-            'data' => $modifiedObjects,
-            $currentTime
+            'data'    => $modifiedSlots,
+            'current_time' => $currentTime
         ]);
     }
+
 
     public function find_end_slot(Request $request)
     {
