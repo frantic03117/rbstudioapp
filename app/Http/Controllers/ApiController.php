@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BlockedSlot;
 use App\Models\Studio\Service;
 use App\Models\Booking;
 use App\Models\RbNotification;
@@ -268,16 +269,75 @@ class ApiController extends Controller
     public function cancel_booking()
     {
         date_default_timezone_set('Asia/Kolkata');
-        $fdata =  [
+
+        $fdata = [
             'booking_status' => '0',
             'payment_status' => '0'
         ];
+
+        // Get timelimit from settings
         $gettimelimit = Setting::where('id', '2')->first();
-        $minutes =  $gettimelimit ?  floatval($gettimelimit->col_val) > 0 ?  floatval($gettimelimit->col_val) :  30 : 30;
+        $minutes = $gettimelimit && floatval($gettimelimit->col_val) > 0
+            ? floatval($gettimelimit->col_val)
+            : 30;
+
         $timelimit = Carbon::now()->subMinutes($minutes)->format('Y-m-d H:i:s');
-        Booking::where($fdata)->where('created_at', '<=',  $timelimit)->update(['booking_status' => '2']);
+
+        // Get all bookings that need to be auto-cancelled
+        $bookings = Booking::where($fdata)
+            ->where('created_at', '<=', $timelimit)
+            ->get();
+
+        foreach ($bookings as $booking) {
+            $bid = $booking->id;
+            $user = User::where('id', $booking->user_id)->first();
+
+            // User message
+            $msg = "Your booking ID {$bid} has been auto-cancelled due to time limit expiry. Please re-book or contact support for assistance.";
+
+            // Notify Super admin
+            $super = User::where('role', 'Super')->first();
+            if ($super && $super?->fcm_token) {
+                $appmessage = "Booking ID {$bid} has been auto-cancelled due to payment/time limit expiry. View details in the Bookings tab.";
+
+                $n_tdata = [
+                    'user_id' => $user?->id ?? 0,
+                    'booking_id' => $booking->id,
+                    'studio_id' => $booking->studio_id,
+                    'vendor_id' => $booking->vendor_id,
+                    'shown_to_user' => '0',
+                    'type' => 'Booking',
+                    'title' => 'Booking Auto-Cancelled',
+                    "message" => $appmessage,
+                    "created_at" => date('Y-m-d H:i:s')
+                ];
+                RbNotification::create($n_tdata);
+
+                // Optional push notification
+                // $this->send_notification($super?->fcm_token, "Booking Auto-Cancelled", $appmessage, $super->id);
+            }
+
+            // Notify User
+            $udata = [
+                'user_id' => $user?->id ?? 0,
+                'booking_id' => $booking->id,
+                'studio_id' => $booking->studio_id,
+                'vendor_id' => $booking->vendor_id,
+                'type' => 'Booking',
+                'shown_to_user' => '1',
+                'title' => 'Booking Auto-Cancelled',
+                'message' => $msg
+            ];
+            RbNotification::create($udata);
+
+            // Update booking & remove blocked slots
+            Booking::where('id', $booking->id)->update(['booking_status' => '2']);
+            BlockedSlot::where('booking_id', $booking->id)->delete();
+        }
+
         return true;
     }
+
     public function payment_notification()
     {
         $fdata = [
