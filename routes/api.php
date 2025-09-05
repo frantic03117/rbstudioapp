@@ -76,6 +76,7 @@ Route::post('admin', [AdminController::class, 'api_login']);
 Route::get('/transactions-all', [TransactionController::class, 'index'])->name('api_transactions');
 Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard']);
+    Route::get('/slots', [ApiController::class, 'all_slots']);
     Route::post('/book-studio', [BookingController::class, 'store']);
     Route::get('bookings/{slug}', [BookingController::class, 'custom_view']);
     Route::get('bookings/show/{id}', [BookingController::class, 'show']);

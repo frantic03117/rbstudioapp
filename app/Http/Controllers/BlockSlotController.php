@@ -101,7 +101,6 @@ class BlockSlotController extends Controller
                 }
             }
         }
-
         return $request->expectsJson()
             ? response()->json(['success' => 1, 'message' => 'Blocked slots saved successfully'])
             : redirect()->back()->with('success', 'Blocked slots saved successfully!');
@@ -139,8 +138,9 @@ class BlockSlotController extends Controller
             'bdate'      => $blockDate,
             'reason'     => 'buffer',
         ]);
-
-        return redirect()->back()->with('success', 'Buffer time added successfully');
+        return $request->expectsJson()
+            ? response()->json(['success' => 1, 'message' => 'Buffer time added successfully'])
+            : redirect()->back()->with('success', 'Buffer time added successfully!');
     }
     public function destroyMultiple(Request $request)
     {

@@ -13,6 +13,7 @@ use App\Models\Location\Country;
 use App\Traits\RbTrait;
 use App\Models\Location\State;
 use App\Models\Setting;
+use App\Models\Slot;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -677,5 +678,14 @@ class ApiController extends Controller
         }
         $data =  $rbns->update(['is_read' => '1']);
         return response()->json(['success' => 1, "data" => $data, 'message' => 'all read successfully']);
+    }
+    public function all_slots()
+    {
+        $items = Slot::orderBy('start_at', 'asc')->get();
+        return response()->json([
+            'data' => $items,
+            'success' => 1,
+            'message' => 'list of slots'
+        ]);
     }
 }
