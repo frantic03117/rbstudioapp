@@ -110,7 +110,7 @@ class Booking extends Model
     }
     public function buffer_slot()
     {
-        return $this->hasMany(BlockedSlot::class, 'booking_id', 'id')->where('reason', 'buffer');
+        return $this->hasMany(BlockedSlot::class, 'booking_id', 'id')->where('reason', 'buffer')->orderBy('id', 'DESC');
     }
     /*
     |--------------------------------------------------------------------------
