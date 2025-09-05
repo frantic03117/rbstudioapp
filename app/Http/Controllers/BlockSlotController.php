@@ -67,17 +67,23 @@ class BlockSlotController extends Controller
 
         $validated = $request->validate($rules);
 
-        // If "All" selected → expand all studios
+        // Expand studios if "All" is selected
         $studioIds = in_array('All', $validated['studio_id'])
             ? Studio::pluck('id')->toArray()
             : $validated['studio_id'];
 
-        // Get slots within the selected time range
-        $slotIds = Slot::whereBetween('id', [$validated['start_time'], $validated['end_time']])
-            ->pluck('id')
-            ->toArray();
+        // Get slot objects
+        $startSlot = Slot::findOrFail($validated['start_time']);
+        $endSlot   = Slot::findOrFail($validated['end_time']);
 
-        // Loop through dates between from_date and to_date
+        // Build full datetime range
+        $startDatetime = new \DateTime("{$validated['from_date']} {$startSlot->start_at}");
+        $endDatetime   = new \DateTime("{$validated['to_date']} {$endSlot->end_at}");
+
+        // Get all slots
+        $allSlots = Slot::all();
+
+        // Loop dates between from_date and to_date
         $period = new \DatePeriod(
             new \DateTime($validated['from_date']),
             new \DateInterval('P1D'),
@@ -86,25 +92,33 @@ class BlockSlotController extends Controller
 
         foreach ($period as $date) {
             foreach ($studioIds as $studioId) {
-                foreach ($slotIds as $slotId) {
-                    BlockedSlot::firstOrCreate(
-                        [
-                            'studio_id' => $studioId,
-                            'slot_id'   => $slotId,
-                            'bdate'     => $date->format('Y-m-d'),
-                        ],
-                        [
-                            'booking_id' => 0,
-                            'reason'     => 'other',
-                        ]
-                    );
+                foreach ($allSlots as $slot) {
+                    $slotStart = new \DateTime("{$date->format('Y-m-d')} {$slot->start_at}");
+                    $slotEnd   = new \DateTime("{$date->format('Y-m-d')} {$slot->end_at}");
+
+                    // Keep slots that overlap with range
+                    if ($slotStart >= $startDatetime && $slotEnd <= $endDatetime) {
+                        BlockedSlot::firstOrCreate(
+                            [
+                                'studio_id' => $studioId,
+                                'slot_id'   => $slot->id,
+                                'bdate'     => $date->format('Y-m-d'),
+                            ],
+                            [
+                                'booking_id' => 0,
+                                'reason'     => 'other',
+                            ]
+                        );
+                    }
                 }
             }
         }
+
         return $request->expectsJson()
             ? response()->json(['success' => 1, 'message' => 'Blocked slots saved successfully'])
             : redirect()->back()->with('success', 'Blocked slots saved successfully!');
     }
+
 
     public function add_buffer_time(Request $request, $id)
     {
