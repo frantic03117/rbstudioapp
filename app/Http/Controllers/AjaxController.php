@@ -178,62 +178,64 @@ class AjaxController extends Controller
             'studio_id' => 'required|exists:studios,id',
         ]);
 
-        $studioId   = $request->studio_id;
-        $sdate      = Carbon::parse($request->sdate)->format('Y-m-d');
-        $studio     = Studio::findOrFail($studioId);
-        $opens      = Carbon::parse($studio->opens_at)->format('H:i:s');
-        $closes     = Carbon::parse($studio->ends_at)->format('H:i:s');
-        $bookingId  = $request->booking_id ?? "a1";
-        $isEdit     = $request->isEdit ?? false;
+        $sid   = $request->studio_id;
+        $sdate = Carbon::parse($request->sdate)->format('Y-m-d');
+        $studio = Studio::findOrFail($sid);
 
+        $opens = Carbon::parse($studio->opens_at);
+        $close = Carbon::parse($studio->ends_at);
+        $bid   = $request->booking_id ?? "a1";
 
-        $blockedQuery = BlockedSlot::whereDate('bdate', $sdate)
-            ->where('studio_id', $studioId);
+        // 🔹 Get blocked slot IDs for that studio/date
+        $blocked = BlockedSlot::whereDate('bdate', $sdate)
+            ->where('studio_id', $sid);
 
-        if ($bookingId !== "a1") {
-            $blockedQuery->where('booking_id', '!=', $bookingId);
+        if ($bid !== "a1") {
+            $blocked->where('booking_id', '!=', $bid);
         }
 
-        $blockedSlots = $blockedQuery->pluck('slot_id')->toArray();
+        $blockedSlotIds = $blocked->pluck('slot_id')->toArray();
+
+        // 🔹 Convert blocked IDs into actual times
+        $blockedTimes = Slot::whereIn('id', $blockedSlotIds)->pluck('start_at')->toArray();
 
         $currentTime = now()->format('H:i:s');
 
-        $query = Slot::whereNotIn('id', $blockedSlots)
-            ->whereNotExists(function ($q) use ($sdate, $studioId, $isEdit, $bookingId) {
+        // 🔹 Query available slots
+        $query = Slot::whereNotIn('start_at', $blockedTimes) // exclude blocked times
+            ->whereNotExists(function ($q) use ($sdate, $sid, $bid) {
                 $q->from('bookings')
                     ->whereIn('booking_status', ['1', '0'])
                     ->whereDate('booking_start_date', $sdate)
-                    ->where('studio_id', $studioId)
+                    ->where('studio_id', $sid)
                     ->whereColumn('bookings.start_at', '<', 'slots.end_at')
                     ->whereColumn('bookings.end_at', '>', 'slots.start_at')
-                    ->when($bookingId !== "a1", function ($sub) use ($bookingId) {
-                        $sub->where('id', '!=', $bookingId);
+                    ->when($bid !== "a1", function ($sub) use ($bid) {
+                        $sub->where('id', '!=', $bid);
                     });
             });
 
-
-        if ($sdate === date('Y-m-d')) {
+        // 🔹 Exclude past slots for today
+        if ($sdate == date('Y-m-d')) {
             $query->where('start_at', '>=', $currentTime);
         }
 
-
+        // 🔹 Respect studio open/close if "mode" is passed
         if ($request->has('mode') && $request->mode) {
-            $query->whereBetween('start_at', [$opens, $closes]);
+            $query->whereBetween('start_at', [$opens->format('H:i:s'), $close->format('H:i:s')]);
         }
 
-        // Get slots
         $slots = $query->orderBy('start_at')->get();
 
-        // Add date field to each slot
-        $modifiedSlots = $slots->map(function ($slot) use ($sdate) {
+        // 🔹 Attach date to each slot
+        $modifiedObjects = $slots->map(function ($slot) use ($sdate) {
             $slot->date = $sdate;
             return $slot;
         });
 
         return response()->json([
             'success' => 1,
-            'data'    => $modifiedSlots,
-            'current_time' => $currentTime
+            'data'    => $modifiedObjects,
         ]);
     }
 
