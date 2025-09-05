@@ -182,11 +182,11 @@ class AjaxController extends Controller
         $sdate = Carbon::parse($request->sdate)->format('Y-m-d');
         $studio = Studio::findOrFail($sid);
 
-        $opens = Carbon::parse($studio->opens_at);
-        $close = Carbon::parse($studio->ends_at);
+        $opens = Carbon::parse($studio->opens_at)->format('H:i:s');
+        $close = Carbon::parse($studio->ends_at)->format('H:i:s');
         $bid   = $request->booking_id ?? "a1";
 
-        // 🔹 Get blocked slot IDs for that studio/date
+        // 🔹 All blocked slots for that day
         $blocked = BlockedSlot::whereDate('bdate', $sdate)
             ->where('studio_id', $sid);
 
@@ -195,14 +195,12 @@ class AjaxController extends Controller
         }
 
         $blockedSlotIds = $blocked->pluck('slot_id')->toArray();
-
-        // 🔹 Convert blocked IDs into actual times
-        $blockedTimes = Slot::whereIn('id', $blockedSlotIds)->pluck('start_at')->toArray();
+        $blockedTimes   = Slot::whereIn('id', $blockedSlotIds)->pluck('start_at')->toArray();
 
         $currentTime = now()->format('H:i:s');
 
-        // 🔹 Query available slots
-        $query = Slot::whereNotIn('start_at', $blockedTimes) // exclude blocked times
+        // 🔹 Base query
+        $query = Slot::whereNotIn('start_at', $blockedTimes)
             ->whereNotExists(function ($q) use ($sdate, $sid, $bid) {
                 $q->from('bookings')
                     ->whereIn('booking_status', ['1', '0'])
@@ -220,14 +218,14 @@ class AjaxController extends Controller
             $query->where('start_at', '>=', $currentTime);
         }
 
-        // 🔹 Respect studio open/close if "mode" is passed
+        // 🔹 Respect studio open/close if mode is set
         if ($request->has('mode') && $request->mode) {
-            $query->whereBetween('start_at', [$opens->format('H:i:s'), $close->format('H:i:s')]);
+            $query->whereBetween('start_at', [$opens, $close]);
         }
 
         $slots = $query->orderBy('start_at')->get();
 
-        // 🔹 Attach date to each slot
+        // 🔹 Attach date
         $modifiedObjects = $slots->map(function ($slot) use ($sdate) {
             $slot->date = $sdate;
             return $slot;
@@ -238,6 +236,7 @@ class AjaxController extends Controller
             'data'    => $modifiedObjects,
         ]);
     }
+
 
 
     public function find_end_slot(Request $request)
