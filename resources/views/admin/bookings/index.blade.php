@@ -439,11 +439,10 @@
                                                         href="{{ route('rebook', ['id' => $b['id']]) }}">
                                                         Book Again
                                                     </a>
-                                                    @php
-                                                        $lastBufferSlot = collect($b['buffer_slot'])->last();
-                                                    @endphp
-
                                                     <div class="btn-group" role="group" aria-label="Buffer Slot">
+                                                        @php
+                                                            $lastBufferSlot = collect($b['buffer_slot'])->last();
+                                                        @endphp
                                                         @if ($lastBufferSlot)
                                                             <form
                                                                 action="{{ route('remove_buffer_time_Wb', ['id' => $lastBufferSlot->id]) }}"
@@ -464,19 +463,23 @@
                                                             </button>
                                                         @endif
 
+
                                                         <span id="buffer-count-{{ $b['id'] }}"
                                                             class="px-3 py-1 border bg-light">
-                                                            {{ count($b['buffer_slot']) }}
+                                                            {{ count($b->buffer_slot) }}
                                                         </span>
 
                                                         <button type="button" class="btn btn-sm btn-outline-success"
                                                             onclick="addBuffer({{ $b['id'] }})"
                                                             data-bs-toggle="tooltip" data-bs-placement="top"
-                                                            title="Increase buffer time
+                                                            title="Increase buffer time by 1 hour">
+                                                            +
+                                                        </button>
+                                                    </div>
 
 
-
-                                                    @if ($b->booking_status != '2') <a href="{{ route('booking.edit', $b->id) }}"
+                                                    @if ($b->booking_status != '2')
+                                                        <a href="{{ route('booking.edit', $b->id) }}"
                                                             class="btn btn-warning btn-sm">Rescheule</a>
                                                         {!! Form::open([
                                                             'route' => ['booking.destroy', $b->id],
@@ -491,8 +494,11 @@
                                                             function confirmCancel() {
                                                                 return confirm("Are you sure you want to cancel this booking?");
                                                             };
-                                                        </script> @endif
-                                                    @if ($b->booking_status == '2') <button class="btn btn-sm btn-danger">Add Refund</button> @endif
+                                                        </script>
+                                                    @endif
+                                                    @if ($b->booking_status == '2')
+                                                        <button class="btn btn-sm btn-danger">Add Refund</button>
+                                                    @endif
                                                     @include('admin.bookings.booking_items', [
                                                         'bid' => $b->id,
                                                         'sid' => $b->studio->id,
@@ -515,11 +521,11 @@
                                                         'states' => $states,
                                                     ])
                                                 </div>
-@endif
+                                            @endif
 
                                         </td>
                                     </tr>
-@endforeach
+                                @endforeach
                             </tbody>
                         </table>
                         {{ $bookings->appends(request()->query())->links() }}
@@ -701,103 +707,91 @@
 
 
     <!-- Modal -->
-    <div class="modal
-                                                            fade" id="staticBackdrop" data-bs-backdrop="static"
-                                                            data-bs-keyboard="false" tabindex="-1"
-                                                            aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header bg-gradient">
-                                                                        <h1 class="modal-title fs-5 text-white"
-                                                                            id="staticBackdropLabel">Add Payment</h1>
-                                                                        <button type="button" class="btn-close"
-                                                                            data-bs-dismiss="modal"
-                                                                            aria-label="Close"></button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        {!! Form::open(['route' => 'transactions.store', 'method' => 'POST']) !!}
-                                                                        <input type="hidden" name="booking_id"
-                                                                            id="booking_id">
-                                                                        <div class="form-group mb-2">
-                                                                            <label for="">
-                                                                                Enter Mode
-                                                                            </label>
-                                                                            <input type="text" name="mode"
-                                                                                id="mode" class="form-control">
-                                                                        </div>
-                                                                        <div class="form-group mb-2">
-                                                                            <label for="">
-                                                                                Enter Transaction Id
-                                                                            </label>
-                                                                            <input type="text" name="transaction_id"
-                                                                                id="transaction_id" class="form-control">
-                                                                        </div>
-                                                                        <div class="form-group mb-2">
-                                                                            <label for="">
-                                                                                Enter Amount
-                                                                            </label>
-                                                                            <input type="text" name="amount"
-                                                                                id="amount" class="form-control">
-                                                                        </div>
-                                                                        <div class="form-group mb-4">
-                                                                            <label for="">Enter Date</label>
-                                                                            <input type="date" name="transaction_date"
-                                                                                id="transaction_date"
-                                                                                class="form-control">
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <button
-                                                                                class="btn w-100 btn-gradient">Submit</button>
-                                                                        </div>
-                                                                        {!! Form::close() !!}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                    </div>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-gradient">
+                    <h1 class="modal-title fs-5 text-white" id="staticBackdropLabel">Add Payment</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {!! Form::open(['route' => 'transactions.store', 'method' => 'POST']) !!}
+                    <input type="hidden" name="booking_id" id="booking_id">
+                    <div class="form-group mb-2">
+                        <label for="">
+                            Enter Mode
+                        </label>
+                        <input type="text" name="mode" id="mode" class="form-control">
+                    </div>
+                    <div class="form-group mb-2">
+                        <label for="">
+                            Enter Transaction Id
+                        </label>
+                        <input type="text" name="transaction_id" id="transaction_id" class="form-control">
+                    </div>
+                    <div class="form-group mb-2">
+                        <label for="">
+                            Enter Amount
+                        </label>
+                        <input type="text" name="amount" id="amount" class="form-control">
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="">Enter Date</label>
+                        <input type="date" name="transaction_date" id="transaction_date" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn w-100 btn-gradient">Submit</button>
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
 
-                                                    <script>
-                                                        const copyLink = (string) => {
-                                                            navigator.clipboard.writeText(string)
-                                                                .then(() => {
-                                                                    console.log('Link copied to clipboard!');
-                                                                    alert('Link copied successfully')
-                                                                })
-                                                                .catch(err => {
-                                                                    console.error('Could not copy text: ', err);
-                                                                });
-                                                        }
-                                                        const setbookingid = (id) => {
-                                                            $("#booking_id").val(id);
-                                                        };
-                                                    </script>
-                                                    <script>
-                                                        const sendWhatsapp = (type, date = null, stime = null, etime = null, name = null, amount = null, duration, link =
-                                                            null) => {
-                                                            let msg = "";
-                                                            if (type == "confirm") {
-                                                                msg =
-                                                                    `Hello you have booked the studio on ${date}  from ${stime} to ${etime}. Your session will be in ${name}. Total amount for ${duration} hours is ${amount} inclusive of all taxes. Please Note: This is a non-cancellable booking. Cancellation will incur a 50% charge. Setup and packup time will be added to your booking hours. See you at the studios !! R AND B STUDIOS`
-                                                            }
-                                                            if (type == "cancel") {
-                                                                msg =
-                                                                    `Hello Customer, on ${date} from ${stime} has been cancelled. Cancelation charge of 50% will be deducted. Any remaining balance will be returned to you via UPI within 24-48 hours. Hope to see you again at the studio. Thanks R AND B STUDIOS`
-                                                            }
-                                                            if (type == "payment") {
-                                                                msg =
-                                                                    `Hello, your payment of ${amount} including taxes is pending for your booking on ${date} from ${stime} for ${duration} hours . Request you to please use the following link ${link} or UPI the same on 9820996688. Thanks. R AND B STUDIOS`
-                                                            }
-                                                            if (type == "reschedule") {
-                                                                msg =
-                                                                    `Hello you have booked the studio on ${date}  from ${stime} to ${etime}. Your session will be in ${name}. Total amount for ${duration} hours is ${amount} inclusive of all taxes. Please Note: This is a non-cancellable booking. Cancellation will incur a 50% charge. Setup and packup time will be added to your booking hours. See you at the studios !! R AND B STUDIOS`
-                                                            }
-                                                            const encodedMsg = encodeURIComponent(msg);
-                                                            const whatsappNumber = '9820996688';
-                                                            const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodedMsg}`;
-                                                            window.open(whatsappLink, '_blank');
+    <script>
+        const copyLink = (string) => {
+            navigator.clipboard.writeText(string)
+                .then(() => {
+                    console.log('Link copied to clipboard!');
+                    alert('Link copied successfully')
+                })
+                .catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+        }
+        const setbookingid = (id) => {
+            $("#booking_id").val(id);
+        };
+    </script>
+    <script>
+        const sendWhatsapp = (type, date = null, stime = null, etime = null, name = null, amount = null, duration, link =
+            null) => {
+            let msg = "";
+            if (type == "confirm") {
+                msg =
+                    `Hello you have booked the studio on ${date}  from ${stime} to ${etime}. Your session will be in ${name}. Total amount for ${duration} hours is ${amount} inclusive of all taxes. Please Note: This is a non-cancellable booking. Cancellation will incur a 50% charge. Setup and packup time will be added to your booking hours. See you at the studios !! R AND B STUDIOS`
+            }
+            if (type == "cancel") {
+                msg =
+                    `Hello Customer, on ${date} from ${stime} has been cancelled. Cancelation charge of 50% will be deducted. Any remaining balance will be returned to you via UPI within 24-48 hours. Hope to see you again at the studio. Thanks R AND B STUDIOS`
+            }
+            if (type == "payment") {
+                msg =
+                    `Hello, your payment of ${amount} including taxes is pending for your booking on ${date} from ${stime} for ${duration} hours . Request you to please use the following link ${link} or UPI the same on 9820996688. Thanks. R AND B STUDIOS`
+            }
+            if (type == "reschedule") {
+                msg =
+                    `Hello you have booked the studio on ${date}  from ${stime} to ${etime}. Your session will be in ${name}. Total amount for ${duration} hours is ${amount} inclusive of all taxes. Please Note: This is a non-cancellable booking. Cancellation will incur a 50% charge. Setup and packup time will be added to your booking hours. See you at the studios !! R AND B STUDIOS`
+            }
+            const encodedMsg = encodeURIComponent(msg);
+            const whatsappNumber = '9820996688';
+            const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodedMsg}`;
+            window.open(whatsappLink, '_blank');
 
-                                                        }
-                                                    </script>
-                                                @endsection
+        }
+    </script>
+@endsection
