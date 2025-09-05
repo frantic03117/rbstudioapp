@@ -8,6 +8,7 @@ use App\Models\Slot;
 use App\Models\Studio\Studio;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class BlockSlotController extends Controller
 {
@@ -18,14 +19,16 @@ class BlockSlotController extends Controller
 
         $studios = Studio::select(['id', 'name'])->get();
         $slots   = Slot::orderBy('start_at', 'asc')->get();
+        $reason = $_GET['reason'] ?? null;
 
-        $query = BlockedSlot::orderBy('bdate', 'DESC')
+        $query = BlockedSlot::orderBy('bdate', 'DESC')->where('reason', '!=', 'booking')
             ->orderBy('slot_id', 'asc')
             ->whereDate('bdate', '>=', $today)
-
             ->with('slot')
             ->with('studio:id,name');
-
+        if ($reason) {
+            $query->where('reason', $reason);
+        }
 
         if ($request->filled('studio_id') && $request->studio_id !== 'All') {
             $query->where('studio_id', $request->studio_id);
@@ -41,52 +44,69 @@ class BlockSlotController extends Controller
         $title = "List of blocked slots";
         $bdate = $_GET['bdate'] ?? null;
         $sid = $_GET['studio_id'] ?? null;
-        $res   = compact('items', 'title', 'studios', 'slots', 'bdate', 'sid');
-
+        $res   = compact('items', 'title', 'studios', 'slots', 'bdate', 'sid', 'reason');
+        if ($request->expectsJson()) {
+            return response()->json([
+                'data' => $items,
+                'success' => 1,
+                'message' => 'List of blocked slots'
+            ]);
+        }
         return view('admin.blocked_slot.blocked_slot', $res);
     }
 
     public function store(Request $request)
     {
-        $studioIds = $request->input('studio_id', []);
-        $slotIds   = $request->input('slot_id', []);
-        $bdate     = $request->input('bdate');
+        $rules = [
+            'studio_id'  => 'required|array',
+            'from_date'  => 'required|date',
+            'to_date'    => 'required|date|after_or_equal:from_date',
+            'start_time' => 'required|integer|exists:slots,id',
+            'end_time'   => 'required|integer|exists:slots,id',
+        ];
 
-        // If "All" is selected for studios, fetch all studio IDs
-        if (in_array('All', $studioIds)) {
-            $studioIds = Studio::pluck('id')->toArray();
-        }
+        $validated = $request->validate($rules);
 
-        // If "All" is selected for slots, fetch all slot IDs
-        if (in_array('All', $slotIds)) {
-            $slotIds = Slot::pluck('id')->toArray();
-        }
+        // If "All" selected → expand all studios
+        $studioIds = in_array('All', $validated['studio_id'])
+            ? Studio::pluck('id')->toArray()
+            : $validated['studio_id'];
 
-        // Store combinations
-        foreach ($studioIds as $studioId) {
-            foreach ($slotIds as $slotId) {
-                $isAlredyBlocked = BlockedSlot::where([
-                    'studio_id' => $studioId,
-                    'slot_id'   => $slotId,
-                    'bdate'     => $bdate
-                ])->first();
-                if (!$isAlredyBlocked) {
-                    BlockedSlot::create([
-                        'studio_id' => $studioId,
-                        'slot_id'   => $slotId,
-                        'booking_id' => 0,
-                        'bdate'     => $bdate,
-                        'reason'    => 'other',
-                    ]);
+        // Get slots within the selected time range
+        $slotIds = Slot::whereBetween('id', [$validated['start_time'], $validated['end_time']])
+            ->pluck('id')
+            ->toArray();
+
+        // Loop through dates between from_date and to_date
+        $period = new \DatePeriod(
+            new \DateTime($validated['from_date']),
+            new \DateInterval('P1D'),
+            (new \DateTime($validated['to_date']))->modify('+1 day')
+        );
+
+        foreach ($period as $date) {
+            foreach ($studioIds as $studioId) {
+                foreach ($slotIds as $slotId) {
+                    BlockedSlot::firstOrCreate(
+                        [
+                            'studio_id' => $studioId,
+                            'slot_id'   => $slotId,
+                            'bdate'     => $date->format('Y-m-d'),
+                        ],
+                        [
+                            'booking_id' => 0,
+                            'reason'     => 'other',
+                        ]
+                    );
                 }
             }
         }
-        if ($request->expectsJson()) {
-            return response()->json(['success' => 1, 'message' => 'Blocked saved successfully']);
-        } else {
-            return redirect()->back()->with('success', 'Blocked slots saved successfully!');
-        }
+
+        return $request->expectsJson()
+            ? response()->json(['success' => 1, 'message' => 'Blocked slots saved successfully'])
+            : redirect()->back()->with('success', 'Blocked slots saved successfully!');
     }
+
     public function add_buffer_time(Request $request, $id)
     {
         $booking = Booking::findOrFail($id);
@@ -121,5 +141,25 @@ class BlockSlotController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Buffer time added successfully');
+    }
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'No slots selected for deletion.');
+        }
+
+        BlockedSlot::whereIn('id', $ids)->delete();
+        return $request->expectsJson()
+            ? response()->json(['success' => 1, 'message' => 'Blocked slots deleted successfully'])
+            : redirect()->back()->with('success', 'Blocked slots deleted successfully!');
+    }
+    public function destroy(Request $request, $id)
+    {
+        BlockedSlot::where('id', $id)->delete();
+        return $request->expectsJson()
+            ? response()->json(['success' => 1, 'message' => 'Blocked slots deleted successfully'])
+            : redirect()->back()->with('success', 'Blocked slots deleted successfully!');
     }
 }

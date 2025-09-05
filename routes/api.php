@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\BlockSlotController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PromoCodeController;
@@ -109,6 +110,11 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::post('update_rental_item', [BookingController::class, 'update_rental_item_in_booking']);
     Route::post('remove_rental_item_from_booking', [BookingController::class, 'remove_rental_item_from_booking']);
     Route::post('booking-discount', [BookingController::class, 'discount']);
+    Route::get('blocked-slot', [BlockSlotController::class, 'index']);
+    Route::post('blocked-slot', [BlockSlotController::class, 'store']);
+    Route::post('/blocked-slot/destroy-multiple', [BlockSlotController::class, 'destroyMultiple']);
+    Route::post('/blocked-slot/destroy/{id}', [BlockSlotController::class, 'destroy'])->name('remove_buffer_time');
+    Route::get('/add-buffer-slot/{id}', [BlockSlotController::class, 'add_buffer_time'])->name('add_buffer_time');
 });
 
 Route::post('get_slots', [AjaxController::class, 'get_slots']);

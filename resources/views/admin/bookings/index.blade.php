@@ -439,11 +439,33 @@
                                                         href="{{ route('rebook', ['id' => $b['id']]) }}">
                                                         Book Again
                                                     </a>
-                                                    <a class="btn btn-sm btn-soft-danger position-relative"
-                                                        href="{{ route('add_buffer_time', ['id' => $b['id']]) }}">
-                                                        Add Buffer Time <span
-                                                            class="bg-danger text-white px-1 rounded-pill">{{ count($b->buffer_slot) }}</span>
-                                                    </a>
+                                                    <div class="btn-group" role="group" aria-label="Buffer Slot">
+                                                        <form
+                                                            action="{{ route('remove_buffer_time_Wb', ['id' => $b['buffer_slot'][$b['buffer_slot_count'] - 1]?->id]) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="Remove buffer time by 1 hour">
+                                                                −
+                                                            </button>
+                                                        </form>
+
+
+                                                        <span id="buffer-count-{{ $b['id'] }}"
+                                                            class="px-3 py-1 border bg-light">
+                                                            {{ count($b->buffer_slot) }}
+                                                        </span>
+
+                                                        <button type="button" class="btn btn-sm btn-outline-success"
+                                                            onclick="addBuffer({{ $b['id'] }})"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="Increase buffer time by 1 hour">
+                                                            +
+                                                        </button>
+                                                    </div>
+
+
                                                     @if ($b->booking_status != '2')
                                                         <a href="{{ route('booking.edit', $b->id) }}"
                                                             class="btn btn-warning btn-sm">Rescheule</a>
@@ -495,6 +517,46 @@
                             </tbody>
                         </table>
                         {{ $bookings->appends(request()->query())->links() }}
+                        <script>
+                            function addBuffer(bookingId) {
+                                window.location.href = "{{ url('/api/admin/add-buffer-slot') }}/" + bookingId;
+                                // fetch("{{ url('/api/admin/add-buffer-slot') }}/" + bookingId, {
+                                //         method: "GET", // same as your current route
+                                //         headers: {
+                                //             "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                //             "Accept": "application/json",
+                                //             "Content-Type": "application/json"
+                                //         }
+                                //     })
+                                //     .then(res => res.json())
+                                //     .then(data => {
+                                //         if (data.buffer_slot) {
+                                //             document.getElementById("buffer-count-" + bookingId).innerText =
+                                //                 data.buffer_slot.length;
+                                //         }
+                                //     })
+                                //     .catch(err => console.error(err));
+                            }
+
+                            // function removeBuffer(bookingId) {
+                            //     fetch("{{ url('/api/admin/blocked-slot/destroy') }}/" + bookingId, {
+                            //             method: "POST",
+                            //             headers: {
+                            //                 "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                            //                 "Content-Type": "application/json"
+                            //             }
+                            //         })
+                            //         .then(res => res.json())
+                            //         .then(data => {
+                            //             if (data.buffer_slot) {
+                            //                 document.getElementById("buffer-count-" + bookingId).innerText =
+                            //                     data.buffer_slot.length;
+                            //             }
+                            //         })
+                            //         .catch(err => console.error(err));
+                            // }
+                        </script>
+
                     </div>
                 </div>
             </div>

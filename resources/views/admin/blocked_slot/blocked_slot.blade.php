@@ -19,7 +19,7 @@
                             </select>
 
                         </div>
-                        <div class="col-md-3">
+                        {{-- <div class="col-md-3">
                             <label for="">Select Slot</label>
                             <select name="slot_id[]" class="form-control" id="slot_id" multiple>
                                 <option value="All">All</option>
@@ -27,7 +27,7 @@
                                     <option value="{{ $item->id }}">{{ $item->start_at }}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
                         <script>
                             $(document).ready(function() {
                                 $('select').select2({
@@ -37,8 +37,32 @@
                             });
                         </script>
                         <div class="col-md-3">
-                            <label for="">Select Date</label>
-                            <input type="date" name="bdate" id="bdate" class="form-control">
+                            <label for="">From Date</label>
+                            <input type="date" name="from_date" id="from_date" class="form-control">
+
+                        </div>
+                        <div class="col-md-3">
+                            <label for="">From Time</label>
+                            <select name="start_time" id="start_time" class="form-select">
+                                <option value="">Select</option>
+                                @foreach ($slots as $slt)
+                                    <option value="{{ $slt['id'] }}">{{ $slt['start_at'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="">To Date</label>
+                            <input type="date" name="to_date" id="to_date" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="">End Time</label>
+                            <select name="end_time" id="end_time" class="form-select">
+                                <option value="">Select</option>
+                                @foreach ($slots as $slt)
+                                    <option value="{{ $slt['id'] }}">{{ $slt['start_at'] }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="col-md-12">
                             <button class="btn btn-primary">Submit</button>
@@ -64,42 +88,80 @@
                                 <label for="">Select Date</label>
                                 <input type="date" name="bdate" value="{{ $bdate }}" class="form-control">
                             </div>
+                            <div class="col-md-3">
+                                <label for="">Enter Reason</label>
+                                <input type="text" name="reason" value="{{ $reason }}" class="form-control">
+                            </div>
                             <div class="col-md-2">
                                 <button class="mt-2 block btn btn-primary">Filter</button>
                             </div>
                         </div>
                     </form>
-                    <table class="table table-sm table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Sr</th>
-                                <th>Date</th>
-                                <th>Studio</th>
-                                <th>Slot</th>
-                                <th>Reason</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($items as $i => $item)
+                    <form action="{{ route('blocked-slot.destroy-multiple') }}" method="POST" id="deleteForm">
+                        @csrf
+
+
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <td>{{ $i + 1 }}</td>
-                                    <td>
-                                        {{ date('d-M-Y', strtotime($item->bdate)) }}
-                                    </td>
-                                    <td>
-                                        {{ $item?->studio?->name }}
-                                    </td>
-                                    <td>
-                                        {{ $item?->slot?->start_at }}
-                                    </td>
-                                    <td>
-                                        {{ $item->reason }}
-                                    </td>
+                                    <th>
+                                        <input type="checkbox" id="selectAll"> <!-- master checkbox -->
+                                    </th>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Studio</th>
+                                    <th>Slot</th>
+                                    <th>Reason</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    {!! $items->links() !!}
+                            </thead>
+                            <tbody>
+                                @foreach ($items as $i => $item)
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="ids[]" value="{{ $item->id }}"
+                                                class="selectItem">
+                                        </td>
+                                        <td>{{ $items->firstItem() + $i }}</td>
+                                        <td>{{ date('d-M-Y', strtotime($item->bdate)) }}</td>
+                                        <td>{{ $item?->studio?->name }}</td>
+                                        <td>{{ $item?->slot?->start_at }}</td>
+                                        <td>{{ $item->reason }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        <button type="submit" class="btn btn-danger d-none" id="deleteBtn">
+                            Delete Selected
+                        </button>
+                    </form>
+
+                    {{ $items->links() }} <!-- pagination -->
+
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            const selectAll = document.getElementById("selectAll");
+                            const checkboxes = document.querySelectorAll(".selectItem");
+                            const deleteBtn = document.getElementById("deleteBtn");
+
+                            // Toggle all checkboxes
+                            selectAll.addEventListener("change", function() {
+                                checkboxes.forEach(cb => cb.checked = selectAll.checked);
+                                toggleDeleteButton();
+                            });
+
+                            // Toggle button visibility when selecting items
+                            checkboxes.forEach(cb => {
+                                cb.addEventListener("change", toggleDeleteButton);
+                            });
+
+                            function toggleDeleteButton() {
+                                const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+                                deleteBtn.classList.toggle("d-none", !anyChecked);
+                            }
+                        });
+                    </script>
+
                 </div>
             </div>
         </div>

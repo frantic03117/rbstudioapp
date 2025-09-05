@@ -61,6 +61,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('vendor', VendorController::class);
     Route::resource('setting', SettingController::class);
     Route::resource('blocked-slot', BlockSlotController::class);
+    Route::post('/blocked-slot/destroy-multiple', [BlockSlotController::class, 'destroyMultiple'])
+        ->name('blocked-slot.destroy-multiple');
+    Route::post('/blocked-slot/destroy/{id}', [BlockSlotController::class, 'destroy'])->name('remove_buffer_time_Wb');
     Route::get('add-resource/{id}', [StudioController::class, 'add_resource'])->name('add_resource');
     Route::get('delete_s_service/{id}', [StudioController::class, 'delete_s_service'])->name('delete_s_service');
     Route::post('add-resource/{id}', [StudioController::class, 'save_resource'])->name('studio.add_resource');

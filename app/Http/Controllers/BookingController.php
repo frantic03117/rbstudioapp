@@ -156,7 +156,7 @@ class BookingController extends Controller
             }
         }
         $items->with('vendor')->with('service:id,name,icon,approval_required')->with('user:id,name,email,mobile')->with('studio:id,name,mobile,address,opens_at,ends_at');
-        $items->with('buffer_slot')->with('rents')->with('extra_added')->withSum('extra_added', 'amount')->with('transactions')->withSum('transactions', 'amount');
+        $items->with('buffer_slot')->withCount('buffer_slot')->with('rents')->with('extra_added')->withSum('extra_added', 'amount')->with('transactions')->withSum('transactions', 'amount');
         $items->with('creater:id,name,email');
         if ($booking_tenure == "past") {
             $items->where('booking_start_date', '<', $now);
@@ -1432,7 +1432,6 @@ class BookingController extends Controller
             $exists = BookingItem::where('booking_id', $request->booking_id)
                 ->where('item_id', $request->item_id)
                 ->exists();
-
             if (!$exists) {
                 $validator->errors()->add('item_id', 'This item does not exist in the booking.');
             }
