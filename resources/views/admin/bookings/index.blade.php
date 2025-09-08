@@ -352,6 +352,10 @@
                                                         {{ $discount = $b->discount_total }}
                                                     </li>
                                                     <li>
+                                                        Total Sub Sum :
+                                                        {{ $discount = $b->net_total }}
+                                                    </li>
+                                                    <li>
                                                         GST : {{ $b->gst_sum }}
                                                     </li>
                                                     <li>

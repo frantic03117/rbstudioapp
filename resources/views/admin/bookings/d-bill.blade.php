@@ -50,7 +50,6 @@
                 <div class="col-md-2"></div>
                 <div class="col-md-8 mb-5">
                     <div class="text-end d-flex justify-content-end gap-2 gap-x-2 gx-1">
-
                         <button onclick="printPdfBill()" class="btn btn-gradient me-2">Download</button>
                         <span class="mx-2"></span>
                         <a href="{{ route('bookingsview', 'upcoming') }}?booking_status=1"
@@ -66,25 +65,26 @@
                             <table border="0" cellpadding="20" class="table table-sm table-bordered"
                                 style="background:#fff;border:none;table-layout:fixed;">
                                 <tbody>
-                                    <tr class="no-border">
-                                        <td colspan="4">
-                                            <div style="margin-inline-start: 10px;margin-top:10px;">
-                                                <img src="{{ url('public/images/logo.png') }}" style="width: 100px"
+                                    <tr class="">
+                                        <td colspan="8">
+                                            <div style="display:flex;padding:10px;">
+                                                <img src="{{ url('public/images/logo.png') }}" style="width: 60px"
                                                     alt="">
+                                                <div style="margin-left: 5px;">
+                                                    <h2 class="mb-0 " style="font-size:16px;">
+                                                        R & B Studio
+                                                    </h2>
+
+                                                    <p class="mb-0">
+                                                        905 B Wing, Venus Tower, Veera Desai Road, Azad Nagar
+                                                        <br />
+                                                        Mumbai - 400052
+                                                    </p>
+                                                </div>
 
                                             </div>
                                         </td>
-                                        <td colspan="4">
-                                            <h2 class="mb-0 " style="font-size:16px;">
-                                                R & B Studio
-                                            </h2>
 
-                                            <p class="mb-0">
-                                                905 B Wing, Venus Tower, Veera Desai Road, Azad Nagar
-                                                <br />
-                                                Mumbai - 400052
-                                            </p>
-                                        </td>
                                         <td colspan="4">
                                             <p style="margin-bottom: 10px"></p>
                                             <p class="mb-0">Phone No: +91-989285600</p>
@@ -166,28 +166,28 @@
                                     </tr>
 
                                     <tr>
-                                        <td colspan="2">
-                                            <div style="padding:10px;width:40px;">
+                                        <td colspan="2" style="text-align:center;">
+                                            <div style="padding:10px; text-align:center;">
                                                 Date
                                             </div>
                                         </td>
-                                        <td colspan="5">
-                                            <div style="padding:10px;width:400px;flex:1">
+                                        <td colspan="5" style="text-align:center;">
+                                            <div style="padding:10px;width:400px;flex:1;text-align:center;">
                                                 Description
                                             </div>
                                         </td>
-                                        <td colspan="1">
-                                            <div style="padding:10px;width:50px;">
+                                        <td colspan="1" style="text-align:center;">
+                                            <div style="padding:10px;text-align:center;">
                                                 Hours
                                             </div>
                                         </td>
-                                        <td colspan="2">
-                                            <div style="padding:10px;width:50px;">
+                                        <td colspan="2" style="text-align:center;">
+                                            <div style="padding:10px;text-align:center;">
                                                 Rate
                                             </div>
                                         </td>
-                                        <td colspan="2">
-                                            <div style="padding:10px;width:50px;">
+                                        <td colspan="2" style="text-align:right;">
+                                            <div style="padding:10px;text-align:right;">
                                                 Amount
                                             </div>
                                         </td>
@@ -196,34 +196,34 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            <div class="" style="padding:10px;">
+                                            <div class="" style="padding:10px;text-align:center;">
                                                 {{ date('d-M-Y', strtotime($booking->booking_start_date)) }}
                                             </div>
                                         </td>
                                         <td colspan="5">
-                                            <div class="w-100" style="padding:10px;">
+                                            <div class="w-100" style="padding:10px;text-align:center;">
                                                 {{-- <p>
                                                 {{ $booking->studio_charge }}/hour X {{ $booking->duration }} hours =
                                             </p> --}}
                                                 <p class="mb-0">
-                                                    {{ $booking->studio->name }} {{ $booking->duration }} hours,
+                                                    {{ $booking->studio->name }} ,
                                                     {{ $booking->service?->name }}
                                                 </p>
                                             </div>
                                         </td>
                                         <td>
-                                            <div c style="padding:10px;width:80px;">
+                                            <div c style="padding:10px;width:80px;text-align:center;">
                                                 {{ $booking->duration }}
                                             </div>
                                         </td>
                                         <td colspan="2">
-                                            <div class="w-00" style="padding:10px;">
+                                            <div class="w-00" style="padding:10px;text-align:center;">
                                                 ₹ {{ $booking->studio_charge }}
                                             </div>
                                         </td>
 
                                         <td colspan="2">
-                                            <div class="w-00" style="padding:10px;">
+                                            <div class="w-00" style="padding:10px;text-align:right;">
                                                 ₹ {{ $booking->studio_charge * $booking->duration }}
                                             </div>
                                         </td>
@@ -236,11 +236,11 @@
                                     @foreach ($items as $item)
                                         <tr>
                                             <td colspan="2">
-                                                <div class="" style="padding:10px;">
+                                                <div class="" style="padding:10px;text-align:center;">
                                                     {{ date('d-M-Y', strtotime($booking->booking_start_date)) }}</div>
                                             </td>
                                             <td colspan="5">
-                                                <div class="w-100" style="padding:10px;">
+                                                <div class="w-100" style="padding:10px;text-align:center;">
                                                     <p>
 
                                                         {{ $item->rents->name }}
@@ -250,18 +250,18 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <div style="padding:10px;">
+                                                <div style="padding:10px;text-align:center;">
                                                     {{ $item->uses_hours }}
 
                                                 </div>
                                             </td>
                                             <td colspan="2">
-                                                <div style="padding:10px;">
+                                                <div style="padding:10px;text-align:center;">
                                                     ₹ {{ $item->charge }}
                                                 </div>
                                             </td>
                                             <td colspan="2">
-                                                <div style="padding:10px;">
+                                                <div style="padding:10px;text-align:right;">
                                                     {{ $item->charge * $item->uses_hours }}
                                                     @php
                                                         array_push($arr, $item->charge * $item->uses_hours);
@@ -282,11 +282,11 @@
                                     @foreach ($trans as $t)
                                         <tr>
                                             <td colspan="2">
-                                                <div class="" style="padding:10px;">
+                                                <div class="" style="padding:10px;text-align:center;">
                                                     {{ date('d-M-Y', strtotime($t->created_at)) }}</div>
                                             </td>
                                             <td colspan="5">
-                                                <div class="w-100" style="padding:10px;">
+                                                <div class="w-100" style="padding:10px;text-align:center;">
                                                     <p>
                                                         {{ $t->type }}
                                                     </p>
@@ -301,7 +301,7 @@
 
                                             </td>
                                             <td colspan="2">
-                                                <div class="w-00" style="padding:10px;">
+                                                <div class="w-00" style="padding:10px;text-align:right;">
                                                     ₹ {{ number_format($t->amount, 2) }}
 
                                                     @php
@@ -385,17 +385,17 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="6" style="text-align: right;">
+                                        <td colspan="6" style="text-align: center;">
                                             <p>
                                                 Certified that the particulars given above are true
                                                 and correct. (E & O.E.)
                                             </p>
                                         </td>
-                                        <td colspan="6">
-                                            <p>
+                                        <td colspan="6" style="text-align: center;">
+                                            <p style="margin : 0;">
                                                 This is computer-generated document
                                             </p>
-                                            <p>
+                                            <p style="margin : 0;">
                                                 No signature is required
                                             </p>
                                         </td>

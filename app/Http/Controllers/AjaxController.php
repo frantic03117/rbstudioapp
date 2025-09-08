@@ -181,7 +181,7 @@ class AjaxController extends Controller
         $sid   = $request->studio_id;
         $sdate = Carbon::parse($request->sdate)->format('Y-m-d');
         $studio = Studio::findOrFail($sid);
-
+        $isEdit = $request->isEdit;
         $opens = Carbon::parse($studio->opens_at)->format('H:i:s');
         $close = Carbon::parse($studio->ends_at)->format('H:i:s');
         $bid   = $request->booking_id ?? "a1";
@@ -214,7 +214,7 @@ class AjaxController extends Controller
             });
 
         // 🔹 Exclude past slots for today
-        if ($sdate == date('Y-m-d')) {
+        if (!$isEdit && $sdate == date('Y-m-d')) {
             $query->where('start_at', '>=', $currentTime);
         }
 
