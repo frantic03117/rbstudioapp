@@ -226,30 +226,38 @@
             if ($("#booking_start_date").val()) {
                 getSlots(drt);
             }
+            get_slot_start();
+
         };
         const getEndDate = (e) => {
             get_slot_start();
         };
         const get_slot_start = () => {
-            let output = " <option value=''>---Select---</option>";
+            let output = "<option value=''>---Select---</option>";
             const sdate = $("#booking_start_date").val();
             let sid = $("#studio_id").val();
             let bid = "{{ $booking->id }}";
+
             $.post("{{ route('find_start_slot') }}", {
                 sdate: sdate,
                 studio_id: sid,
                 isEdit: true,
                 booking_id: bid
             }, function(res) {
-                if (res?.success) {
+                if (res?.success && res.data.length > 0) {
                     res.data.forEach((slt) => {
-                        output +=
-                            `<option value="${slt.id}">${moment(sdate + ' ' +slt.start_at).format('hh:mm A')}</option>`;
+                        output += `<option value="${slt.id}">
+                    ${moment(sdate + ' ' + slt.start_at).format('hh:mm A')}
+                </option>`;
                     });
-                    $("#start_slot").html(output);
                 }
+                $("#start_slot").html(output); // always reset with output
+            }).fail(() => {
+                // On error, fallback to only default
+                $("#start_slot").html(output);
             });
-        }
+        };
+
         const getSlots = (drt) => {
             let output = "";
             let edate = $("#booking_end_date").val();
