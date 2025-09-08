@@ -43,6 +43,7 @@ Route::get('payment-pending-notification', [ApiController::class, 'payment_notif
 Route::post('webhook-handler', [StudioController::class, 'paymentCallbackRazorpayWebHook']);
 Route::post('find_start_slot', [AjaxController::class, 'find_start_slot'])->name('find_start_slot');
 Route::post('find_end_slot', [AjaxController::class, 'find_end_slot'])->name('find_end_slot');
+Route::get('find_gst_list/{id}', [ApiController::class, 'find_gst_list']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -62,7 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('add-fcm', [ApiController::class, 'update_fcm']);
     Route::get('notifications', [ApiController::class, 'my_notifications']);
     Route::get('gst_list', [ApiController::class, 'gst_list']);
-    Route::get('find_gst_list/{id}', [ApiController::class, 'find_gst_list']);
+
     Route::post('update_profile', [ApiController::class, 'update_profile']);
     Route::post('update_profile_image', [UserController::class, 'select_profile_image']);
     Route::post('clear-notification', [ApiController::class, 'clear_notification']);
