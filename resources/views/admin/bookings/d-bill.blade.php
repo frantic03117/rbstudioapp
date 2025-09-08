@@ -115,9 +115,13 @@
 
 
                                             <div class="w-100">
+
                                                 <h5 style="font-size: 14px;" class="mb-0">
                                                     <b>Name :</b>
-                                                    {{ $user->name }}
+                                                    {{ $user->name }} @if ($booking->gst?->company)
+                                                        {{ $booking->gst?->company }}
+                                                    @endif
+
                                                 </h5>
                                                 @if ($user?->gst)
                                                     <p class="mb-0">
