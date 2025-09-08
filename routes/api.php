@@ -62,6 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('add-fcm', [ApiController::class, 'update_fcm']);
     Route::get('notifications', [ApiController::class, 'my_notifications']);
     Route::get('gst_list', [ApiController::class, 'gst_list']);
+    Route::get('find_gst_list/{id}', [ApiController::class, 'find_gst_list']);
     Route::post('update_profile', [ApiController::class, 'update_profile']);
     Route::post('update_profile_image', [UserController::class, 'select_profile_image']);
     Route::post('clear-notification', [ApiController::class, 'clear_notification']);

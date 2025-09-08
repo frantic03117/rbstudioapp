@@ -650,6 +650,12 @@ class ApiController extends Controller
         $items = DB::table('booking_gsts')->where('user_id', $uid)->orderBy('id', 'DESC')->get();
         return response()->json(['success' => 1, "data" => $items]);
     }
+    public function find_gst_list(Request $request, $id)
+    {
+        $uid = $id;
+        $items = DB::table('booking_gsts')->where('user_id', $uid)->orderBy('id', 'DESC')->get();
+        return response()->json(['success' => 1, "data" => $items]);
+    }
     public function update_profile(Request $request)
     {
         $id = auth('sanctum')->user()->id;
