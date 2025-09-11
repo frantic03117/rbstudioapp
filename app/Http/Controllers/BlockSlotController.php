@@ -166,7 +166,9 @@ class BlockSlotController extends Controller
             return redirect()->back()->with('error', 'No slots selected for deletion.');
         }
 
-        BlockedSlot::whereIn('id', $ids)->delete();
+        BlockedSlot::whereIn('id', $ids)
+            ->where('reason', '!=', 'booking')
+            ->delete();
         return $request->expectsJson()
             ? response()->json(['success' => 1, 'message' => 'Blocked slots deleted successfully'])
             : redirect()->back()->with('success', 'Blocked slots deleted successfully!');
