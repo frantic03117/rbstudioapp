@@ -125,15 +125,17 @@ class BlockSlotController extends Controller
         $booking = Booking::findOrFail($id);
 
         if (!$booking) {
-            return redirect()->back()->with('error', 'Booking not found');
+            return response()->json(['success' => 1, 'message' => "Not found"]);
+            // return redirect()->back()->with('error', 'Booking not found');
         }
-
+        return response()->json($booking);
         // get the last booked slot (by date + slot_id)
         $bookedSlot = BlockedSlot::where('booking_id', $id)
             ->orderBy('bdate', 'desc')
             ->orderBy('slot_id', 'desc')
             ->first();
-
+        return response()->json($bookedSlot);
+        die;
         if (!$bookedSlot) {
             return redirect()->back()->with('error', 'No blocked slots found');
         }
@@ -171,7 +173,7 @@ class BlockSlotController extends Controller
     }
     public function destroy(Request $request, $id)
     {
-        BlockedSlot::where('id', $id)->delete();
+        BlockedSlot::where('id', $id)->where('reason', '!=', 'booking')->delete();
         return $request->expectsJson()
             ? response()->json(['success' => 1, 'message' => 'Blocked slots deleted successfully'])
             : redirect()->back()->with('success', 'Blocked slots deleted successfully!');

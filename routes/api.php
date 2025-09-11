@@ -117,8 +117,8 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::post('blocked-slot', [BlockSlotController::class, 'store']);
     Route::post('/blocked-slot/destroy-multiple', [BlockSlotController::class, 'destroyMultiple']);
     Route::post('/blocked-slot/destroy/{id}', [BlockSlotController::class, 'destroy'])->name('remove_buffer_time');
-    Route::get('/add-buffer-slot/{id}', [BlockSlotController::class, 'add_buffer_time'])->name('add_buffer_time');
 });
+Route::get('/add-buffer-slot/{id}', [BlockSlotController::class, 'add_buffer_time'])->name('add_buffer_time');
 
 Route::post('get_slots', [AjaxController::class, 'get_slots']);
 Route::post('pre_booking_details', [BookingController::class, 'pre_booking_details']);

@@ -156,18 +156,7 @@ class RentController extends Controller
     }
     public static function findRentalItems($id)
     {
-        // $rules = [
-        //     'booking_id' => 'required|exists:bookings,id'
-        // ];
 
-        // $validation = Validator::make($request->all(), $rules);
-        // if ($validation->fails()) {
-        //     return response()->json([
-        //         'data' => null,
-        //         'success' => 0,
-        //         'message' => $validation->errors()->first()
-        //     ], 422);
-        // }
 
         $bookingId = $id;
 
@@ -182,55 +171,66 @@ class RentController extends Controller
         }
 
 
-        $blockedBloced = Booking::where('booking_start_date', $booking->booking_start_date)
+        $overlappingBookings = Booking::where('studio_id', $booking->studio_id)
+            ->where('id', '!=', $id) // exclude current booking
+            ->where(function ($q) use ($booking) {
+                $q->where('booking_start_date', '<', $booking->booking_end_date)
+                    ->where('booking_end_date', '>', $booking->booking_start_date);
+            })
             ->pluck('id');
-        $blockeditems = BookingItem::whereIn('booking_id', $blockedBloced)->pluck('item_id');
-        // Use a single query to get available items
+        $blockedItems = BookingItem::whereIn('booking_id', $overlappingBookings)
+            ->pluck('item_id');
 
         $items = Charge::where('studio_id', $booking->studio_id)
-            ->whereNotIn('item_id', $blockeditems)->whereNotIn('id', function ($q) use ($bookingId) {
-                $q->from('booking_items')->where('booking_id', $bookingId)->select('item_id');
-            })->with('item')
+            ->whereNotIn('item_id', $blockedItems)
+            ->whereNotIn('item_id', function ($q) use ($id) {
+                $q->from('booking_items')
+                    ->where('booking_id', $id)
+                    ->select('item_id');
+            })
+            ->with('item')
             ->get();
-        // if ($request->expectsJson()) {
-        //     return response()->json([
-        //         'data' => $items,
-        //         'success' => 1,
-        //         'message' => 'List of rental items'
-        //     ]);
-        // }
+
         return  $items;
     }
-    public  function findRentalItemsApi(Request $request, $id)
+    public function findRentalItemsApi(Request $request, $id)
     {
-
-        $bookingId = $id;
-        // Get booking start/end date and studio in one query
         $booking = Booking::select('booking_start_date', 'booking_end_date', 'studio_id')
-            ->where('id', $bookingId)
+            ->where('id', $id)
             ->first();
 
-        // If booking not found (should not happen due to exists validation)
         if (!$booking) {
             return response()->json(['success' => 0, 'message' => 'Invalid booking id'], 404);
         }
 
-
-        $blockedBloced = Booking::where('booking_start_date', $booking->booking_start_date)
+        // Find overlapping bookings in the same studio
+        $overlappingBookings = Booking::where('studio_id', $booking->studio_id)
+            ->where('id', '!=', $id) // exclude current booking
+            ->where(function ($q) use ($booking) {
+                $q->where('booking_start_date', '<', $booking->booking_end_date)
+                    ->where('booking_end_date', '>', $booking->booking_start_date);
+            })
             ->pluck('id');
-        $blockeditems = BookingItem::whereIn('booking_id', $blockedBloced)->pluck('item_id');
-        // Use a single query to get available items
 
+        // Get all items booked in those overlapping bookings
+        $blockedItems = BookingItem::whereIn('booking_id', $overlappingBookings)
+            ->pluck('item_id');
+
+        // Fetch available items for this booking's studio, excluding blocked + already added
         $items = Charge::where('studio_id', $booking->studio_id)
-            ->whereNotIn('item_id', $blockeditems)->whereNotIn('id', function ($q) use ($bookingId) {
-                $q->from('booking_items')->where('booking_id', $bookingId)->select('item_id');
-            })->with('item')
+            ->whereNotIn('item_id', $blockedItems)
+            ->whereNotIn('item_id', function ($q) use ($id) {
+                $q->from('booking_items')
+                    ->where('booking_id', $id)
+                    ->select('item_id');
+            })
+            ->with('item')
             ->get();
+
         return response()->json([
             'data' => $items,
             'success' => 1,
             'message' => 'List of rental items'
         ]);
-        // return  $items;
     }
 }
