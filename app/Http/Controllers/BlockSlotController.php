@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Slot;
 use App\Models\Studio\Studio;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -128,14 +129,14 @@ class BlockSlotController extends Controller
             return response()->json(['success' => 1, 'message' => "Not found"]);
             // return redirect()->back()->with('error', 'Booking not found');
         }
-        return response()->json($booking);
+        // return response()->json($booking);
         // get the last booked slot (by date + slot_id)
         $bookedSlot = BlockedSlot::where('booking_id', $id)
             ->orderBy('bdate', 'desc')
             ->orderBy('slot_id', 'desc')
             ->first();
-        return response()->json($bookedSlot);
-        die;
+        // return response()->json($bookedSlot);
+        // die;
         if (!$bookedSlot) {
             return redirect()->back()->with('error', 'No blocked slots found');
         }
@@ -179,5 +180,47 @@ class BlockSlotController extends Controller
         return $request->expectsJson()
             ? response()->json(['success' => 1, 'message' => 'Blocked slots deleted successfully'])
             : redirect()->back()->with('success', 'Blocked slots deleted successfully!');
+    }
+    public function bookingfindwithoutsots()
+    {
+        $bookings = Booking::whereNotIn('id', function ($q) {
+            $q->select('booking_id')->from('blocked_slots');
+        })
+            ->where('booking_status', '1')
+            ->select(['id', 'booking_start_date', 'booking_end_date', 'studio_id'])
+            ->get();
+
+        $data = [];
+
+        foreach ($bookings as $b) {
+            $start = Carbon::parse($b->booking_start_date);
+            $end   = Carbon::parse($b->booking_end_date);
+            $d = Carbon::parse($start)->diffInHours(Carbon::parse($end));
+
+            for ($a = 0; $a < $d; $a++) {
+                $ndate = date('Y-m-d H:0:0', strtotime($start) + $a * 3600);
+                $ntime = date('H:0:0', strtotime($ndate));
+                $nd = date('Y-m-d', strtotime($ndate));
+                $nslt = Slot::where('start_at', $ntime)->first();
+                BlockedSlot::updateOrCreate(
+                    [
+                        'studio_id'  => $b->studio_id,
+                        'booking_id' => $b->id,
+                        'slot_id'    => $nslt['id'],
+                        'bdate'      => $nd,
+                    ],
+                    [
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                );
+            }
+        }
+
+        return response()->json([
+            'success' => 1,
+            'data'    => $data,
+            'message' => 'Bookings without blocked slots'
+        ]);
     }
 }

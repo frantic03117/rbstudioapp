@@ -1394,6 +1394,28 @@ class BookingController extends Controller
             return redirect()->back()->with('success', 'GST updated successfully');
         }
     }
+    public function delete_gst_details(Request $request, $id)
+    {
+        // Try to find the record
+        $findGst = BookingGst::find($id);
+
+        if (!$findGst) {
+            return response()->json([
+                'success' => 0,
+                'message' => 'GST details not found'
+            ], 404);
+        }
+
+        // Mark as deleted
+        $findGst->is_delete = 1;
+        $findGst->save();
+
+        return response()->json([
+            'success' => 1,
+            'message' => 'GST details marked as deleted successfully'
+        ]);
+    }
+
     public function update_rental_item_in_booking(Request $request)
     {
         $rules = [

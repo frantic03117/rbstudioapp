@@ -110,6 +110,7 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::post('booking_item-add', [BookingController::class, 'booking_item_add']);
     Route::post('extra-amount/store', [ExtraBookingAmountController::class, 'store']);
     Route::post('update-gst-details', [BookingController::class, 'update_gst_details']);
+
     Route::post('update_rental_item', [BookingController::class, 'update_rental_item_in_booking']);
     Route::post('remove_rental_item_from_booking', [BookingController::class, 'remove_rental_item_from_booking']);
     Route::post('booking-discount', [BookingController::class, 'discount']);
@@ -118,7 +119,8 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::post('/blocked-slot/destroy-multiple', [BlockSlotController::class, 'destroyMultiple']);
     Route::post('/blocked-slot/destroy/{id}', [BlockSlotController::class, 'destroy'])->name('remove_buffer_time');
 });
-Route::get('/add-buffer-slot/{id}', [BlockSlotController::class, 'add_buffer_time'])->name('add_buffer_time');
+Route::get('/admin/add-buffer-slot/{id}', [BlockSlotController::class, 'add_buffer_time'])->name('add_buffer_time');
+Route::get('/fault', [BlockSlotController::class, 'bookingfindwithoutsots']);
 
 Route::post('get_slots', [AjaxController::class, 'get_slots']);
 Route::post('pre_booking_details', [BookingController::class, 'pre_booking_details']);
@@ -133,3 +135,4 @@ Route::get('faqs', [ApiController::class, 'faqs']);
 Route::get('states/{id}', [ApiController::class, 'states']);
 Route::get('gallery', [GalleryController::class, 'index']);
 Route::post('query/resolve', [HomeController::class, 'resolve_queries'])->name('resolve_queries');
+Route::post('delete-gst-details/:id', [BookingController::class, 'delete_gst_details']);
