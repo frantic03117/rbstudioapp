@@ -49,6 +49,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::get('terms/{url}', [ApiController::class, 'terms']);
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('delete-gst-details/{id}', [BookingController::class, 'delete_gst_details']);
     Route::post('contact_us', [ApiController::class, 'contact_us']);
     Route::get('contact_us', [ApiController::class, 'queries']);
     Route::post('contact_us/delete/{id}', [ApiController::class, 'delete_query']);
@@ -135,4 +136,3 @@ Route::get('faqs', [ApiController::class, 'faqs']);
 Route::get('states/{id}', [ApiController::class, 'states']);
 Route::get('gallery', [GalleryController::class, 'index']);
 Route::post('query/resolve', [HomeController::class, 'resolve_queries'])->name('resolve_queries');
-Route::post('delete-gst-details/:id', [BookingController::class, 'delete_gst_details']);
