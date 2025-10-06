@@ -155,7 +155,7 @@ class BlockSlotController extends Controller
             'bdate'      => $blockDate,
             'reason'     => 'buffer',
         ];
-        return response()->json($ndata);
+        // return response()->json($ndata);
 
         BlockedSlot::create($ndata);
 
