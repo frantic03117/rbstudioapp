@@ -922,10 +922,10 @@
                                 <a href="{{ route('terms', ['url' => 'cancellation-policy']) }}"><i
                                         class="fa fa-caret-right"></i>Cancellation Policy</a>
                             </li>
-                            <li>
+                            {{-- <li>
                                 <a href="{{ route('terms', ['url' => 'refund-policy']) }}"><i
                                         class="fa fa-caret-right"></i>Refund Policy</a>
-                            </li>
+                            </li> --}}
 
 
                         </ul>
