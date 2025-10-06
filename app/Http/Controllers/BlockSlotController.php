@@ -157,7 +157,7 @@ class BlockSlotController extends Controller
         ];
         // return response()->json($ndata);
 
-        BlockedSlot::create($ndata);
+        BlockedSlot::insert($ndata);
 
         return $request->expectsJson()
             ? response()->json(['success' => 1, 'message' => 'Buffer time added successfully'])
