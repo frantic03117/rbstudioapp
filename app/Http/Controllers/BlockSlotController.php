@@ -148,13 +148,17 @@ class BlockSlotController extends Controller
             : date('Y-m-d', strtotime($bookedSlot->bdate . ' +1 day'));
 
         // create the buffer slot
-        BlockedSlot::create([
+        $ndata = [
             'studio_id'  => $booking->studio_id,
             'booking_id' => $booking->id,
             'slot_id'    => $nextSlotToBlock,
             'bdate'      => $blockDate,
             'reason'     => 'buffer',
-        ]);
+        ];
+        return response()->json($ndata);
+
+        BlockedSlot::create($ndata);
+
         return $request->expectsJson()
             ? response()->json(['success' => 1, 'message' => 'Buffer time added successfully'])
             : redirect()->back()->with('success', 'Buffer time added successfully!');
