@@ -343,8 +343,8 @@ class AjaxController extends Controller
         for ($i = 1; $i <= $hours; $i++) {
             $bedate = (clone $bsdate)->addHours($i);
 
-            // ⛔ Stop if we reached a blocked slot
-            if ($nextBlocked && $bedate->gte($nextBlocked)) {
+
+            if ($nextBlocked && $bedate->gt($nextBlocked)) {
                 break;
             }
 
