@@ -44,6 +44,7 @@ Route::any('logout', [AdminController::class, 'logout'])->name('logout');
 Route::any('check-payment', [StudioController::class, 'getPaymentStatusAfterPending']);
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/policy/{url}', [HomeController::class, 'terms'])->name('terms');
 Route::get('admin/generate-bill/{id}', [BookingController::class, 'generate_bill'])->name('generate_bill');
 Route::get('download_bill/{id}', [BookingController::class, 'download_bill'])->name('download_bill');

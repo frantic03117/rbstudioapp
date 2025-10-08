@@ -25,6 +25,12 @@ class HomeController extends Controller
         $res = compact('title');
         return view('frontend.index', $res);
     }
+    public function contact()
+    {
+        $title = "Book Studio For your events";
+        $res = compact('title');
+        return view('frontend.contact', $res);
+    }
     public function terms($url)
     {
         $title = "Book Studio For your events";
