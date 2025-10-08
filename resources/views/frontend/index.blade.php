@@ -900,43 +900,22 @@
 
                 <!-- Contact Form -->
                 <div class="col-md-8">
-                    <form>
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="Your Name"
-                                required>
+                    <div class="row">
+                        <div class="col-12">
+                            <h5>Our Location</h5>
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3769.467701952016!2d72.83478507554113!3d19.13099398208497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b6265a933aa1%3A0xbb888b8fd66d79e7!2sR%20and%20B%20Studios!5e0!3m2!1sen!2sin!4v1715867950650!5m2!1sen!2sin"
+                                    width="600" height="450" style="border:0;" allowfullscreen=""
+                                    loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="Your Email"
-                                required>
-                        </div>
-                        <div class="form-group">
-                            <label for="subject">Subject</label>
-                            <input type="text" class="form-control" id="subject" placeholder="Subject"
-                                required>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea class="form-control" id="message" rows="5" placeholder="Your Message" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Send Message</button>
-                    </form>
+                    </div>
                 </div>
             </div>
 
             <!-- Google Map -->
-            <div class="row mt-5">
-                <div class="col-12">
-                    <h5>Our Location</h5>
-                    <div class="embed-responsive embed-responsive-16by9">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3769.467701952016!2d72.83478507554113!3d19.13099398208497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b6265a933aa1%3A0xbb888b8fd66d79e7!2sR%20and%20B%20Studios!5e0!3m2!1sen!2sin!4v1715867950650!5m2!1sen!2sin"
-                            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </section>
 
