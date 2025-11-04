@@ -185,6 +185,7 @@
                                     <th>Studio</th>
 
                                     <th>Equipment Rental</th>
+                                    <th>TDS Allow</th>
                                     <th>
                                         Payment Status
                                     </th>
@@ -306,6 +307,17 @@
                                             </table>
 
                                         </td>
+                                        <td>
+                                            <form action="{{ route('tds_control', ['id' => $b->id]) }}" method="post">
+                                                @csrf
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                        id="switchCheckChecked{{ $b->id }}"
+                                                        {{ $b->tds_allowed == '1' ? 'checked' : '' }}
+                                                        onchange="this.form.submit()">
+                                                </div>
+                                            </form>
+                                        </td>
 
                                         <td>
                                             @if ($b->booking_status == '0')
@@ -355,6 +367,12 @@
                                                         Total Sub Sum :
                                                         {{ $discount = $b->net_total }}
                                                     </li>
+                                                    @if ($b->tds_allowed == '1')
+                                                        <li>
+                                                            TDS : {{ $b->net_total * 0.1 }}
+                                                        </li>
+                                                    @endif
+
                                                     <li>
                                                         GST : {{ $b->gst_sum }}
                                                     </li>

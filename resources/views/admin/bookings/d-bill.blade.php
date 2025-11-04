@@ -340,6 +340,7 @@
                                             {{ $subt = array_sum($arr) + $booking->studio_charge * $booking->duration + $booking->extra_added_sum_amount }}
                                         </td>
                                     </tr>
+
                                     <tr>
                                         <td colspan="8" style="text-align: right;">
                                             Discount
@@ -356,6 +357,17 @@
                                             ₹ {{ $netremain = $subt - $d }}
                                         </td>
                                     </tr>
+                                    @if ($booking->tds_allowed == '1')
+                                        <tr>
+                                            <td colspan="8" style="text-align: right;">
+                                                TDS Total
+                                            </td>
+                                            <td colspan="4" style="text-align: right;">
+                                                ₹
+                                                {{ $tds = $netremain * 0.1 }}
+                                            </td>
+                                        </tr>
+                                    @endif
 
                                     <tr>
                                         <td colspan="8" style="text-align: right;">

@@ -1139,36 +1139,21 @@ class BookingController extends Controller
         $extra_charge_per_hour = 200;
         $bookings->transform(
             function ($b) use ($extra_charge_per_hour) {
-
                 $extra_hours = 0;
-
                 $start_time = strtotime($b['booking_start_date']);
                 $end_time = strtotime($b['booking_end_date']);
-
-                // Define extra charge period (11 PM - 8 AM)
                 $night_start = strtotime(date('Y-m-d', $start_time) . ' 23:00:00');
                 $morning_end = strtotime(date('Y-m-d', $start_time) . ' 08:00:00');
-
-                // Fix: Use next day's 8 AM **only if booking crosses midnight**
                 if ($start_time >= $night_start) {
                     $morning_end += 86400;
                 }
-
-
                 while ($start_time < $end_time) {
-                    // Fix: Use AND (`&&`) instead of OR (`||`)
                     if ($start_time >= $night_start || $start_time < $morning_end) {
                         $extra_hours++;
                     }
                     $start_time = strtotime('+1 hour', $start_time);
                 }
-
-
-
-                // Apply extra charge only if extra hours exist
                 $extra_charge = ($extra_hours > 0) ? $extra_hours * $extra_charge_per_hour : 0;
-
-                // Base amount
                 $base_amount = $b['duration'] * $b['studio_charge'];
                 $extra_added = $b['extra_added_sum_amount'];
                 $rents = $b->rents;
@@ -1177,28 +1162,20 @@ class BookingController extends Controller
                     $rent_charge += $r->pivot->charge * $r->pivot->uses_hours;
                 }
                 $b['rent_charges'] = $rent_charge;
-                // Final total calculation including GST (18%)
                 $total_amount = ($base_amount + $extra_charge + $extra_added + $rent_charge) * 1.18;
                 $b['extra_charge'] = $extra_charge;
-                // Add the calculated total to the booking object
                 $b['total_amount'] = round($total_amount, 2);
-
                 return $b;
             }
         );
-
         $booking = $bookings[0];
-
         $studio = Studio::where('vendor_id', $booking->vendor_id)
             ->with('country')->with('state')->with('district')
             ->first();
-        // return response()->json($studio);
-        // die;
         $sid = $studio->id;
         $trans = Transaction::where('booking_id', $id)->where('status', 'Success')->get();
         $user = User::where('id', $booking->user_id)->first();
         $items = BookingItem::with('rents')->where('booking_id', $id)->get();
-
         $title = "Generate Bill";
         $ritems = Rent::whereIn('id', function ($query) use ($sid) {
             $query->from('charges')->select('item_id')->where('studio_id', $sid)->where('type', 'Item');
@@ -1473,5 +1450,24 @@ class BookingController extends Controller
         } else {
             return redirect()->back()->with('success', 'Updated successfully')->withErrors($validation)->withInput();
         }
+    }
+    public function tds_control(Request $request, $id)
+    {
+        $booking = Booking::findOrFail($id);
+
+        // Toggle the tds_allowed field (1 ↔ 0)
+        $booking->tds_allowed = $booking->tds_allowed == "1" ? "0" : "1";
+        $booking->save();
+
+        // If the request expects a JSON response (API)
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'tds_allowed' => $booking->tds_allowed,
+            ]);
+        }
+
+        // Otherwise (e.g., normal web request)
+        return redirect()->back()->with('success', 'Tds updated');
     }
 }

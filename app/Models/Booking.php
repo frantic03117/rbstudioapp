@@ -34,7 +34,8 @@ class Booking extends Model
         'promo_discount_calculated',
         'approved_at',
         'created_by',
-        'created_at'
+        'created_at',
+        'tds_allowed'
     ];
 
     protected $appends = [

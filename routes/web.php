@@ -83,6 +83,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::post('studio/handle-pp/{id}', [StudioController::class, 'handlePartialPayment'])->name('handlePartialPayment');
     Route::post('update-gst-details', [BookingController::class, 'update_gst_details'])->name('update_gst_details');
     Route::get('add-buffer-slot/{id}', [BlockSlotController::class, 'add_buffer_time'])->name('add_buffer_time');
+    Route::post('update-tds/{id}', [BookingController::class, 'tds_control'])->name('tds_control');
 
 
     Route::get('calendar', [HomeController::class, 'index'])->name('calendar');
