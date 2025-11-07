@@ -368,7 +368,7 @@ class StudioController extends Controller
     }
     public function pay_now(Request $request, $id)
     {
-        $booking = Booking::where('id', $id)->where('booking_status', '1')->with('studio')
+        $booking = Booking::where('id', $id)->where('booking_status', "!=", "2")->with('studio')
             ->with('transactions')->withSum('transactions', 'amount')
             ->with('rents')->withSum('extra_added', 'amount')->with('gst')
             ->with('service:id,name')
@@ -669,7 +669,7 @@ class StudioController extends Controller
     public function pay_now_razorpay(Request $request, $id)
     {
         $mode = $_GET['mode'] ?? null;
-        $booking = Booking::where('id', $id)->where('booking_status', '1')->with('studio')
+        $booking = Booking::where('id', $id)->where('booking_status', "!=", '2')->with('studio')
             ->with('transactions')->withSum('transactions', 'amount')
             ->with('rents')->withSum('extra_added', 'amount')->with('gst')
             ->with('service:id,name')->with('user')
