@@ -20,21 +20,34 @@ class BlockSlotController extends Controller
 
         $studios = Studio::select(['id', 'name'])->get();
         $slots   = Slot::orderBy('start_at', 'asc')->get();
-        $reason = $_GET['reason'] ?? null;
+        $reason = $request->get('reason');
+        $slot   = $request->get('slot');
+        $bdate  = $request->get('bdate');
+        $sid    = $request->get('studio_id');
 
-        $query = BlockedSlot::orderBy('bdate', 'DESC')->where('reason', '!=', 'booking')
-            ->orderBy('slot_id', 'asc')
+        // Base query
+        $query = BlockedSlot::with(['slot', 'studio:id,name'])
+            ->where('reason', '!=', 'booking')
             ->whereDate('bdate', '>=', $today)
-            ->with('slot')
-            ->with('studio:id,name');
+            ->orderBy('bdate', 'DESC')
+            ->orderBy('slot_id', 'asc');
+
+        // Apply filters dynamically
         if ($reason) {
             $query->where('reason', $reason);
         }
 
-        if ($request->filled('studio_id') && $request->studio_id !== 'All') {
-            $query->where('studio_id', $request->studio_id);
+        if ($slot) {
+            $query->where('slot_id', $slot);
         }
 
+        if ($sid && $sid !== 'All') {
+            $query->where('studio_id', $sid);
+        }
+
+        if ($bdate) {
+            $query->whereDate('bdate', $bdate);
+        }
 
         if ($request->filled('bdate')) {
             $query->whereDate('bdate', $request->bdate);
@@ -53,6 +66,11 @@ class BlockSlotController extends Controller
                 'message' => 'List of blocked slots'
             ]);
         }
+        // return response()->json([
+        //     'data' => $items,
+        //     'success' => 1,
+        //     'message' => 'List of blocked slots'
+        // ]);
         return view('admin.blocked_slot.blocked_slot', $res);
     }
 

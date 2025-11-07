@@ -89,6 +89,15 @@
                                 <input type="date" name="bdate" value="{{ $bdate }}" class="form-control">
                             </div>
                             <div class="col-md-3">
+                                <label for="">Select Time</label>
+                                <select name="start_time" id="start_time" class="form-select">
+                                    <option value="">Select</option>
+                                    @foreach ($slots as $slt)
+                                        <option value="{{ $slt['id'] }}">{{ $slt['start_at'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3">
                                 <label for="">Enter Reason</label>
                                 <input type="text" name="reason" value="{{ $reason }}" class="form-control">
                             </div>
@@ -111,7 +120,7 @@
                                     <th>Date</th>
                                     <th>Studio</th>
                                     <th>Slot</th>
-                                    <th>Reason</th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -125,7 +134,7 @@
                                         <td>{{ date('d-M-Y', strtotime($item->bdate)) }}</td>
                                         <td>{{ $item?->studio?->name }}</td>
                                         <td>{{ $item?->slot?->start_at }}</td>
-                                        <td>{{ $item->reason }}</td>
+
                                     </tr>
                                 @endforeach
                             </tbody>
