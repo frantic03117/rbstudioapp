@@ -21,7 +21,7 @@ class BlockSlotController extends Controller
         $studios = Studio::select(['id', 'name'])->get();
         $slots   = Slot::orderBy('start_at', 'asc')->get();
         $reason = $request->get('reason');
-        $slot   = $request->get('slot');
+        $slot   = $request->get('slot_id');
         $bdate  = $request->get('bdate');
         $sid    = $request->get('studio_id');
 
@@ -48,17 +48,11 @@ class BlockSlotController extends Controller
         if ($bdate) {
             $query->whereDate('bdate', $bdate);
         }
-
-        if ($request->filled('bdate')) {
-            $query->whereDate('bdate', $request->bdate);
-        }
-
-        $items = $query->paginate(20);
-
+        $items = $query->paginate(20)->appends($request->query());
         $title = "List of blocked slots";
         $bdate = $_GET['bdate'] ?? null;
         $sid = $_GET['studio_id'] ?? null;
-        $res   = compact('items', 'title', 'studios', 'slots', 'bdate', 'sid', 'reason');
+        $res   = compact('items', 'title', 'studios', 'slots', 'bdate', 'sid', 'reason', 'slot');
         if ($request->expectsJson()) {
             return response()->json([
                 'data' => $items,

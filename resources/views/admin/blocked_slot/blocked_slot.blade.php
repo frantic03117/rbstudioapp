@@ -90,17 +90,15 @@
                             </div>
                             <div class="col-md-3">
                                 <label for="">Select Time</label>
-                                <select name="start_time" id="start_time" class="form-select">
+                                <select name="slot_id" value="{{ $slot }}" id="slot_id" class="form-select">
                                     <option value="">Select</option>
                                     @foreach ($slots as $slt)
-                                        <option value="{{ $slt['id'] }}">{{ $slt['start_at'] }}</option>
+                                        <option @selected($slot == $slt['id']) value="{{ $slt['id'] }}">
+                                            {{ $slt['start_at'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-3">
-                                <label for="">Enter Reason</label>
-                                <input type="text" name="reason" value="{{ $reason }}" class="form-control">
-                            </div>
+
                             <div class="col-md-2">
                                 <button class="mt-2 block btn btn-primary">Filter</button>
                             </div>
