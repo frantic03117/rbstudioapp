@@ -87,10 +87,25 @@ class AdminController extends Controller
         date_default_timezone_set('Asia/kolkata');
         $title = "Welcome to Dashboard";
         $now = Carbon::now()->format('Y-m-d');
+        $today = Carbon::today();
+        if ($today->month >= 4) {
+            // Current financial year
+            $fystart = Carbon::create($today->year, 4, 1)->startOfDay()->format('Y-m-d');
+            $fyend = Carbon::create($today->year + 1, 3, 31)->endOfDay()->format('Y-m-d');
+        } else {
+            // Previous financial year
+            $fystart = Carbon::create($today->year - 1, 4, 1)->startOfDay()->format('Y-m-d');
+            $fyend = Carbon::create($today->year, 3, 31)->endOfDay()->format('Y-m-d');
+        }
+
         $vid = $_GET['vendor_id'] ?? null;
         $sid = $_GET['studio_id'] ?? null;
         $service_id = $_GET['service_id'] ?? null;
-        $studios = Studio::where('vendor_id', $vid)->get();
+        $studios = Studio::query();
+        if ($vid) {
+            $studios->where('vendor_id', $vid);
+        }
+        $studios =  $studios->get();
         $services = Service::whereIn('id', function ($q) use ($sid) {
             $q->from('service_studios')->where('studio_id', $sid)->select('service_id');
         })->get();
@@ -104,23 +119,47 @@ class AdminController extends Controller
         }
         $boks->with('user:id,name')->where('approved_at', '!=', null);
         $books = $boks->with('rents')->withSum('transactions', 'amount');
-
         $tay_booking = Booking::whereDate('booking_start_date', $now)->where('booking_status', '=', '1');
         if (Auth::user()->role != "Super") {
             $tay_booking->where('vendor_id', Auth::user()->vendor_id);
         }
+        if ($sid) {
+            $tay_booking->where('studio_id', $sid);
+        }
         $today_item = $tay_booking->where('approved_at', '!=', null);
         $today_booking = $today_item->sum('duration');
-
         $firstdate = Carbon::now()->startOfMonth()->format('Y-m-d');
-
         $enddate = Carbon::now()->endOfMonth()->format('Y-m-d');
-
         $tal_booking_month = Booking::where('booking_start_date', '>=',  $firstdate)->where('booking_start_date', '<=', $enddate);
         if (Auth::user()->role != "Super") {
             $tal_booking_month->where('vendor_id', Auth::user()->vendor_id);
         }
+        if ($sid) {
+            $tal_booking_month->where('studio_id', $sid);
+        }
         $total_booking_month = $tal_booking_month->where('booking_status', '=', '1')->sum('duration');
+
+        $total_fy_year_booking = Booking::where('booking_start_date', ">=", $fystart)->where('booking_end_date',  "<=", $fyend)->where('booking_status', '=', '1');
+        if (Auth::user()->role != "Super") {
+            $total_fy_year_booking->where('vendor_id', Auth::user()->vendor_id);
+        }
+        if ($sid) {
+            $total_fy_year_booking->where('studio_id', $sid);
+        }
+        $total_fy_year_booking =  $total_fy_year_booking->count();
+
+
+
+        $all_booking = Booking::where('booking_status', '=', '1');
+        if (Auth::user()->role != "Super") {
+            $all_booking->where('vendor_id', Auth::user()->vendor_id);
+        }
+        if ($sid) {
+            $all_booking->where('studio_id', $sid);
+        }
+        $all_booking =  $all_booking->count();
+
+
         $aproval = Booking::where('booking_start_date', '>=', date('Y-m-d H:i:s'));
         if (Auth::user()->role != "Super") {
             $aproval->where('vendor_id', Auth::user()->vendor_id);
@@ -157,10 +196,11 @@ class AdminController extends Controller
         $nonpaymentBookingCount =  Booking::where('booking_start_date', '>=',  $firstdate)
             ->where('booking_start_date', '<=', $enddate)
             ->where('booking_status', '=', '1')->where('payment_status', '=', '0')->count();
-        $res = compact('title', 'today_booking', 'defaultView', 'total_booking_month', 'approval', "vendors", "vid", "sid",  "studios", "services", "service_id", 'totalamount', 'nonpaymentBookingCount');
+        $res = compact('title', 'today_booking', 'fystart', 'fyend', 'defaultView', 'total_booking_month', 'approval', "vendors", "vid", "sid",  "studios", "services", "service_id", 'totalamount', 'nonpaymentBookingCount', 'total_fy_year_booking', 'all_booking');
         if ($request->expectsJson()) {
             return response()->json($res);
         }
+        // return response()->json($res);
         return view('admin.dashboard', $res);
     }
     public function events(Request $request)

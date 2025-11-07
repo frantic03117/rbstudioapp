@@ -10,8 +10,6 @@
 @endsection
 @section('content')
     <div class="container-fluid">
-        <!-- start page title -->
-
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -24,10 +22,25 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 my-2">
+            <div class="col-md-6 my-2">
                 <div class="w-100">
                     <a href="{{ route('booking.create') }}" class="btn-gradient btn btn-sm">Add New Booking</a>
                 </div>
+            </div>
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-2">
+                <form action="" method="get">
+                    <select name="studio_id" value="{{ $_GET['studio_id'] }}" onchange="this.form.submit()"
+                        class="form-select form-select-sm">
+                        <option value="">All</option>
+                        @foreach ($studios as $item)
+                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                        @endforeach
+                    </select>
+                </form>
+
             </div>
         </div>
         <!-- end page title -->
@@ -81,7 +94,53 @@
                         </div>
                     </div><!-- end card body -->
                 </a><!-- end card -->
-            </div><!-- end col-->
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <a href="{{ route('bookingsview', ['slug' => 'upcoming']) }}" class="card card-h-100">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <span class="text-muted mb-3 lh-1 d-block text-truncate"> FY
+                                    {{ date('y', strtotime($fystart)) }}-{{ date('y', strtotime($fyend)) }}
+                                    <br>Hours</span>
+                                <h4 class="mb-3">
+                                    <span class="badge bg-success-subtle text-success counter-value  d-block"
+                                        data-target="{{ $total_fy_year_booking }}">{{ $total_fy_year_booking }}</span>
+                                </h4>
+                            </div>
+                            <div class="col-6">
+                                <div id="mini-chart2" data-colors='["#5156be"]' class="apex-charts mb-2"></div>
+                            </div>
+                        </div>
+                        <div class="text-nowrap">
+
+                            <span class="ms-1 text-muted font-size-13">In this financial Year</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <a href="{{ route('bookingsview', ['slug' => 'upcoming']) }}" class="card card-h-100">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <span class="text-muted mb-3 lh-1 d-block text-truncate"> All <br>Hours</span>
+                                <h4 class="mb-3">
+                                    <span class="badge bg-success-subtle text-success counter-value  d-block"
+                                        data-target="{{ $all_booking }}">{{ $all_booking }}</span>
+                                </h4>
+                            </div>
+                            <div class="col-6">
+                                <div id="mini-chart2" data-colors='["#5156be"]' class="apex-charts mb-2"></div>
+                            </div>
+                        </div>
+                        <div class="text-nowrap">
+
+                            <span class="ms-1 text-muted font-size-13">Since starting</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
 
             <div class="col-xl-3 col-md-6">
                 <!-- card -->
@@ -106,7 +165,7 @@
                 </a><!-- end card -->
             </div><!-- end col -->
 
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-3 d-none col-md-6">
                 <!-- card -->
                 <a href="{{ route('bookingsview', ['slug' => 'upcoming']) }}" class="card card-h-100">
                     <!-- card body -->
