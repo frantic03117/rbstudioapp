@@ -103,11 +103,12 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="7" style="text-align: center;font-size:14px;">
-                                            <h4>Customer Details</h4>
+                                        <td colspan="7"
+                                            style="text-align: left;font-size:14px;vertical-align: middle;">
+                                            <h4 style="margin-bottom: 0;">Customer Details</h4>
                                         </td>
                                         <td colspan="5" style="font-size:14px;">
-                                            <h4>Receipt Details</h4>
+                                            <h4 style="margin-bottom: 0;">Receipt Details</h4>
                                         </td>
                                     </tr>
                                     <tr>
@@ -315,14 +316,28 @@
                                     @endforeach
                                     <tr>
                                         <td colspan="8" style="text-align: right;">
-                                            Amount
+                                            Studio Amount
                                         </td>
                                         <td colspan="4" style="text-align: right;">
-                                            ₹
-                                            {{ $subt = array_sum($arr) + $booking->studio_charge * $booking->duration }}
+                                            ₹{{ $booking->studio_charge_sum }}
                                         </td>
                                     </tr>
-
+                                    <tr>
+                                        <td colspan="8" style="text-align: right;">
+                                            Overnight Charges
+                                        </td>
+                                        <td colspan="4" style="text-align: right;">
+                                            ₹{{ $booking->extra_charge }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8" style="text-align: right;">
+                                            Rental Item Charges
+                                        </td>
+                                        <td colspan="4" style="text-align: right;">
+                                            ₹{{ $booking->rent_charges }}
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td colspan="8" style="text-align: right;">
                                             Extra Amount
@@ -331,40 +346,37 @@
                                             ₹ {{ $booking->extra_added_sum_amount ?? 0 }}
                                         </td>
                                     </tr>
+
+
+
+
                                     <tr>
                                         <td colspan="8" style="text-align: right;">
-                                            Sub Total
+                                            Total Discount
                                         </td>
                                         <td colspan="4" style="text-align: right;">
-                                            ₹
-                                            {{ $subt = array_sum($arr) + $booking->studio_charge * $booking->duration + $booking->extra_added_sum_amount }}
+                                            ₹{{ $booking->discount_total }}
                                         </td>
                                     </tr>
 
                                     <tr>
                                         <td colspan="8" style="text-align: right;">
-                                            Discount
+                                            Sub Total
                                         </td>
                                         <td colspan="4" style="text-align: right;">
-                                            {{ $d = $booking->discount + $booking->promo_discount_calculated }}
+                                            ₹ {{ $booking->net_total }}
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td colspan="8" style="text-align: right;">
-                                            Net Amount
-                                        </td>
-                                        <td colspan="4" style="text-align: right;">
-                                            ₹ {{ $netremain = $subt - $d }}
-                                        </td>
-                                    </tr>
+
+
+
                                     @if ($booking->tds_allowed == '1')
                                         <tr>
                                             <td colspan="8" style="text-align: right;">
-                                                TDS Total
+                                                TDS
                                             </td>
                                             <td colspan="4" style="text-align: right;">
-                                                ₹
-                                                {{ $tds = $netremain * 0.1 }}
+                                                ₹ {{ $booking->net_total * 0.1 }}
                                             </td>
                                         </tr>
                                     @endif
@@ -374,7 +386,15 @@
                                             GST
                                         </td>
                                         <td colspan="4" style="text-align: right;">
-                                            ₹ {{ $gst = $netremain * 0.18 }}
+                                            ₹ {{ $booking->gst_sum }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8" style="text-align: right;">
+                                            Total
+                                        </td>
+                                        <td colspan="4" style="text-align: right;">
+                                            ₹ {{ $booking->total_amount }}
                                         </td>
                                     </tr>
 
@@ -383,7 +403,7 @@
                                             Advance
                                         </td>
                                         <td colspan="4" style="text-align: right;">
-                                            ₹ {{ number_format(array_sum($crr), 2) }}
+                                            ₹ {{ $paid = $booking->paid_sum }}
                                         </td>
                                     </tr>
 
@@ -392,7 +412,7 @@
                                             Balance
                                         </td>
                                         <td colspan="4" style="text-align: right;">
-                                            ₹ {{ number_format($netremain + $gst - array_sum($crr), 2) }}
+                                            ₹ {{ $remainingamount = floor($booking->balance) }}
 
                                         </td>
                                     </tr>

@@ -368,12 +368,14 @@ class StudioController extends Controller
     }
     public function pay_now(Request $request, $id)
     {
-        $booking = Booking::where('id', $id)->with('studio')
+        $booking = Booking::where('id', $id)->where('booking_status', '1')->with('studio')
             ->with('transactions')->withSum('transactions', 'amount')
             ->with('rents')->withSum('extra_added', 'amount')->with('gst')
             ->with('service:id,name')
             ->first();
-
+        if (!$booking) {
+            return response()->json(['succcess' => 0, "message" => 'No booking found']);
+        }
 
         // $extra_charge_per_hour = 200;
         // $extra_hours = 0;
@@ -667,12 +669,14 @@ class StudioController extends Controller
     public function pay_now_razorpay(Request $request, $id)
     {
         $mode = $_GET['mode'] ?? null;
-        $booking = Booking::where('id', $id)->with('studio')
+        $booking = Booking::where('id', $id)->where('booking_status', '1')->with('studio')
             ->with('transactions')->withSum('transactions', 'amount')
             ->with('rents')->withSum('extra_added', 'amount')->with('gst')
             ->with('service:id,name')->with('user')
             ->first();
-
+        if (!$booking) {
+            return response()->json(['succcess' => 0, "message" => 'No booking found']);
+        }
 
 
         $isPartial = $request->isPartial;

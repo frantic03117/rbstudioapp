@@ -1462,12 +1462,40 @@ class BookingController extends Controller
         // If the request expects a JSON response (API)
         if ($request->wantsJson()) {
             return response()->json([
-                'success' => true,
+                'success' => 1,
                 'tds_allowed' => $booking->tds_allowed,
             ]);
         }
 
         // Otherwise (e.g., normal web request)
         return redirect()->back()->with('success', 'Tds updated');
+    }
+    public function updateArtist(Request $request, $id)
+    {
+        // ✅ Step 1: Validate input
+        $validated = $request->validate([
+            'artist' => 'required|string|max:255',
+        ], [
+            'artist.required' => 'Please enter an artist name.',
+            'artist.string' => 'The artist name must be a valid string.',
+            'artist.max' => 'The artist name may not be greater than 255 characters.',
+        ]);
+
+        // ✅ Step 2: Find booking
+        $booking = Booking::findOrFail($id);
+
+        // ✅ Step 3: Update artist
+        $booking->artist = $validated['artist'];
+        $booking->save();
+
+        // ✅ Step 4: Return response
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => 1,
+                'data' => [],
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Artist updated successfully.');
     }
 }

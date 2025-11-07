@@ -182,10 +182,8 @@
                                     <th>Sr No.</th>
                                     <th>User</th>
                                     <th>Booking</th>
-                                    <th>Studio</th>
-
                                     <th>Equipment Rental</th>
-                                    <th>TDS Allow</th>
+
                                     <th>
                                         Payment Status
                                     </th>
@@ -228,6 +226,12 @@
                                         </td>
                                         <td style="width:250px;">
                                             <ul class="mb-0 list-unstyled p-0 m-0">
+                                                <li>
+                                                    <b>Studio :</b> {{ $b->studio?->name }}
+                                                </li>
+                                                <li>
+                                                    <b> Service : </b> {{ $b->service?->name }}
+                                                </li>
                                                 <li class="text-nowrap">
                                                     <b>Start Time :</b>
                                                     {{ date('d/m/Y : h:i A', strtotime($b->booking_start_date)) }}
@@ -263,19 +267,24 @@
 
                                                     </li>
                                                 @endif
+                                                <li>
+                                                    <form action="{{ route('updateArtist', ['id' => $b->id]) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        <label for="" class="d-block">Artist</label>
+                                                        <div class="input-group">
+                                                            <input type="text" placeholder="Update Artist Name"
+                                                                name="artist" value="{{ $b->artist }}" id=""
+                                                                class="form-control form-control-sm">
+                                                            <button class="btn btn-sm btn-gradient">Update</button>
+                                                        </div>
+                                                    </form>
+
+                                                </li>
 
                                             </ul>
                                         </td>
-                                        <td>
-                                            <ul class="list-unstyled mb-0 text-nowrap">
-                                                <li>
-                                                    {{ $b->studio?->name }}
-                                                </li>
-                                                <li>
-                                                    Service : {{ $b->service?->name }}
-                                                </li>
-                                            </ul>
-                                        </td>
+
 
                                         <td>
                                             <table class="w-100 text-nowrap table-fixed">
@@ -307,17 +316,7 @@
                                             </table>
 
                                         </td>
-                                        <td>
-                                            <form action="{{ route('tds_control', ['id' => $b->id]) }}" method="post">
-                                                @csrf
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" role="switch"
-                                                        id="switchCheckChecked{{ $b->id }}"
-                                                        {{ $b->tds_allowed == '1' ? 'checked' : '' }}
-                                                        onchange="this.form.submit()">
-                                                </div>
-                                            </form>
-                                        </td>
+
 
                                         <td>
                                             @if ($b->booking_status == '0')
@@ -357,7 +356,7 @@
 
                                                     <li>
                                                         Admin Discount :
-                                                        {{ floatval($b->discount) }}
+                                                        {{ floatval($b->discount) }} {{ $b->discount_type }}
                                                     </li>
                                                     <li>
                                                         Total Discount :
@@ -543,6 +542,19 @@
                                                         'states' => $states,
                                                     ])
                                                 </div>
+                                                <form action="{{ route('tds_control', ['id' => $b->id]) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    <div class="form-check mt-4 form-switch">
+                                                        <input class="form-check-input border-1 border-primary"
+                                                            type="checkbox" role="switch"
+                                                            id="switchCheckChecked{{ $b->id }}"
+                                                            {{ $b->tds_allowed == '1' ? 'checked' : '' }}
+                                                            onchange="this.form.submit()">
+                                                        <label for="switchCheckChecked{{ $b->id }}">TDS
+                                                            Status</label>
+                                                    </div>
+                                                </form>
                                             @endif
 
                                         </td>

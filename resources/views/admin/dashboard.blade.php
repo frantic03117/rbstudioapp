@@ -32,11 +32,11 @@
             </div>
             <div class="col-md-2">
                 <form action="" method="get">
-                    <select name="studio_id" value="{{ $_GET['studio_id'] }}" onchange="this.form.submit()"
+                    <select name="studio_id" value="{{ $sid }}" onchange="this.form.submit()"
                         class="form-select form-select-sm">
                         <option value="">All</option>
                         @foreach ($studios as $item)
-                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            <option @selected($sid == $item->id) value="{{ $item->id }}">{{ $item->name }}</option>
                         @endforeach
                     </select>
                 </form>

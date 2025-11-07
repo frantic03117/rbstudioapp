@@ -141,3 +141,4 @@ Route::any('payment-response/{type}/{id}', [TransactionController::class, 'succe
 // Route::get('add-payment-online/{id}', [StudioController::class, 'add_payment_online'])->name('pay-online');
 Route::get('add-payment-online/{id}', [StudioController::class, 'pay_now_razorpay'])->name('pay-online');
 Route::get('check-status/{id}', [StudioController::class, 'checkOrderStatus'])->name('checkOrderStatus');
+Route::post('artist-update/{id}', [BookingController::class, 'updateArtist'])->name('updateArtist');
