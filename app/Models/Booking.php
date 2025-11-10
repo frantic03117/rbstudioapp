@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Studio\Studio;
 use App\Models\Studio\Service;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -48,6 +49,7 @@ class Booking extends Model
         'total_amount',
         'paid_sum',
         'balance',
+        'cancel_time'
 
     ];
 
@@ -205,6 +207,14 @@ class Booking extends Model
     public function getBalanceAttribute()
     {
         return round($this->total_amount - $this->paid_sum, 2);
+    }
+    public function getCancelTimeAttribute($value)
+    {
+        $endtime = Setting::where('id', '2')->select('col_val')->first();
+        $minutes = $endtime->col_val;
+        return Carbon::parse($this->created_at)
+            ->addMinutes($minutes)
+            ->format('Y-m-d H:i:s');
     }
     public function getCreatedAtAttribute($value)
     {
