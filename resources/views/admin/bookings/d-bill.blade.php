@@ -422,6 +422,9 @@
                                                 and correct. (E & O.E.)
                                             </p>
                                         </td>
+
+                                    </tr>
+                                    <tr>
                                         <td colspan="6" style="text-align: center;">
                                             <p style="margin : 0;">
                                                 Please Note: This document is a Receipt and is not a GST Tax Invoice. A
