@@ -191,13 +191,13 @@ class Booking extends Model
     }
     public function getTdsSumAttribute()
     {
-        return $this->net_total * 0.1;
+        return $this->tds_allowed == "1" ?  $this->net_total * 0.10 : 0;
     }
 
     // ✅ GST (default 18%)
     public function getGstSumAttribute()
     {
-        return $this->tds_allowed == "1" ?  $this->net_total * 0.18 : 0;
+        return $this->net_total * 0.18;
     }
 
     // ✅ Final total with GST
