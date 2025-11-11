@@ -259,7 +259,8 @@ class AdminController extends Controller
                 "service" => $item->service?->name,
                 'classNames' => [implode('_', explode(' ', $item->studio->name))],
                 "backgroundColor" => $item->studio->color,
-                "rents" => $item->rents
+                "rents" => $item->rents,
+                "tds" => $item->tds_allowed
             ];
             array_push($arr, $urr);
         }
