@@ -203,7 +203,7 @@ class RentController extends Controller
         }
 
         // Find overlapping bookings in the same studio
-        $overlappingBookings = Booking::where('id', '!=', $id) // exclude current booking
+        $overlappingBookings = Booking::where('id', '!=', $id)->where('booking_status', '!=', '2')
             ->where(function ($q) use ($booking) {
                 $q->where('booking_start_date', '<', $booking->booking_end_date)
                     ->where('booking_end_date', '>', $booking->booking_start_date);

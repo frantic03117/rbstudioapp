@@ -424,7 +424,8 @@
                                         </td>
                                         <td colspan="6" style="text-align: center;">
                                             <p style="margin : 0;">
-                                                This is computer-generated document
+                                                Please Note: This document is a Receipt and is not a GST Tax Invoice. A
+                                                Tax Invoice will be issued upon completion of the transaction.
                                             </p>
                                             <p style="margin : 0;">
                                                 No signature is required
