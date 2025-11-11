@@ -159,9 +159,8 @@
                                                     <b>Date : </b> {{ date('d-M-Y') }}
                                                 </p>
                                                 <p class="mb-0">
-                                                    <b>Bill No : </b> {{ $booking->bill_no }}
+                                                    <b>Receipt No : </b> {{ $booking->bill_no }}
                                                 </p>
-
                                             </div>
                                         </td>
                                     </tr>
