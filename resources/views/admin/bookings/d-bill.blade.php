@@ -416,7 +416,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="6" style="text-align: center;">
+                                        <td colspan="12" style="text-align: center;">
                                             <p>
                                                 Certified that the particulars given above are true
                                                 and correct. (E & O.E.)
@@ -425,7 +425,7 @@
 
                                     </tr>
                                     <tr>
-                                        <td colspan="6" style="text-align: center;">
+                                        <td colspan="12" style="text-align: center;">
                                             <p style="margin : 0;">
                                                 Please Note: This document is a Receipt and is not a GST Tax Invoice. A
                                                 Tax Invoice will be issued upon completion of the transaction.
