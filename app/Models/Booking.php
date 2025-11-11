@@ -49,7 +49,8 @@ class Booking extends Model
         'total_amount',
         'paid_sum',
         'balance',
-        'cancel_time'
+        'cancel_time',
+        'tds_sum'
 
     ];
 
@@ -187,6 +188,10 @@ class Booking extends Model
     public function getNetTotalAttribute()
     {
         return $this->subtotal - $this->discount_total;
+    }
+    public function getTdsSumAttribute()
+    {
+        return $this->net_total * 0.1;
     }
 
     // ✅ GST (default 18%)
