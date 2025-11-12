@@ -240,9 +240,11 @@ class UserController extends Controller
                 return response()->json(['data' => [], 'message' => 'Invalid gallery id']);
             }
             $uid = auth('sanctum')->user()->id ?? auth()->user()->id;
+
             User::where('id', $uid)->update(['profile_image' => $gallery['image']]);
         }
         if ($request->hasFile('image')) {
+            $uid = auth('sanctum')->user()->id ?? auth()->user()->id;
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
             $filename = 'gallery_' . date('Ymd_His') . '.' . $extension;
