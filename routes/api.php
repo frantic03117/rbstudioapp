@@ -112,7 +112,7 @@ Route::middleware(['auth:sanctum', 'checkrole:Super,Admin,Employee'])->prefix('a
     Route::post('extra-amount/store', [ExtraBookingAmountController::class, 'store']);
     Route::post('update-gst-details', [BookingController::class, 'update_gst_details']);
     Route::post('update-tds/{id}', [BookingController::class, 'tds_control']);
-
+    Route::post('update_profile_image', [UserController::class, 'select_profile_image']);
     Route::post('update_rental_item', [BookingController::class, 'update_rental_item_in_booking']);
     Route::post('remove_rental_item_from_booking', [BookingController::class, 'remove_rental_item_from_booking']);
     Route::post('booking-discount', [BookingController::class, 'discount']);
