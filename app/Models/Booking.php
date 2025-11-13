@@ -211,7 +211,9 @@ class Booking extends Model
     }
     public function getBalanceAttribute()
     {
-        return round($this->total_amount - $this->paid_sum, 2);
+        $tds =  $this->tds_allowed == "1" ?  $this->net_total * 0.10 : 0;
+
+        return round($this->total_amount - $this->paid_sum - $tds, 2);
     }
     public function getCancelTimeAttribute($value)
     {
