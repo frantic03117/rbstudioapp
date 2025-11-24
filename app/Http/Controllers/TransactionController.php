@@ -108,7 +108,7 @@ class TransactionController extends Controller
         $request->validate([
             'amount' => 'required|numeric',
             'booking_id' => 'required',
-            'transaction_id' => 'nullable|unique:transactions'
+            // 'transaction_id' => 'nullable|unique:transactions'
         ]);
         $bid = $request->booking_id;
         $booking = Booking::where('id', $bid)->first();
@@ -120,7 +120,7 @@ class TransactionController extends Controller
             }
         }
         $data = [
-            'transaction_id' => $request->transaction_id,
+            'transaction_id' => $request->transaction_id ?? date('ymdhis'),
             'mode' => $request->mode,
             'booking_id' => $bid,
             'user_id' => $booking?->user_id,

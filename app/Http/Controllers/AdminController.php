@@ -130,6 +130,8 @@ class AdminController extends Controller
         $today_booking = $today_item->sum('duration');
         $firstdate = Carbon::now()->startOfMonth()->format('Y-m-d');
         $enddate = Carbon::now()->endOfMonth()->format('Y-m-d');
+        // echo $enddate;
+        // die;
         $tal_booking_month = Booking::where('booking_start_date', '>=',  $firstdate)->where('booking_start_date', '<=', $enddate);
         if (Auth::user()->role != "Super") {
             $tal_booking_month->where('vendor_id', Auth::user()->vendor_id);
@@ -146,7 +148,7 @@ class AdminController extends Controller
         if ($sid) {
             $total_fy_year_booking->where('studio_id', $sid);
         }
-        $total_fy_year_booking =  $total_fy_year_booking->count();
+        $total_fy_year_booking =  $total_fy_year_booking->sum('duration');
 
 
 
@@ -157,7 +159,7 @@ class AdminController extends Controller
         if ($sid) {
             $all_booking->where('studio_id', $sid);
         }
-        $all_booking =  $all_booking->count();
+        $all_booking =  $all_booking->sum('duration');
 
 
         $aproval = Booking::where('booking_start_date', '>=', date('Y-m-d H:i:s'));
@@ -260,7 +262,8 @@ class AdminController extends Controller
                 'classNames' => [implode('_', explode(' ', $item->studio->name))],
                 "backgroundColor" => $item->studio->color,
                 "rents" => $item->rents,
-                "tds" => $item->tds_allowed
+                "tds" => $item->tds_allowed,
+                'payment_completed ' => $item->balance <= 1 ? true : false
             ];
             array_push($arr, $urr);
         }
