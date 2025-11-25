@@ -263,7 +263,7 @@ class AdminController extends Controller
                 "backgroundColor" => $item->studio->color,
                 "rents" => $item->rents,
                 "tds" => $item->tds_allowed,
-                'payment_completed ' => $item->balance <= 1 ? true : false
+                'payment_completed' => $item->balance <= 1 ? true : false
             ];
             array_push($arr, $urr);
         }
